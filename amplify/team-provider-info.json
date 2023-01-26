@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-stockist-dev-211436-authRole",
+      "UnauthRoleArn": "arn:aws:iam::747387283150:role/amplify-stockist-dev-211436-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::747387283150:role/amplify-stockist-dev-211436-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-stockist-dev-211436-deployment",
+      "UnauthRoleName": "amplify-stockist-dev-211436-unauthRole",
+      "StackName": "amplify-stockist-dev-211436",
+      "StackId": "arn:aws:cloudformation:ap-south-1:747387283150:stack/amplify-stockist-dev-211436/5771f150-9d90-11ed-9525-0a4f3d521d4c",
+      "AmplifyAppId": "dbe2vusvch399"
+    },
+    "categories": {
+      "auth": {
+        "stockist8025f2df": {}
+      }
+    }
+  }
+}
