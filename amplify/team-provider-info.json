@@ -17,6 +17,12 @@
       },
       "api": {
         "stockist": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dbe2vusvch399",
+          "type": "cicd"
+        }
       }
     }
   }
