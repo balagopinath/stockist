@@ -1,0 +1,16 @@
+.tool {
+    width: fit-content;
+    flex: none;
+    margin: 0px 2px 0px 0px;
+    padding: 1px 5px 1px 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tool:hover {
+    border: 1px;
+    border-radius: 2px; 
+    border-color: black;
+    border-style: solid;
+    padding: 0px 5px 0px 5px;
+}

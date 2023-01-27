@@ -23,6 +23,13 @@
           "appId": "dbe2vusvch399",
           "type": "cicd"
         }
+      },
+      "function": {
+        "stockist8025f2dfCreateAuthChallenge": {},
+        "stockist8025f2dfDefineAuthChallenge": {},
+        "stockist8025f2dfVerifyAuthChallengeResponse": {
+          "RECAPTCHASECRET": "Nadhan#81"
+        }
       }
     }
   }

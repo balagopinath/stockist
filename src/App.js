@@ -1,33 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
-import { withAuthenticator, Button, Heading } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import ToolBar from './toolbar/toolbar';
+import Tool from './toolbar/Tool';
 import '@aws-amplify/ui-react/styles.css';
 
 
 function App({signOut, user}) {
- 
-
+  function logOut(e) {
+    signOut();
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <button onClick={signOut}>
-        Sign Out
-      </button>
+      <ToolBar name="Hello">
+        <Tool name="Tool 1" align="Left" />
+        <Tool name="Sign Out" align="Right" onClick={logOut}/>
+      </ToolBar>
     </div>
   );
-}
-
+} 
+ 
 export default withAuthenticator(App);

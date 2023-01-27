@@ -1,0 +1,18 @@
+{
+  "trigger": true,
+  "modules": [
+    "captcha-verify"
+  ],
+  "parentResource": "stockist8025f2df",
+  "functionName": "stockist8025f2dfVerifyAuthChallengeResponse",
+  "resourceName": "stockist8025f2dfVerifyAuthChallengeResponse",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "C:\\snapshot\\repo\\build\\node_modules\\@aws-amplify\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\VerifyAuthChallengeResponse",
+  "triggerTemplate": "VerifyAuthChallengeResponse.json.ejs",
+  "triggerEventPath": "VerifyAuthChallengeResponse.event.json",
+  "roleName": "stockist8025f2dfVerifyAuthChallengeResponse",
+  "skipEdit": true,
+  "RECAPTCHASECRET": "Nadhan#81",
+  "enableCors": false
+}
