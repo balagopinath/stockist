@@ -9,10 +9,15 @@ schema {
 
 type Query {
     getExchanges: [Exchange]
+    getUserProfiles: [UserProfile]
+    getUserProfile(
+        filter: ModelUserProfileFilterInput
+    ) : UserProfile
 }
 
 type Mutation {
-    addExchange(id: ID!, name: String, description: String, priority: Int): Exchange
+    addExchange(name: String, description: String, priority: Int): Exchange
+    addUserProfile(name: String, userId: String): UserProfile
 }
 
 type Exchange {
@@ -20,4 +25,14 @@ type Exchange {
     name: String
     description: String
     priority: Int
+}
+
+type UserProfile {
+    id: ID!
+    name: String!
+    userId: String!
+}
+
+input ModelUserProfileFilterInput {
+    userId: String
 }

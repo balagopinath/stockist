@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-stockist-dev-211436-unauthRole",
       "StackName": "amplify-stockist-dev-211436",
       "StackId": "arn:aws:cloudformation:ap-south-1:747387283150:stack/amplify-stockist-dev-211436/5771f150-9d90-11ed-9525-0a4f3d521d4c",
-      "AmplifyAppId": "dbe2vusvch399"
+      "AmplifyAppId": "dbe2vusvch399",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-stockist-dev-211436-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
@@ -25,10 +26,18 @@
         }
       },
       "function": {
-        "stockist8025f2dfCreateAuthChallenge": {},
-        "stockist8025f2dfDefineAuthChallenge": {},
+        "stockist8025f2dfCreateAuthChallenge": {
+          "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
+          "s3Key": "amplify-builds/stockist8025f2dfCreateAuthChallenge-4e344e6d37312b6e4149-build.zip"
+        },
+        "stockist8025f2dfDefineAuthChallenge": {
+          "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
+          "s3Key": "amplify-builds/stockist8025f2dfDefineAuthChallenge-44326532357565556a61-build.zip"
+        },
         "stockist8025f2dfVerifyAuthChallengeResponse": {
-          "RECAPTCHASECRET": "Nadhan#81"
+          "RECAPTCHASECRET": "Nadhan#81",
+          "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
+          "s3Key": "amplify-builds/stockist8025f2dfVerifyAuthChallengeResponse-75765949563568556579-build.zip"
         }
       }
     }

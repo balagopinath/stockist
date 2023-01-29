@@ -11,3 +11,21 @@ export const getExchanges = /* GraphQL */ `
     }
   }
 `;
+export const getUserProfiles = /* GraphQL */ `
+  query GetUserProfiles {
+    getUserProfiles {
+      id
+      name
+      userId
+    }
+  }
+`;
+export const getUserProfile = /* GraphQL */ `
+  query GetUserProfile($filter: ModelUserProfileFilterInput) {
+    getUserProfile(filter: $filter) {
+      id
+      name
+      userId
+    }
+  }
+`;

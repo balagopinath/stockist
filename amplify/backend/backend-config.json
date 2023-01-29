@@ -98,7 +98,55 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_stockist8025f2dfCreateAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist8025f2dfCreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist8025f2dfCreateAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist8025f2dfCreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist8025f2dfDefineAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist8025f2dfDefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist8025f2dfDefineAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist8025f2dfDefineAuthChallenge"
+        }
+      ]
+    },
     "AMPLIFY_function_stockist8025f2dfVerifyAuthChallengeResponse_RECAPTCHASECRET": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist8025f2dfVerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist8025f2dfVerifyAuthChallengeResponse_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist8025f2dfVerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist8025f2dfVerifyAuthChallengeResponse_s3Key": {
       "usedBy": [
         {
           "category": "function",
