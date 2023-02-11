@@ -7,9 +7,9 @@ class Environment {
 
     static async setAuthenticatedUser(user) {
         this.authUser = user;
-        this.userProfile = await AppSync.getUserProfile(user.userId);
+        this.userProfile = await AppSync.getUserProfile(user.username);
         if(this.userProfile == null) {
-            this.userProfile = await AppSync.createUserProfile("Guest", user.userId);
+            this.userProfile = await AppSync.createUserProfile("Guest", user.username);
         }
     }
 
