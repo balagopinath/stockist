@@ -1,31 +1,32 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getExchanges = /* GraphQL */ `
-  query GetExchanges {
-    getExchanges {
-      id
-      name
-      description
-      priority
-    }
-  }
-`;
-export const getUserProfiles = /* GraphQL */ `
-  query GetUserProfiles {
-    getUserProfiles {
-      id
-      name
-      userId
-    }
-  }
-`;
 export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($filter: ModelUserProfileFilterInput) {
-    getUserProfile(filter: $filter) {
+  query GetUserProfile($id: ID!) {
+    getUserProfile(id: $id) {
       id
-      name
       userId
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserProfiles = /* GraphQL */ `
+  query ListUserProfiles(
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        userName
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

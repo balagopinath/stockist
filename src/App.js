@@ -12,6 +12,7 @@ function App({signOut, user}) {
   
   function logOut(e) {
     signOut();
+    Environment.setAuthenticatedUser(null);
   }
   return (
     <div className="App">

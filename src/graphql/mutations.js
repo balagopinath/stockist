@@ -1,22 +1,45 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const addExchange = /* GraphQL */ `
-  mutation AddExchange($name: String, $description: String, $priority: Int) {
-    addExchange(name: $name, description: $description, priority: $priority) {
+export const createUserProfile = /* GraphQL */ `
+  mutation CreateUserProfile(
+    $input: CreateUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    createUserProfile(input: $input, condition: $condition) {
       id
-      name
-      description
-      priority
+      userId
+      userName
+      createdAt
+      updatedAt
     }
   }
 `;
-export const addUserProfile = /* GraphQL */ `
-  mutation AddUserProfile($name: String, $userId: String) {
-    addUserProfile(name: $name, userId: $userId) {
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile(
+    $input: UpdateUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    updateUserProfile(input: $input, condition: $condition) {
       id
-      name
       userId
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile(
+    $input: DeleteUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    deleteUserProfile(input: $input, condition: $condition) {
+      id
+      userId
+      userName
+      createdAt
+      updatedAt
     }
   }
 `;
