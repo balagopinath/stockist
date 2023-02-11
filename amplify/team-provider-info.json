@@ -17,7 +17,8 @@
         "stockist23ba6881": {}
       },
       "api": {
-        "stockist": {}
+        "stockist": {},
+        "AdminQueries": {}
       },
       "hosting": {
         "amplifyhosting": {
@@ -39,7 +40,10 @@
           "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
           "s3Key": "amplify-builds/stockist8025f2dfVerifyAuthChallengeResponse-75765949563568556579-build.zip"
         },
-        "AdminQueries2859d7c8": {}
+        "AdminQueries2859d7c8": {
+          "deploymentBucketName": "amplify-stockist-dev-155550-deployment",
+          "s3Key": "amplify-builds/AdminQueries2859d7c8-7a554f764e472f664c37-build.zip"
+        }
       }
     }
   }
