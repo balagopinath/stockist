@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "stockist8025f2df": {}
+        "stockist8025f2df": {},
+        "stockist23ba6881": {}
       },
       "api": {
         "stockist": {}
@@ -37,7 +38,8 @@
           "RECAPTCHASECRET": "Nadhan#81",
           "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
           "s3Key": "amplify-builds/stockist8025f2dfVerifyAuthChallengeResponse-75765949563568556579-build.zip"
-        }
+        },
+        "AdminQueries2859d7c8": {}
       }
     }
   }
