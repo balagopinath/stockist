@@ -1,3 +1,4 @@
+import { AWSCloudWatchProvider } from "aws-amplify";
 import AppSync from "./AppSync";
 
 
