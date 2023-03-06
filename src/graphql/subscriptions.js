@@ -6,7 +6,7 @@ export const onCreateUserProfile = /* GraphQL */ `
     $filter: ModelSubscriptionUserProfileFilterInput
   ) {
     onCreateUserProfile(filter: $filter) {
-      id
+      Id
       userId
       userName
       createdAt
@@ -19,7 +19,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
     $filter: ModelSubscriptionUserProfileFilterInput
   ) {
     onUpdateUserProfile(filter: $filter) {
-      id
+      Id
       userId
       userName
       createdAt
@@ -32,7 +32,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
     $filter: ModelSubscriptionUserProfileFilterInput
   ) {
     onDeleteUserProfile(filter: $filter) {
-      id
+      Id
       userId
       userName
       createdAt

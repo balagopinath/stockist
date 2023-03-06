@@ -7,7 +7,7 @@ export const createUserProfile = /* GraphQL */ `
     $condition: ModelUserProfileConditionInput
   ) {
     createUserProfile(input: $input, condition: $condition) {
-      id
+      Id
       userId
       userName
       createdAt
@@ -21,7 +21,7 @@ export const updateUserProfile = /* GraphQL */ `
     $condition: ModelUserProfileConditionInput
   ) {
     updateUserProfile(input: $input, condition: $condition) {
-      id
+      Id
       userId
       userName
       createdAt
@@ -35,7 +35,7 @@ export const deleteUserProfile = /* GraphQL */ `
     $condition: ModelUserProfileConditionInput
   ) {
     deleteUserProfile(input: $input, condition: $condition) {
-      id
+      Id
       userId
       userName
       createdAt

@@ -16,7 +16,7 @@ class AppSync {
         return prom;
     }
     static async createUserProfile(name, userId) {
-        return await API.graphql({ query: mutations.addUserProfile, variables: {input: {name: "Guest", userId: userId}}})
+        return await API.graphql({ query: mutations.createUserProfile, variables: {input: {name: name, userId: userId}}})
     }
 }
 
