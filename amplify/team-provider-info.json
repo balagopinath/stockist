@@ -13,36 +13,18 @@
     },
     "categories": {
       "auth": {
-        "stockist8025f2df": {},
         "stockist23ba6881": {}
       },
-      "api": {
-        "stockist": {},
-        "AdminQueries": {}
+      "function": {
+        "AdminQueries2859d7c8": {
+          "deploymentBucketName": "amplify-stockist-dev-155550-deployment",
+          "s3Key": "amplify-builds/AdminQueries2859d7c8-755a736a4f6948573031-build.zip"
+        }
       },
       "hosting": {
         "amplifyhosting": {
           "appId": "d29r9senpekqrh",
           "type": "cicd"
-        }
-      },
-      "function": {
-        "stockist8025f2dfCreateAuthChallenge": {
-          "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
-          "s3Key": "amplify-builds/stockist8025f2dfCreateAuthChallenge-4e344e6d37312b6e4149-build.zip"
-        },
-        "stockist8025f2dfDefineAuthChallenge": {
-          "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
-          "s3Key": "amplify-builds/stockist8025f2dfDefineAuthChallenge-44326532357565556a61-build.zip"
-        },
-        "stockist8025f2dfVerifyAuthChallengeResponse": {
-          "RECAPTCHASECRET": "Nadhan#81",
-          "deploymentBucketName": "amplify-stockist-dev-211436-deployment",
-          "s3Key": "amplify-builds/stockist8025f2dfVerifyAuthChallengeResponse-75765949563568556579-build.zip"
-        },
-        "AdminQueries2859d7c8": {
-          "deploymentBucketName": "amplify-stockist-dev-155550-deployment",
-          "s3Key": "amplify-builds/AdminQueries2859d7c8-7a554f764e472f664c37-build.zip"
         }
       }
     }
