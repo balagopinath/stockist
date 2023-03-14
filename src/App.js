@@ -1,18 +1,21 @@
 import './App.css';
-import { withAuthenticator } from '@aws-amplify/ui-react';
 import ToolBar from './toolbar/toolbar';
 import Tool from './toolbar/Tool';
 import Environment from './Environment';
 import '@aws-amplify/ui-react/styles.css';
+import withInjector from './withInjector';
 
 
-function App({signOut, user}) {
-  Environment.setAuthenticatedUser(user);
+function App({logOutOp, logInUser, profileServ}) {
+  Environment.setAuthenticatedUser(logInUser);
 
   
   function logOut(e) {
-    signOut();
+    logOutOp();
     Environment.setAuthenticatedUser(null);
+  }
+  function profile() {
+    
   }
   return (
     <div className="App">
@@ -24,4 +27,4 @@ function App({signOut, user}) {
   );
 } 
  
-export default withAuthenticator(App);
+export default withInjector(App);
