@@ -1,3 +1,14 @@
+.toolbarContainer {
+    height: auto;
+    width: 100%;
+    position: relative;
+    background-color: transparent;
+}
+
+.popupMenuContainer {
+    background-color: transparent;
+}
+
 .toolbar {
     height: 25px;
     background-color: bisque;

@@ -1,6 +1,6 @@
 import { AWSCloudWatchProvider } from "aws-amplify";
 import AppSync from "./AppSync";
-
+import Log from "./Log"
 
 class Environment {
     static authUser = null;
@@ -9,9 +9,13 @@ class Environment {
     static async setAuthenticatedUser(user) {
         this.authUser = user;
         if(user != null) {
-            this.userProfile = await AppSync.getUserProfile(user.username);
-            if(this.userProfile == null) {
-                this.userProfile = await AppSync.createUserProfile("Guest", user.username);
+            try {
+                this.userProfile = await AppSync.getUserProfile(user.username);
+                if(this.userProfile == null) {
+                    this.userProfile = await AppSync.createUserProfile("Guest", user.username);
+                }
+            } catch(ex) {
+                Log.Write(ex.message);
             } 
         } else {
             this.userProfile = null;

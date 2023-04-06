@@ -5,25 +5,53 @@ import './tool.css';
 /**
  * @param {name: string, align: string}
  */
-class Tool extends React.Component {
-    constructor() {
-        super();
+
+export class Tool extends React.Component {
+    constructor(props) {
+        super()
+        this.isAlignRight = props.align === "Right" ? true : false;
+        this.handleClick = this.handleClick.bind(this);
+        if(props !== undefined && props.children !== undefined) {
+            React.Children.map(props.children, item => {
+                if(item.type.name === 'MenuContainer') {
+                    this.menuContainer = item;
+                }
+            });
+
+        }
+    }
+    componentDidMount() {
+        
+    }
+    
+    componentWillUnmount() {
+        
     }
     handleClick() {
-
+        if(this.props.onClick !== undefined) {
+            this.props.onClick();
+        }
     }
     render() {
-        if(this.props && this.props.onClick) {
-            this.clickHandle = this.props.onClick;
-        } else {
-            this.clickHandle = this.handleClick;
-        } 
-
         return (
-            <div className='tool' onClick={this.clickHandle}>
-                {this.props.name}
+            <div className={'toolContainer' + (this.isAlignRight ? ' dropMenuRightAligned' : ' dropMenuLeftAligned')}>
+                <div className='tool' onClick={this.handleClick}>
+                    {
+                        this.props.icon !== undefined ?
+                            <img src={this.props.icon} alt={this.props.name} />
+                        :
+                            this.props.name
+                    }
+                </div>
+                {
+                    this.menuContainer !== undefined ?
+                        <div id={this.props.name} className='dropDownMenuContainer'>
+                            {this.menuContainer}
+                        </div>
+                    : null
+                }
             </div>
-        )
+            )
     }
 }
 
@@ -34,4 +62,3 @@ Tool.defaultProps = {
     align: 'Left'
 }
 
-export default Tool;

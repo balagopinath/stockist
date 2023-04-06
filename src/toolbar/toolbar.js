@@ -8,15 +8,23 @@ class Toolbar extends React.Component {
         super()
         this.toolName = props.name;
         this.tools = props.children;
-    } 
+    }
+
+   
+
     render() {
       return (
-        <div className='toolbar'> 
-            <div className='leftControls'>
-                {this.tools.filter(e => e.props.align === "Left")} 
+        <div className='toolbarContainer'>
+            <div className='toolbar'> 
+                <div className='leftControls'>
+                    {this.tools.filter(e => e.props.align === "Left")}
+                </div>
+                <div className='rightControls'>
+                    {this.tools.filter(e => e.props.align === "Right")}
+                </div>
             </div>
-            <div className='rightControls'>
-                {this.tools.filter(e => e.props.align === "Right")}
+            <div className='popupMenuContainer'>
+
             </div>
         </div>
       )

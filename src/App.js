@@ -1,9 +1,12 @@
 import './App.css';
 import ToolBar from './toolbar/toolbar';
-import Tool from './toolbar/Tool';
+import { Tool } from './toolbar/Tool';
 import Environment from './Environment';
 import '@aws-amplify/ui-react/styles.css';
 import { withAuthenticator } from '@aws-amplify/ui-react';
+import profile from './Images/profile.png'
+import { MenuContainer } from './menu/menuContainer';
+import MenuItem from './menu/menuItem';
 
 
 function App({signOut, user}) {
@@ -14,14 +17,16 @@ function App({signOut, user}) {
     signOut();
     Environment.setAuthenticatedUser(null);
   }
-  function profile() {
-    
-  }
   return (
     <div className="App">
       <ToolBar name="Hello">
         <Tool name="Tool 1" align="Left" />
-        <Tool name="Sign Out" align="Right" onClick={logOut}/>
+        <Tool name="User" align="Right" icon={profile} >
+          <MenuContainer>
+            <MenuItem name="Profile" />
+            <MenuItem name="Sign out" onClick={logOut} />
+          </MenuContainer>
+        </Tool>
       </ToolBar>
     </div>
   );
