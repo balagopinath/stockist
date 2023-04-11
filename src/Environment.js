@@ -1,12 +1,14 @@
 import { AWSCloudWatchProvider } from "aws-amplify";
 import AppSync from "./AppSync";
 import Log from "./Log"
+import React from "react";
 
 class Environment {
     static authUser = null;
     static userProfile = null;
+    static dialogHost = null;
 
-    static async setAuthenticatedUser(user) {
+    static async #setAuthenticatedUser(user) {
         this.authUser = user;
         if(user != null) {
             try {
@@ -24,6 +26,15 @@ class Environment {
 
     static getAuthenticatedUser() {
         return this.authUser;
+    }
+
+    static showDialog(dialog) {
+        this.dialogHost.showDialog(React.createElement(dialog, {hideDialog: this.dialogHost.hideDialog }));
+    }
+
+    static initialize(user, hostDialog) {
+        this.dialogHost = hostDialog;
+        this.#setAuthenticatedUser(user);
     }
 }
 

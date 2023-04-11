@@ -1,0 +1,22 @@
+.formContainer {
+    background-color: white;
+    min-width: 400px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.formHeader {
+    background-color: silver;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    padding-left: 20px;
+}
+
+.formFooter {
+    background-color: silver;
+    height: 30px;
+    width: 100%;
+}
