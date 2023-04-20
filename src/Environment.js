@@ -8,7 +8,7 @@ class Environment {
     static userProfile = null;
     static dialogHost = null;
 
-    static async #setAuthenticatedUser(user) {
+    static async setAuthenticatedUser(user) {
         this.authUser = user;
         if(user != null) {
             try {
@@ -30,11 +30,6 @@ class Environment {
 
     static showDialog(dialog) {
         this.dialogHost.showDialog(React.createElement(dialog, {hideDialog: this.dialogHost.hideDialog }));
-    }
-
-    static initialize(user, hostDialog) {
-        this.dialogHost = hostDialog;
-        this.#setAuthenticatedUser(user);
     }
 }
 

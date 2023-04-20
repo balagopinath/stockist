@@ -1,0 +1,13 @@
+.dialogHost {
+    min-height: 100vh;
+}
+.dialogContainer {
+    min-height: 100vh;
+    background: rgba(200, 200, 200, 0.3);
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

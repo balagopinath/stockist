@@ -10,11 +10,12 @@ import { MenuContainer } from './menu/menuContainer';
 import MenuItem from './menu/menuItem';
 import UserProfile from './forms/profile/userProfile';
 import React, { useState } from 'react';
+import Dialog from './dialog';
 
 
 function App({signOut, user}) {
   const [dialogs, setItems] = useState([]);
-  Environment.initialize(user, {showDialog: showDialog, hideDialog: hideDialog});
+  Environment.setAuthenticatedUser(user);
 
   function hideDialog() {
     setItems(dialogs.slice(0, dialogs.length - 1));
@@ -30,7 +31,6 @@ function App({signOut, user}) {
     Environment.setAuthenticatedUser(null);
   }
   return (
-    <div className="AppContainer">
       <div className="App">
         <ToolBar name="Hello">
           <Tool name="Tool 1" align="Left" />
@@ -42,17 +42,7 @@ function App({signOut, user}) {
           </Tool>
         </ToolBar>
       </div>
-      {
-        dialogs.map((dialog, index) => 
-          <div key={index}  className='dialogContainer'>
-            {
-              dialog
-            }
-          </div>
-        )
-      }
-    </div>
   );
 } 
  
-export default withAuthenticator(App);
+export default Dialog(withAuthenticator(App));
