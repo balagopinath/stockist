@@ -9,22 +9,14 @@ import profile from './Images/profile.png'
 import { MenuContainer } from './menu/menuContainer';
 import MenuItem from './menu/menuItem';
 import UserProfile from './forms/profile/userProfile';
-import React, { useState } from 'react';
-import Dialog from './dialog';
+import Dialog, { withDialog } from './dialog';
 
 
 function App({signOut, user}) {
-  const [dialogs, setItems] = useState([]);
   Environment.setAuthenticatedUser(user);
 
-  function hideDialog() {
-    setItems(dialogs.slice(0, dialogs.length - 1));
-  }
-  function showDialog(dialog) {
-      setItems([...dialogs, dialog])
-  }
   function showProfile() {
-    Environment.showDialog(UserProfile)
+    Dialog.showDialog(UserProfile)
   }
   function logOut(e) {
     signOut();
@@ -45,4 +37,4 @@ function App({signOut, user}) {
   );
 } 
  
-export default Dialog(withAuthenticator(App));
+export default withDialog(withAuthenticator(App));

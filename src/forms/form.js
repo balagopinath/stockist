@@ -1,17 +1,13 @@
 import React from "react";
 import './form.css';
+import Dialog from "../dialog";
 
-class FormBase extends React.Component {
-    constructor() {
-        super()
-        this.renderForm = this.renderForm.bind(this);
-    }
-
+class FormBase extends Dialog {
     getFormName() {
         return "";
     }
 
-    renderForm(contentElem) {
+    renderDialog(contentElem) {
         return (<div className="formContainer">
             <div className="formHeader">
                 <p>{this.getFormName()}</p>
@@ -23,10 +19,6 @@ class FormBase extends React.Component {
 
             </div>
         </div>)
-    }
-
-    render() {
-        return this.renderForm(null);
     }
 }
 
