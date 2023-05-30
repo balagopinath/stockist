@@ -3,8 +3,32 @@ import './form.css';
 import Dialog from "../dialog";
 
 class FormBase extends Dialog {
+    #submitActions = [];
+
+    constructor() {
+        super();
+        this.getSubmitActions().map((item, index) => {
+            this.#submitActions.push(item);
+            return index;
+        })
+        this.onSubmitAction = this.onSubmitAction.bind(this);
+    }
+
     getFormName() {
         return "";
+    }
+
+    getSubmitActions() {
+
+    }
+
+    onSubmitAction(actionName) {
+        if(this.onProcessSubmitAction(actionName))
+            this.hide();
+    }
+
+    onProcessSubmitAction(actionName) {
+        return true;
     }
 
     renderDialog(contentElem) {
@@ -16,7 +40,13 @@ class FormBase extends Dialog {
                 {contentElem}
             </div>
             <div className="formFooter">
-
+                {
+                    this.#submitActions.map((item, index) => {
+                        return (
+                            <button className="submitAction" onClick={e => { this.onSubmitAction(item) }}>{item}</button>
+                        )
+                    })
+                }
             </div>
         </div>)
     }

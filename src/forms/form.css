@@ -19,4 +19,11 @@
     background-color: silver;
     height: 30px;
     width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.submitAction {
+    float: left;
+    min-width: 75px;
 }

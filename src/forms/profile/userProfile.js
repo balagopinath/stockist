@@ -7,6 +7,10 @@ class UserProfile extends FormBase {
         return "User profile";
     }
 
+    getSubmitActions() {
+        return ["Save", "Cancel"];
+    }
+
     renderDialog(contentElem) {
         return super.renderDialog(
             <div className='userProfileContainer' onClick={this.hide}>
