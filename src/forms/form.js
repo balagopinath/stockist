@@ -43,7 +43,7 @@ class FormBase extends Dialog {
                 {
                     this.#submitActions.map((item, index) => {
                         return (
-                            <button className="submitAction" onClick={e => { this.onSubmitAction(item) }}>{item}</button>
+                            <button key={index} className="submitAction" onClick={e => { this.onSubmitAction(item) }}>{item}</button>
                         )
                     })
                 }
