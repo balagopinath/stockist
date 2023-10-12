@@ -1,21 +1,21 @@
 import React from 'react';
 import './userProfile.css'
-import FormBase from '../form';
+import Form from '../form';
+import FormField from '../formField'
+import Dialog from '../../dialog';
 
-class UserProfile extends FormBase {
-    getFormName() {
-        return "User profile";
-    }
+class UserProfile extends Dialog {
 
-    getSubmitActions() {
-        return ["Save", "Cancel"];
+    onAction(actionName) {
+        super.hide();
     }
 
     renderDialog(contentElem) {
         return super.renderDialog(
-            <div className='userProfileContainer' onClick={this.hide}>
-
-            </div>
+            <Form name="User Profile" formActions={["Save", "Cancel"]} onAction={this.onAction} width='800' height='600'>
+                <FormField name="User Name" />
+                <FormField name="Email Id" />
+            </Form>
         );
     }
     

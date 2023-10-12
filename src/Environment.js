@@ -14,7 +14,7 @@ class Environment {
                     this.userProfile = await AppSync.createUserProfile("Guest", user.username);
                 }
             } catch(ex) {
-                Log.Write(ex.message);
+                Log.Write(ex.errors[0].message);
             } 
         } else {
             this.userProfile = null;
@@ -23,6 +23,9 @@ class Environment {
 
     static getAuthenticatedUser() {
         return this.authUser;
+    }
+    static getUserProfile() {
+        return this.userProfile;
     }
 }
 

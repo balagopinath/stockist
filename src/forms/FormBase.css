@@ -1,5 +1,7 @@
 .formContainer {
     background-color: white;
+    height: 100%;
+    width: 100%;
     min-width: 400px;
     min-height: 200px;
     display: flex;
@@ -13,6 +15,11 @@
     display: flex;
     justify-content: left;
     padding-left: 20px;
+}
+
+.formBody {
+    height: 100%;
+    width: 100%;
 }
 
 .formFooter {

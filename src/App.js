@@ -16,7 +16,7 @@ function App({signOut, user}) {
   Environment.setAuthenticatedUser(user);
 
   function showProfile() {
-    Dialog.showDialog(UserProfile)
+    Dialog.showDialog(UserProfile, Environment.getUserProfile())
   }
   function logOut(e) {
     signOut();

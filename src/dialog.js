@@ -3,8 +3,8 @@ import './dialog.css';
 
 export default class Dialog extends React.Component {
     static dialogHOC = null; 
-    static async showDialog(diagComp) {
-        var dialogIns = React.createElement(diagComp, {});
+    static async showDialog(diagComp, dataContext) {
+        var dialogIns = React.createElement(diagComp, {dataContext: dataContext});
         this.dialogHOC.showDialog(dialogIns);
     }
 
