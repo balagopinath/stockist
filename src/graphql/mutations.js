@@ -12,6 +12,7 @@ export const createUserProfile = /* GraphQL */ `
       userName
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -26,6 +27,7 @@ export const updateUserProfile = /* GraphQL */ `
       userName
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -40,6 +42,7 @@ export const deleteUserProfile = /* GraphQL */ `
       userName
       createdAt
       updatedAt
+      __typename
     }
   }
 `;

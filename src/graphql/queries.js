@@ -9,6 +9,7 @@ export const getUserProfile = /* GraphQL */ `
       userName
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -33,8 +34,10 @@ export const listUserProfiles = /* GraphQL */ `
         userName
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
