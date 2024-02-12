@@ -12,7 +12,7 @@ class UserProfile extends Dialog {
 
     renderDialog(contentElem) {
         return super.renderDialog(
-            <Form name="User Profile" formActions={["Save", "Cancel"]} onAction={this.onAction} width='800' height='600'>
+            <Form name="User Profile" formActions={["Save", "Cancel"]} onAction={this.onAction} width='400' height='400'>
                 <FormField name="User Name" />
                 <FormField name="Email Id" />
             </Form>
