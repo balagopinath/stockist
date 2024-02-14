@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './tool.css';
+import { MenuContainer } from '../menu/menuContainer';
 
 /**
  * @param {name: string, align: string}
@@ -11,10 +12,9 @@ export class Tool extends React.Component {
         super()
         this.isAlignRight = props.align === "Right" ? true : false;
         this.handleClick = this.handleClick.bind(this);
-        debugger;
         if(props !== undefined && props.children !== undefined) {
             React.Children.map(props.children, item => {
-                if(item.type.name === 'MenuContainer') {
+                if(item.type === MenuContainer) {
                     this.menuContainer = item;
                 }
             });
