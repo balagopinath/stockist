@@ -1,11 +1,14 @@
 import React from "react";
 import './FormBase.css';
+import FieldControl from "./controlSet/fieldControl";
 
 class FormBase extends React.Component {
     #submitActions = [];
     #fields = []
     #name = '';
     #formStyle = {}
+    #columns = 1
+    #lableSize = 100;
 
     constructor(props) {
         super();
@@ -17,11 +20,21 @@ class FormBase extends React.Component {
         this.state = {
             context: props.dataContext,
         }
-        props.children.forEach(item => {
-            this.#fields.push(item);
-        });
+        if(Array.isArray(props.children)) {
+            props.children.forEach(item => {
+                this.#fields.push(item);
+            });
+        } else {
+            this.#fields.push(props.children);
+        }
 
         this.#name = props.name;
+        if(props.columns !== undefined && props.columns != null && props.columns.trim() !== '' && Number.isInteger(props.columns)) {
+            this.#columns = props.columns;
+        }
+        if(props.lableSize !== undefined && props.lableSize != null && props.lableSize.trim() !== '' && !Number.isNaN(props.lableSize)) {
+            this.#lableSize = Number(props.lableSize);
+        }
 
         if(props.width !== undefined && props.width != null && props.width.trim() !== '') {
             if(!isNaN(props.width)) {
@@ -67,7 +80,7 @@ class FormBase extends React.Component {
                     this.#fields.map((item, index) => {
                         var retValue = null;
 
-                        retValue = (<div key={index}> {item.props.name} </div>)
+                        retValue = (<FieldControl key={index} caption={item.props.name} lableSize={this.#lableSize} inputSize={item.props.width} value={item.props.value} onChange={item.props.onChange} > </FieldControl>)
 
 
                         return retValue;

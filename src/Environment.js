@@ -2,30 +2,33 @@ import AppSync from "./AppSync";
 import Log from "./Log"
 
 class Environment {
-    static authUser = null;
-    static userProfile = null;
+    static #authUser = null;
+    static #userProfile = null;
 
     static async setAuthenticatedUser(user) {
         this.authUser = user;
         if(user != null) {
             try {
-                this.userProfile = await AppSync.getUserProfile(user.username);
-                if(this.userProfile == null) {
-                    this.userProfile = await AppSync.createUserProfile("Guest", user.username);
+                Environment.#userProfile = await AppSync.getUserProfile(user.username);
+                if(Environment.#userProfile == null) {
+                    Environment.#userProfile = await AppSync.createUserProfile("Guest", user.username);
                 }
             } catch(ex) {
-                Log.Write(ex.errors[0].message);
+                if(ex.errors !== undefined)
+                    Log.Write(ex.errors[0].message);
+                else
+                    Log.Write(ex.message);
             } 
         } else {
-            this.userProfile = null;
+            Environment.#userProfile = null;
         }
     }
 
     static getAuthenticatedUser() {
-        return this.authUser;
+        return Environment.#authUser;
     }
     static getUserProfile() {
-        return this.userProfile;
+        return Environment.#userProfile;
     }
 }
 

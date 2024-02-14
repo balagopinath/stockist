@@ -1,3 +1,9 @@
-.field {
-    
+.fieldContainer {
+    padding: 5px;
+    height: 60px;
+    width: 100%;
+    border-width: 1px;
+    border-color: red;
+    border-style: solid;
+    display: flex;
 }

@@ -26,6 +26,10 @@
           "deploymentBucketName": "amplify-stockist-dev-01734-deployment",
           "s3Key": "amplify-builds/AdminQueries2859d7c8-755a736a4f6948573031-build.zip"
         }
+      },
+      "api": {
+        "AdminQueries": {},
+        "stockist": {}
       }
     }
   }
