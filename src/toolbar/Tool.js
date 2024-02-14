@@ -11,6 +11,7 @@ export class Tool extends React.Component {
         super()
         this.isAlignRight = props.align === "Right" ? true : false;
         this.handleClick = this.handleClick.bind(this);
+        debugger;
         if(props !== undefined && props.children !== undefined) {
             React.Children.map(props.children, item => {
                 if(item.type.name === 'MenuContainer') {
