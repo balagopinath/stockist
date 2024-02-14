@@ -8,3 +8,44 @@ type UserProfile @model
   userId: String!  @index(name: "byUserId", sortKeyFields: ["Id"])
   userName: String!
 }
+
+type Exchange @model
+{
+  Id: ID! @primaryKey
+  name: String!
+  code: String!
+}
+
+type Stock @model
+{
+  Id: ID! @primaryKey
+  Stock: String!
+  code: String!
+  exchange: Exchange!
+}
+
+type StockTick @model
+{
+  Id: ID! @primaryKey
+  stock: Stock!
+  LTP: Float!
+  tickTime: AWSDateTime!
+}
+
+type StockUserAssociation @model
+{
+  Id: ID! @primaryKey
+  stock: Stock!
+  userProfile: UserProfile!
+  openingStocks: Int!
+}
+
+type Trade @model
+{
+  Id: ID! @primaryKey
+  stockUser: StockUserAssociation!
+  isBuy: Boolean!
+  price: Float!
+  tranDate: AWSDateTime!
+}
+
