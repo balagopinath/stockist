@@ -9,7 +9,7 @@
 }
 
 .formHeader {
-    background-color: silver;
+    background-color:lightslategray;
     height: 50px;
     width: 100%;
     display: flex;
@@ -24,7 +24,7 @@
 }
 
 .formFooter {
-    background-color: silver;
+    background-color: lightslategray;
     height: 30px;
     width: 100%;
     display: flex;

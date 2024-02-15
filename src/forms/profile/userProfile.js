@@ -20,7 +20,7 @@ class UserProfile extends Dialog {
     }
 
     onAction(actionName) {
-        if(actionName == "Save") {
+        if(actionName === "Save") {
             var up = Environment.getUserProfile();
             up.userName = this.state.userName;
             AppSync.updateUserProfile(up).then(res => {

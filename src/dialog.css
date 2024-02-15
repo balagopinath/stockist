@@ -1,9 +1,9 @@
 .dialogHost {
-    min-height: 100vh;
+    height: 100%;
 }
 
 .dialogContainer {
-    min-height: 100vh;
+    min-height: 100%;
     background: #80808080;
     position: absolute;
     width: 100%;

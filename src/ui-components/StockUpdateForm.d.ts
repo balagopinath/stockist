@@ -23,19 +23,16 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type StockUpdateFormInputValues = {
     Id?: string;
-    Stock?: string;
     code?: string;
 };
 export declare type StockUpdateFormValidationValues = {
     Id?: ValidationFunction<string>;
-    Stock?: ValidationFunction<string>;
     code?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StockUpdateFormOverridesProps = {
     StockUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Id?: PrimitiveOverrideProps<TextFieldProps>;
-    Stock?: PrimitiveOverrideProps<TextFieldProps>;
     code?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type StockUpdateFormProps = React.PropsWithChildren<{

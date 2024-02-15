@@ -10,11 +10,23 @@ import { MenuContainer } from './menu/menuContainer';
 import MenuItem from './menu/menuItem';
 import UserProfile from './forms/profile/userProfile';
 import Dialog, { withDialog } from './dialog';
+import React from 'react';
+import PageRoute from './pageRoute';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function App({signOut, user}) {
+  const navigate = useNavigate();
+
   Environment.setAuthenticatedUser(user);
 
+  function showDashboard() {
+    navigate("/")
+  }
+  function showPortfolio() {
+    navigate("/stock")
+  }
   function showProfile() {
     Dialog.showDialog(UserProfile, Environment.getUserProfile())
   }
@@ -25,7 +37,8 @@ function App({signOut, user}) {
   return (
       <div className="App">
         <ToolBar name="Hello">
-          <Tool name="Tool 1" align="Left" />
+          <Tool name="Dashboard" align="Left" onClick={showDashboard} />
+          <Tool name="Portfolio" align="Left" onClick={showPortfolio} />
           <Tool name="User" align="Right" icon={profile} >
             <MenuContainer>
               <MenuItem name="Profile" onClick={showProfile} />
@@ -33,6 +46,7 @@ function App({signOut, user}) {
             </MenuContainer>
           </Tool>
         </ToolBar>
+        <PageRoute />
       </div>
   );
 } 

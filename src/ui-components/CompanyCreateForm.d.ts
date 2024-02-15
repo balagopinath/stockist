@@ -21,28 +21,28 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type StockCreateFormInputValues = {
+export declare type CompanyCreateFormInputValues = {
     Id?: string;
-    code?: string;
+    name?: string;
 };
-export declare type StockCreateFormValidationValues = {
+export declare type CompanyCreateFormValidationValues = {
     Id?: ValidationFunction<string>;
-    code?: ValidationFunction<string>;
+    name?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type StockCreateFormOverridesProps = {
-    StockCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type CompanyCreateFormOverridesProps = {
+    CompanyCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Id?: PrimitiveOverrideProps<TextFieldProps>;
-    code?: PrimitiveOverrideProps<TextFieldProps>;
+    name?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type StockCreateFormProps = React.PropsWithChildren<{
-    overrides?: StockCreateFormOverridesProps | undefined | null;
+export declare type CompanyCreateFormProps = React.PropsWithChildren<{
+    overrides?: CompanyCreateFormOverridesProps | undefined | null;
 } & {
     clearOnSuccess?: boolean;
-    onSubmit?: (fields: StockCreateFormInputValues) => StockCreateFormInputValues;
-    onSuccess?: (fields: StockCreateFormInputValues) => void;
-    onError?: (fields: StockCreateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: StockCreateFormInputValues) => StockCreateFormInputValues;
-    onValidate?: StockCreateFormValidationValues;
+    onSubmit?: (fields: CompanyCreateFormInputValues) => CompanyCreateFormInputValues;
+    onSuccess?: (fields: CompanyCreateFormInputValues) => void;
+    onError?: (fields: CompanyCreateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: CompanyCreateFormInputValues) => CompanyCreateFormInputValues;
+    onValidate?: CompanyCreateFormValidationValues;
 } & React.CSSProperties>;
-export default function StockCreateForm(props: StockCreateFormProps): React.ReactElement;
+export default function CompanyCreateForm(props: CompanyCreateFormProps): React.ReactElement;

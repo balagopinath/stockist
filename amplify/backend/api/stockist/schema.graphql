@@ -16,12 +16,18 @@ type Exchange @model
   code: String!
 }
 
-type Stock @model
+type Company @model
 {
   Id: ID! @primaryKey
-  Stock: String!
-  code: String!
+  name: String!
+}
+
+type Stock @model 
+{
+  Id: ID! @primaryKey
   exchange: Exchange!
+  company: Company!
+  code: String!
 }
 
 type StockTick @model

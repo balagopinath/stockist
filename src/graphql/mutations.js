@@ -91,6 +91,48 @@ export const deleteExchange = /* GraphQL */ `
     }
   }
 `;
+export const createCompany = /* GraphQL */ `
+  mutation CreateCompany(
+    $input: CreateCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    createCompany(input: $input, condition: $condition) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateCompany = /* GraphQL */ `
+  mutation UpdateCompany(
+    $input: UpdateCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    updateCompany(input: $input, condition: $condition) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteCompany = /* GraphQL */ `
+  mutation DeleteCompany(
+    $input: DeleteCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    deleteCompany(input: $input, condition: $condition) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createStock = /* GraphQL */ `
   mutation CreateStock(
     $input: CreateStockInput!
@@ -98,8 +140,6 @@ export const createStock = /* GraphQL */ `
   ) {
     createStock(input: $input, condition: $condition) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -108,6 +148,14 @@ export const createStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -121,8 +169,6 @@ export const updateStock = /* GraphQL */ `
   ) {
     updateStock(input: $input, condition: $condition) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -131,6 +177,14 @@ export const updateStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -144,8 +198,6 @@ export const deleteStock = /* GraphQL */ `
   ) {
     deleteStock(input: $input, condition: $condition) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -154,6 +206,14 @@ export const deleteStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -169,7 +229,6 @@ export const createStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -192,7 +251,6 @@ export const updateStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -215,7 +273,6 @@ export const deleteStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -238,7 +295,6 @@ export const createStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -268,7 +324,6 @@ export const updateStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -298,7 +353,6 @@ export const deleteStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt

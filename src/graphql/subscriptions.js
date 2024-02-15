@@ -79,12 +79,43 @@ export const onDeleteExchange = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCompany = /* GraphQL */ `
+  subscription OnCreateCompany($filter: ModelSubscriptionCompanyFilterInput) {
+    onCreateCompany(filter: $filter) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCompany = /* GraphQL */ `
+  subscription OnUpdateCompany($filter: ModelSubscriptionCompanyFilterInput) {
+    onUpdateCompany(filter: $filter) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCompany = /* GraphQL */ `
+  subscription OnDeleteCompany($filter: ModelSubscriptionCompanyFilterInput) {
+    onDeleteCompany(filter: $filter) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateStock = /* GraphQL */ `
   subscription OnCreateStock($filter: ModelSubscriptionStockFilterInput) {
     onCreateStock(filter: $filter) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -93,6 +124,14 @@ export const onCreateStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -103,8 +142,6 @@ export const onUpdateStock = /* GraphQL */ `
   subscription OnUpdateStock($filter: ModelSubscriptionStockFilterInput) {
     onUpdateStock(filter: $filter) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -113,6 +150,14 @@ export const onUpdateStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -123,8 +168,6 @@ export const onDeleteStock = /* GraphQL */ `
   subscription OnDeleteStock($filter: ModelSubscriptionStockFilterInput) {
     onDeleteStock(filter: $filter) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -133,6 +176,14 @@ export const onDeleteStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -147,7 +198,6 @@ export const onCreateStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -169,7 +219,6 @@ export const onUpdateStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -191,7 +240,6 @@ export const onDeleteStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -213,7 +261,6 @@ export const onCreateStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -242,7 +289,6 @@ export const onUpdateStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -271,7 +317,6 @@ export const onDeleteStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt

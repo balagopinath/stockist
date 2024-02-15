@@ -9,12 +9,12 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { getStock } from "../graphql/queries";
-import { updateStock } from "../graphql/mutations";
-export default function StockUpdateForm(props) {
+import { getCompany } from "../graphql/queries";
+import { updateCompany } from "../graphql/mutations";
+export default function CompanyUpdateForm(props) {
   const {
     Id: IdProp,
-    stock: stockModelProp,
+    company: companyModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -25,38 +25,38 @@ export default function StockUpdateForm(props) {
   } = props;
   const initialValues = {
     Id: "",
-    code: "",
+    name: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
-  const [code, setCode] = React.useState(initialValues.code);
+  const [name, setName] = React.useState(initialValues.name);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = stockRecord
-      ? { ...initialValues, ...stockRecord }
+    const cleanValues = companyRecord
+      ? { ...initialValues, ...companyRecord }
       : initialValues;
     setId(cleanValues.Id);
-    setCode(cleanValues.code);
+    setName(cleanValues.name);
     setErrors({});
   };
-  const [stockRecord, setStockRecord] = React.useState(stockModelProp);
+  const [companyRecord, setCompanyRecord] = React.useState(companyModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = IdProp
         ? (
             await API.graphql({
-              query: getStock.replaceAll("__typename", ""),
+              query: getCompany.replaceAll("__typename", ""),
               variables: { Id: IdProp },
             })
-          )?.data?.getStock
-        : stockModelProp;
-      setStockRecord(record);
+          )?.data?.getCompany
+        : companyModelProp;
+      setCompanyRecord(record);
     };
     queryData();
-  }, [IdProp, stockModelProp]);
-  React.useEffect(resetStateValues, [stockRecord]);
+  }, [IdProp, companyModelProp]);
+  React.useEffect(resetStateValues, [companyRecord]);
   const validations = {
     Id: [{ type: "Required" }],
-    code: [{ type: "Required" }],
+    name: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -85,7 +85,7 @@ export default function StockUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           Id,
-          code,
+          name,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -116,10 +116,10 @@ export default function StockUpdateForm(props) {
             }
           });
           await API.graphql({
-            query: updateStock.replaceAll("__typename", ""),
+            query: updateCompany.replaceAll("__typename", ""),
             variables: {
               input: {
-                Id: stockRecord.Id,
+                Id: companyRecord.Id,
                 ...modelFields,
               },
             },
@@ -134,7 +134,7 @@ export default function StockUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "StockUpdateForm")}
+      {...getOverrideProps(overrides, "CompanyUpdateForm")}
       {...rest}
     >
       <TextField
@@ -147,7 +147,7 @@ export default function StockUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Id: value,
-              code,
+              name,
             };
             const result = onChange(modelFields);
             value = result?.Id ?? value;
@@ -163,29 +163,29 @@ export default function StockUpdateForm(props) {
         {...getOverrideProps(overrides, "Id")}
       ></TextField>
       <TextField
-        label="Code"
+        label="Name"
         isRequired={true}
         isReadOnly={false}
-        value={code}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               Id,
-              code: value,
+              name: value,
             };
             const result = onChange(modelFields);
-            value = result?.code ?? value;
+            value = result?.name ?? value;
           }
-          if (errors.code?.hasError) {
-            runValidationTasks("code", value);
+          if (errors.name?.hasError) {
+            runValidationTasks("name", value);
           }
-          setCode(value);
+          setName(value);
         }}
-        onBlur={() => runValidationTasks("code", code)}
-        errorMessage={errors.code?.errorMessage}
-        hasError={errors.code?.hasError}
-        {...getOverrideProps(overrides, "code")}
+        onBlur={() => runValidationTasks("name", name)}
+        errorMessage={errors.name?.errorMessage}
+        hasError={errors.name?.hasError}
+        {...getOverrideProps(overrides, "name")}
       ></TextField>
       <Flex
         justifyContent="space-between"
@@ -198,7 +198,7 @@ export default function StockUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(IdProp || stockModelProp)}
+          isDisabled={!(IdProp || companyModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -210,7 +210,7 @@ export default function StockUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(IdProp || stockModelProp) ||
+              !(IdProp || companyModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

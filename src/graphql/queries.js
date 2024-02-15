@@ -81,12 +81,48 @@ export const listExchanges = /* GraphQL */ `
     }
   }
 `;
+export const getCompany = /* GraphQL */ `
+  query GetCompany($Id: ID!) {
+    getCompany(Id: $Id) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listCompanies = /* GraphQL */ `
+  query ListCompanies(
+    $Id: ID
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCompanies(
+      Id: $Id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getStock = /* GraphQL */ `
   query GetStock($Id: ID!) {
     getStock(Id: $Id) {
       Id
-      Stock
-      code
       exchange {
         Id
         name
@@ -95,6 +131,14 @@ export const getStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      company {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      code
       createdAt
       updatedAt
       __typename
@@ -118,7 +162,6 @@ export const listStocks = /* GraphQL */ `
     ) {
       items {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -135,7 +178,6 @@ export const getStockTick = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt
@@ -183,7 +225,6 @@ export const getStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
-        Stock
         code
         createdAt
         updatedAt

@@ -23,22 +23,18 @@ export default function StockCreateForm(props) {
   } = props;
   const initialValues = {
     Id: "",
-    Stock: "",
     code: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
-  const [stock, setStock] = React.useState(initialValues.Stock);
   const [code, setCode] = React.useState(initialValues.code);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setId(initialValues.Id);
-    setStock(initialValues.Stock);
     setCode(initialValues.code);
     setErrors({});
   };
   const validations = {
     Id: [{ type: "Required" }],
-    Stock: [{ type: "Required" }],
     code: [{ type: "Required" }],
   };
   const runValidationTasks = async (
@@ -68,7 +64,6 @@ export default function StockCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           Id,
-          Stock: stock,
           code,
         };
         const validationResponses = await Promise.all(
@@ -133,7 +128,6 @@ export default function StockCreateForm(props) {
           if (onChange) {
             const modelFields = {
               Id: value,
-              Stock: stock,
               code,
             };
             const result = onChange(modelFields);
@@ -150,32 +144,6 @@ export default function StockCreateForm(props) {
         {...getOverrideProps(overrides, "Id")}
       ></TextField>
       <TextField
-        label="Stock"
-        isRequired={true}
-        isReadOnly={false}
-        value={stock}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              Id,
-              Stock: value,
-              code,
-            };
-            const result = onChange(modelFields);
-            value = result?.Stock ?? value;
-          }
-          if (errors.Stock?.hasError) {
-            runValidationTasks("Stock", value);
-          }
-          setStock(value);
-        }}
-        onBlur={() => runValidationTasks("Stock", stock)}
-        errorMessage={errors.Stock?.errorMessage}
-        hasError={errors.Stock?.hasError}
-        {...getOverrideProps(overrides, "Stock")}
-      ></TextField>
-      <TextField
         label="Code"
         isRequired={true}
         isReadOnly={false}
@@ -185,7 +153,6 @@ export default function StockCreateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
-              Stock: stock,
               code: value,
             };
             const result = onChange(modelFields);
