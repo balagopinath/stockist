@@ -81,11 +81,56 @@ export const listExchanges = /* GraphQL */ `
     }
   }
 `;
+export const getIndustrySector = /* GraphQL */ `
+  query GetIndustrySector($Id: ID!) {
+    getIndustrySector(Id: $Id) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listIndustrySectors = /* GraphQL */ `
+  query ListIndustrySectors(
+    $Id: ID
+    $filter: ModelIndustrySectorFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listIndustrySectors(
+      Id: $Id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getCompany = /* GraphQL */ `
   query GetCompany($Id: ID!) {
     getCompany(Id: $Id) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

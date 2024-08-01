@@ -39,8 +39,8 @@ class AppSync {
     static createUserProfile(name, userId) {
         var prom = null;
         
-        if(userId in  AppSync.createUPCommands) {
-            prom = AppSync.createUPCommands[userId]
+        if(userId in  AppSync.#createUPCommands) {
+            prom = AppSync.#createUPCommands[userId]
         } else {
             prom = new Promise((resolve, reject) => {
                 var id = uuidv4();
@@ -56,15 +56,15 @@ class AppSync {
                         reject(err);
                     });
                 });
-            AppSync.createUPCommands[userId] = prom; 
+            AppSync.#createUPCommands[userId] = prom; 
         }
         return prom;
     }
     static deleteUserProfile(userProfile) {
         var prom = null;
         
-        if(userProfile.Id in  AppSync.deleteUPCommands) {
-            prom = AppSync.deleteUPCommands[userProfile.Id]
+        if(userProfile.Id in  AppSync.#deleteUPCommands) {
+            prom = AppSync.#deleteUPCommands[userProfile.Id]
         } else {
             prom = new Promise((resolve, reject) => {
                 
@@ -79,7 +79,7 @@ class AppSync {
                         reject(err);
                     });
                 });
-            AppSync.deleteUPCommands[userProfile.Id] = prom; 
+            AppSync.#deleteUPCommands[userProfile.Id] = prom; 
         }
         return prom;
     }

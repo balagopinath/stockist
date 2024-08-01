@@ -16,10 +16,17 @@ type Exchange @model
   code: String!
 }
 
+type IndustrySector @model
+{
+  Id: ID! @primaryKey
+  name: String!
+}
+
 type Company @model
 {
   Id: ID! @primaryKey
   name: String!
+  industry: IndustrySector!
 }
 
 type Stock @model 
@@ -54,4 +61,3 @@ type Trade @model
   price: Float!
   tranDate: AWSDateTime!
 }
-

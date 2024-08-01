@@ -91,6 +91,48 @@ export const deleteExchange = /* GraphQL */ `
     }
   }
 `;
+export const createIndustrySector = /* GraphQL */ `
+  mutation CreateIndustrySector(
+    $input: CreateIndustrySectorInput!
+    $condition: ModelIndustrySectorConditionInput
+  ) {
+    createIndustrySector(input: $input, condition: $condition) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateIndustrySector = /* GraphQL */ `
+  mutation UpdateIndustrySector(
+    $input: UpdateIndustrySectorInput!
+    $condition: ModelIndustrySectorConditionInput
+  ) {
+    updateIndustrySector(input: $input, condition: $condition) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteIndustrySector = /* GraphQL */ `
+  mutation DeleteIndustrySector(
+    $input: DeleteIndustrySectorInput!
+    $condition: ModelIndustrySectorConditionInput
+  ) {
+    deleteIndustrySector(input: $input, condition: $condition) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createCompany = /* GraphQL */ `
   mutation CreateCompany(
     $input: CreateCompanyInput!
@@ -99,6 +141,13 @@ export const createCompany = /* GraphQL */ `
     createCompany(input: $input, condition: $condition) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -113,6 +162,13 @@ export const updateCompany = /* GraphQL */ `
     updateCompany(input: $input, condition: $condition) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -127,6 +183,13 @@ export const deleteCompany = /* GraphQL */ `
     deleteCompany(input: $input, condition: $condition) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

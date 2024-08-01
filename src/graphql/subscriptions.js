@@ -79,11 +79,57 @@ export const onDeleteExchange = /* GraphQL */ `
     }
   }
 `;
+export const onCreateIndustrySector = /* GraphQL */ `
+  subscription OnCreateIndustrySector(
+    $filter: ModelSubscriptionIndustrySectorFilterInput
+  ) {
+    onCreateIndustrySector(filter: $filter) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateIndustrySector = /* GraphQL */ `
+  subscription OnUpdateIndustrySector(
+    $filter: ModelSubscriptionIndustrySectorFilterInput
+  ) {
+    onUpdateIndustrySector(filter: $filter) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteIndustrySector = /* GraphQL */ `
+  subscription OnDeleteIndustrySector(
+    $filter: ModelSubscriptionIndustrySectorFilterInput
+  ) {
+    onDeleteIndustrySector(filter: $filter) {
+      Id
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateCompany = /* GraphQL */ `
   subscription OnCreateCompany($filter: ModelSubscriptionCompanyFilterInput) {
     onCreateCompany(filter: $filter) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -95,6 +141,13 @@ export const onUpdateCompany = /* GraphQL */ `
     onUpdateCompany(filter: $filter) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -106,6 +159,13 @@ export const onDeleteCompany = /* GraphQL */ `
     onDeleteCompany(filter: $filter) {
       Id
       name
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

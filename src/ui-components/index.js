@@ -8,6 +8,8 @@ export { default as CompanyCreateForm } from "./CompanyCreateForm";
 export { default as CompanyUpdateForm } from "./CompanyUpdateForm";
 export { default as ExchangeCreateForm } from "./ExchangeCreateForm";
 export { default as ExchangeUpdateForm } from "./ExchangeUpdateForm";
+export { default as IndustrySectorCreateForm } from "./IndustrySectorCreateForm";
+export { default as IndustrySectorUpdateForm } from "./IndustrySectorUpdateForm";
 export { default as StockCreateForm } from "./StockCreateForm";
 export { default as StockTickCreateForm } from "./StockTickCreateForm";
 export { default as StockTickUpdateForm } from "./StockTickUpdateForm";
