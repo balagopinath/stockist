@@ -9,6 +9,7 @@ class AppSync {
     static #createUPCommands = {}
     static #deleteUPCommands = {}
     static #updateUPCommands = {}
+    static #getExchangesQuery = null
 
     static getUserProfile(userId) {
         var prom = null;
@@ -105,6 +106,74 @@ class AppSync {
             AppSync.#updateUPCommands[userProfile.Id] = prom; 
         }
         return prom;
+    }
+    
+    static getExchanges() {
+        if(AppSync.#getExchangesQuery == null) {
+            AppSync.#getExchangesQuery = new Promise((resolve, reject) => {
+                API.graphql(graphqlOperation(queries.listExchanges))
+                .then(data => {
+                    resolve(data.data.listExchanges.items)
+                }).catch(err => {
+                    reject(err)
+                });
+            })
+        }
+        return AppSync.#getExchangesQuery;
+    }
+    static getExchange(Id) {
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.getExchange(Id)))
+            .then(data => {
+                resolve(data.data.listExchanges.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static addExchange(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                name: data.name,
+                code: data.code
+            };
+            API.graphql(graphqlOperation(mutations.createExchange,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static editExchange(data, Id) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                name: data.name,
+                code: data.code
+            };
+            API.graphql(graphqlOperation(mutations.updateExchange,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static deleteExchange(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+  
+            };
+            API.graphql(graphqlOperation(mutations.deleteExchange,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
     }
 }
 

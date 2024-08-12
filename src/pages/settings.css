@@ -1,0 +1,58 @@
+.spContainer {
+    background-color: white;
+    height: 100%;
+    display: block;
+    padding: 50px 20px 10px 20px;
+}
+
+.settingContainer {
+    height: 300px;
+    width: 100%;
+    box-shadow: 0px 0px 5px lightgray;
+    border-radius: 10px;
+}
+
+
+.settingHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Center the h4 element vertically */
+    align-items: center;
+    height: 50px; /* Example height */
+    position: relative; /* To position hr absolutely */
+    margin: 10px;
+}
+.settingHeader > h4 {
+    width: 100%;
+}
+  
+.settingHeader::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px; /* Height of the horizontal line */
+    background-color: black; /* Color of the horizontal line */
+  }
+
+  .settingGridContainer {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+  }
+
+  .settingGrid {
+    width: 100%;
+  }
+
+  .gridColumnSizeAuto {
+    width: auto;
+  }
+  .gridColumnSizeFlex {
+    flex: 1;
+  }
+
+  .gridHeader {
+    background-color: lightgray;
+  }

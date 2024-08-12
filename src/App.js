@@ -6,6 +6,7 @@ import Environment from './Environment';
 import '@aws-amplify/ui-react/styles.css';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import profile from './Images/profile.png'
+import Settings  from './Images/settings.png';
 import { MenuContainer } from './menu/menuContainer';
 import MenuItem from './menu/menuItem';
 import UserProfile from './forms/profile/userProfile';
@@ -30,6 +31,9 @@ function App({signOut, user}) {
   function showProfile() {
     Dialog.showDialog(UserProfile, Environment.getUserProfile())
   }
+  function showSettings() {
+    navigate("/settings")
+  }
   function logOut(e) {
     signOut();
     Environment.setAuthenticatedUser(null);
@@ -39,6 +43,7 @@ function App({signOut, user}) {
         <ToolBar name="Hello">
           <Tool name="Dashboard" align="Left" onClick={showDashboard} />
           <Tool name="Portfolio" align="Left" onClick={showPortfolio} />
+          <Tool name="Settings" align="Right" onClick={showSettings} icon={Settings} />
           <Tool name="User" align="Right" icon={profile} >
             <MenuContainer>
               <MenuItem name="Profile" onClick={showProfile} />
