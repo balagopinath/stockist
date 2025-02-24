@@ -4,7 +4,7 @@ import './settings.css'
 import AppSync from "../AppSync";
 import Dialog from "../dialog";
 import Exchange from "../forms/exchange/exchange";
-
+import IndustrySector from "../forms/industrySector/industrySector";
 
 class Setting extends React.Component {
     loadData() {
@@ -153,6 +153,30 @@ class ExchangeSetting extends Setting {
 
 }
 
+class IndustrySectorSetting extends Setting {
+    
+    loadData() {
+        AppSync.getIndustrySectors().then(data => {
+            super.setData(data);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+    getColumnNames() {
+        return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}]
+    }
+    addItem() {
+        Dialog.showDialog(IndustrySector)
+    }
+    editItem() {
+        Dialog.showDialog(IndustrySector, this.state.selectedItem)
+    }
+    deleteItem() {
+        AppSync.deleteExchange(this.state.selectedItem);
+    }
+
+}
+
 export default class Settings extends Page {
 
     constructor(props) {
@@ -161,6 +185,7 @@ export default class Settings extends Page {
     renderPage(contentElem) {
         return super.renderPage(
             <div className="spContainer">
+                <IndustrySectorSetting Name="Industry Sectors" IsAdd={true} />
                 <ExchangeSetting Name="Exchange" IsAdd={true} />
             </div>
         )

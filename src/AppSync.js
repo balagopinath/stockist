@@ -175,6 +175,61 @@ class AppSync {
             });
         })
     }
+
+
+    static getIndustrySectors(Id) {
+
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.listIndustrySectors))
+            .then(data => {
+                resolve(data.data.listIndustrySectors.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static addIndustrySector(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                name: data.name
+            };
+            API.graphql(graphqlOperation(mutations.createIndustrySector,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static editIndustrySector(data, Id) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                name: data.name
+            };
+            API.graphql(graphqlOperation(mutations.updateIndustrySector,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static deleteIndustrySector(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+  
+            };
+            API.graphql(graphqlOperation(mutations.deleteIndustrySector,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
 }
 
 export default AppSync;
