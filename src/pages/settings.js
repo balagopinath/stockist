@@ -142,7 +142,7 @@ class ExchangeSetting extends Setting {
         return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}, {name: "code", size:"100px"}]
     }
     addItem() {
-        Dialog.showDialog(Exchange, null)
+        Dialog.showDialog(Exchange)
     }
     editItem() {
         Dialog.showDialog(Exchange, this.state.selectedItem)
