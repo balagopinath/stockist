@@ -80,7 +80,8 @@ class FormBase extends React.Component {
                     this.#fields.map((item, index) => {
                         var retValue = null;
 
-                        retValue = (<FieldControl key={index} caption={item.props.name} lableSize={this.#lableSize} inputSize={item.props.width} value={item.props.value} onChange={item.props.onChange} > </FieldControl>)
+                        retValue = (<FieldControl key={index} caption={item.props.name} type={item.props.type} lableSize={this.#lableSize} inputSize={item.props.width} value={item.props.value} onChange={item.props.onChange} 
+                            {...(item.props.type === "Combo" ? { options: item.props.options } : {})} > </FieldControl>)
 
 
                         return retValue;

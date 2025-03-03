@@ -123,13 +123,7 @@ export const onCreateCompany = /* GraphQL */ `
     onCreateCompany(filter: $filter) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -141,13 +135,7 @@ export const onUpdateCompany = /* GraphQL */ `
     onUpdateCompany(filter: $filter) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -159,13 +147,7 @@ export const onDeleteCompany = /* GraphQL */ `
     onDeleteCompany(filter: $filter) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -187,6 +169,7 @@ export const onCreateStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename
@@ -213,6 +196,7 @@ export const onUpdateStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename
@@ -239,6 +223,7 @@ export const onDeleteStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename

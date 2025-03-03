@@ -141,13 +141,7 @@ export const createCompany = /* GraphQL */ `
     createCompany(input: $input, condition: $condition) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -162,13 +156,7 @@ export const updateCompany = /* GraphQL */ `
     updateCompany(input: $input, condition: $condition) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -183,13 +171,7 @@ export const deleteCompany = /* GraphQL */ `
     deleteCompany(input: $input, condition: $condition) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -214,6 +196,7 @@ export const createStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename
@@ -243,6 +226,7 @@ export const updateStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename
@@ -272,6 +256,7 @@ export const deleteStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename

@@ -124,13 +124,7 @@ export const getCompany = /* GraphQL */ `
     getCompany(Id: $Id) {
       Id
       name
-      industry {
-        Id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
+      industryId
       createdAt
       updatedAt
       __typename
@@ -155,6 +149,7 @@ export const listCompanies = /* GraphQL */ `
       items {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename
@@ -179,6 +174,7 @@ export const getStock = /* GraphQL */ `
       company {
         Id
         name
+        industryId
         createdAt
         updatedAt
         __typename
@@ -357,6 +353,36 @@ export const listTrades = /* GraphQL */ `
         isBuy
         price
         tranDate
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userProfilesByUserIdAndId = /* GraphQL */ `
+  query UserProfilesByUserIdAndId(
+    $userId: String!
+    $Id: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userProfilesByUserIdAndId(
+      userId: $userId
+      Id: $Id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        userId
+        userName
         createdAt
         updatedAt
         __typename

@@ -5,8 +5,11 @@ import AppSync from "../AppSync";
 import Dialog from "../dialog";
 import Exchange from "../forms/exchange/exchange";
 import IndustrySector from "../forms/industrySector/industrySector";
+import Company from "../forms/company/company";
 
 class Setting extends React.Component {
+    #height = "300px";
+
     loadData() {
         
     }
@@ -22,6 +25,8 @@ class Setting extends React.Component {
         this.addItem = this.addItem.bind(this);
         this.editItem = this.editItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+
+        this.#height = props.height;
     }
 
     componentDidMount() {
@@ -55,7 +60,7 @@ class Setting extends React.Component {
     renderSetting(settingElem) {
         const colNames = this.getColumnNames()
         return (
-            <div className="settingContainer">
+            <div style={{height: this.#height}} className="settingContainer" >
                 <div className="settingHeader">
                     <h4>{this.props.Name}</h4>
                     {this.state.selectedItem && <button onClick={this.deleteItem}>-</button>}
@@ -177,6 +182,30 @@ class IndustrySectorSetting extends Setting {
 
 }
 
+class CompanySetting extends Setting {
+    
+    loadData() {
+        AppSync.getCompanies().then(data => {
+            super.setData(data);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+    getColumnNames() {
+        return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}]
+    }
+    addItem() {
+        Dialog.showDialog(Company)
+    }
+    editItem() {
+        Dialog.showDialog(Company, this.state.selectedItem)
+    }
+    deleteItem() {
+        AppSync.deleteCompany(this.state.selectedItem);
+    }
+
+}
+
 export default class Settings extends Page {
 
     constructor(props) {
@@ -185,8 +214,9 @@ export default class Settings extends Page {
     renderPage(contentElem) {
         return super.renderPage(
             <div className="spContainer">
-                <IndustrySectorSetting Name="Industry Sectors" IsAdd={true} />
-                <ExchangeSetting Name="Exchange" IsAdd={true} />
+                <IndustrySectorSetting Name="Industry Sectors" IsAdd={true} height="300px" />
+                <ExchangeSetting Name="Exchanges" IsAdd={true} height="300px" />
+                <CompanySetting Name="Companies" IsAdd={true} height="300px" />
             </div>
         )
     }

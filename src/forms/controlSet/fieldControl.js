@@ -7,15 +7,18 @@ class FieldControl extends ControlBase {
     #onChangeHandler;
     #lableStyle = {}
     #inputStyle = {}
+    #type = "Text"
 
     constructor(props) {
         super();
         this.state = {
             fieldValue: props.value,
+            optionsPromise: props.options,
+            options: null,
         }
         this.#fieldCaption = props.caption;
         this.#onChangeHandler = props.onChange;
-
+        this.#type = props.type;
         this.#lableStyle.width = props.lableSize;
 
         if(props.inputSize !== undefined && props.inputSize != null && props.inputSize.trim() !== '') {
@@ -30,6 +33,26 @@ class FieldControl extends ControlBase {
 
         this.renderDialog = this.renderDialog.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
+
+        if(this.#type == "Combo" && this.state.options == null) {
+            props.options.then(res => {
+                this.setState({
+                    fieldValue: this.state.fieldValue,
+                    optionsPromise: this.state.optionsPromise,
+                    options: res.map(item => item.name),
+                });
+                if(res.length > 0) {
+                    if(this.state.fieldValue != undefined) {
+                        this.onValueChange({target: this.state.fieldValue});
+                    } else {
+                        this.onValueChange({target: {value: res[0].name}});
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            this.state.options = [props.value]
+        }
     }
 
     onValueChange(event) {
@@ -46,7 +69,34 @@ class FieldControl extends ControlBase {
                     </td>
                     <td>
                         <div style={this.#inputStyle}>
-                            <input type="text" style={{width: "100%"}} value={this.state.fieldValue} onChange={this.onValueChange} ></input>
+                            {(() => {
+                                switch (this.#type) {
+                                case "Combo":
+                                    return (
+                                        <select
+                                            style={{ width: "100%" }}
+                                            value={this.state.fieldValue}
+                                            onChange={this.onValueChange}
+                                        >
+                                            {this.state.options.map((item, index) => (
+                                                <option key={index} value={item}>
+                                                {item}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        );
+                                    break;
+                                default:
+                                    return (
+                                    <input
+                                        type="text"
+                                        style={{ width: "100%" }}
+                                        value={this.state.fieldValue}
+                                        onChange={this.onValueChange}
+                                    />
+                                    );
+                                }
+                            })()}
                         </div>
                     </td>
                 </tr>

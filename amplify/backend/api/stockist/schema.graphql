@@ -26,7 +26,7 @@ type Company @model
 {
   Id: ID! @primaryKey
   name: String!
-  industry: IndustrySector!
+  industryId: ID!
 }
 
 type Stock @model 

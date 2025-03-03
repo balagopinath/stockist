@@ -24,18 +24,22 @@ export default function CompanyCreateForm(props) {
   const initialValues = {
     Id: "",
     name: "",
+    industryId: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
   const [name, setName] = React.useState(initialValues.name);
+  const [industryId, setIndustryId] = React.useState(initialValues.industryId);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setId(initialValues.Id);
     setName(initialValues.name);
+    setIndustryId(initialValues.industryId);
     setErrors({});
   };
   const validations = {
     Id: [{ type: "Required" }],
     name: [{ type: "Required" }],
+    industryId: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -65,6 +69,7 @@ export default function CompanyCreateForm(props) {
         let modelFields = {
           Id,
           name,
+          industryId,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -129,6 +134,7 @@ export default function CompanyCreateForm(props) {
             const modelFields = {
               Id: value,
               name,
+              industryId,
             };
             const result = onChange(modelFields);
             value = result?.Id ?? value;
@@ -154,6 +160,7 @@ export default function CompanyCreateForm(props) {
             const modelFields = {
               Id,
               name: value,
+              industryId,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -167,6 +174,32 @@ export default function CompanyCreateForm(props) {
         errorMessage={errors.name?.errorMessage}
         hasError={errors.name?.hasError}
         {...getOverrideProps(overrides, "name")}
+      ></TextField>
+      <TextField
+        label="Industry id"
+        isRequired={true}
+        isReadOnly={false}
+        value={industryId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Id,
+              name,
+              industryId: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.industryId ?? value;
+          }
+          if (errors.industryId?.hasError) {
+            runValidationTasks("industryId", value);
+          }
+          setIndustryId(value);
+        }}
+        onBlur={() => runValidationTasks("industryId", industryId)}
+        errorMessage={errors.industryId?.errorMessage}
+        hasError={errors.industryId?.hasError}
+        {...getOverrideProps(overrides, "industryId")}
       ></TextField>
       <Flex
         justifyContent="space-between"

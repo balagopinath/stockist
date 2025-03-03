@@ -177,10 +177,20 @@ class AppSync {
     }
 
 
-    static getIndustrySectors(Id) {
+    static getIndustrySectors() {
 
         return new Promise((resolve, reject) => {
             API.graphql(graphqlOperation(queries.listIndustrySectors))
+            .then(data => {
+                resolve(data.data.listIndustrySectors.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static getIndustrySector(Id) {
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.getIndustrySector(Id)))
             .then(data => {
                 resolve(data.data.listIndustrySectors.items)
             }).catch(err => {
@@ -223,6 +233,72 @@ class AppSync {
   
             };
             API.graphql(graphqlOperation(mutations.deleteIndustrySector,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+
+
+    static getCompanies() {
+
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.listCompanies))
+            .then(data => {
+                resolve(data.data.listCompanies.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static getCompany(Id) {
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.getCompany(Id)))
+            .then(data => {
+                resolve(data.data.listCompanies.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static addCompany(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                name: data.name,
+                industry: data.industry
+            };
+            API.graphql(graphqlOperation(mutations.createCompany,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static editCompany(data, Id) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                name: data.name,
+                industry: data.industry
+            };
+            API.graphql(graphqlOperation(mutations.updateCompany,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static deleteCompany(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+              };
+            API.graphql(graphqlOperation(mutations.deleteCompany,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {

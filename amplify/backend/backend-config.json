@@ -1,27 +1,5 @@
 {
   "api": {
-    "AdminQueries": {
-      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "stockist23ba6881"
-        },
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "AdminQueries2859d7c8"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
     "stockist": {
       "dependsOn": [],
       "output": {
@@ -40,7 +18,7 @@
     }
   },
   "auth": {
-    "stockist23ba6881": {
+    "stockist1b465968": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -68,57 +46,76 @@
     }
   },
   "function": {
-    "AdminQueries2859d7c8": {
+    "stockist7fc744a0CreateAuthChallenge": {
       "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "stockist23ba6881"
-        }
-      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "stockist7fc744a0DefineAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "stockist7fc744a0VerifyAuthChallengeResponse": {
+      "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
-  "hosting": {
-    "amplifyhosting": {
-      "service": "amplifyhosting",
-      "type": "cicd"
-    }
-  },
   "parameters": {
-    "AMPLIFY_function_AdminQueries2859d7c8_deploymentBucketName": {
+    "AMPLIFY_function_stockist7fc744a0CreateAuthChallenge_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "AdminQueries2859d7c8"
+          "resourceName": "stockist7fc744a0CreateAuthChallenge"
         }
       ]
     },
-    "AMPLIFY_function_AdminQueries2859d7c8_s3Key": {
+    "AMPLIFY_function_stockist7fc744a0CreateAuthChallenge_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "AdminQueries2859d7c8"
+          "resourceName": "stockist7fc744a0CreateAuthChallenge"
         }
       ]
     },
-    "AMPLIFY_hosting_amplifyhosting_appId": {
+    "AMPLIFY_function_stockist7fc744a0DefineAuthChallenge_deploymentBucketName": {
       "usedBy": [
         {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
+          "category": "function",
+          "resourceName": "stockist7fc744a0DefineAuthChallenge"
         }
       ]
     },
-    "AMPLIFY_hosting_amplifyhosting_type": {
+    "AMPLIFY_function_stockist7fc744a0DefineAuthChallenge_s3Key": {
       "usedBy": [
         {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
+          "category": "function",
+          "resourceName": "stockist7fc744a0DefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist7fc744a0VerifyAuthChallengeResponse_RECAPTCHASECRET": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist7fc744a0VerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist7fc744a0VerifyAuthChallengeResponse_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist7fc744a0VerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_stockist7fc744a0VerifyAuthChallengeResponse_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stockist7fc744a0VerifyAuthChallengeResponse"
         }
       ]
     }
