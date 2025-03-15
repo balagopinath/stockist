@@ -124,6 +124,13 @@ export const onCreateCompany = /* GraphQL */ `
       Id
       name
       industryId
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -136,6 +143,13 @@ export const onUpdateCompany = /* GraphQL */ `
       Id
       name
       industryId
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -148,6 +162,13 @@ export const onDeleteCompany = /* GraphQL */ `
       Id
       name
       industryId
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

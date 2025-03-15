@@ -34,14 +34,20 @@ class Setting extends React.Component {
     }
 
     setData(data) {
+        var selectedItem = null;
         const updatedData = data.map(item => {
             return {
                 ...item,
                 isSelected: false, // Set isSelected to false for each item
             };
         });
-    
-        this.setState({ data: updatedData });
+        
+        if(this.state.selectedItem != null) {
+           selectedItem = updatedData.find(item =>  item.Id === this.state.selectedItem.Id); 
+            if(selectedItem)
+                selectedItem.isSelected = true;
+        }
+        this.setState({ data: updatedData, selectedItem: selectedItem });
 
     }
     addItem() {
@@ -99,7 +105,7 @@ class Setting extends React.Component {
                             {this.state.data != null && this.state.data.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     <td>
-                                        <input type="radio" name={this.props.Name} value={row.isSelected} onChange={() => this.setSelected(row)} />
+                                        <input type="radio" name={this.props.Name} checked={row.isSelected} onChange={() => this.setSelected(row)} />
                                     </td>
                                     {colNames.map((col, colIndex) => (
                                         <td
@@ -147,10 +153,14 @@ class ExchangeSetting extends Setting {
         return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}, {name: "code", size:"100px"}]
     }
     addItem() {
-        Dialog.showDialog(Exchange)
+       Dialog.showDialog(Exchange).then(() => {
+            this.loadData();
+       })
     }
     editItem() {
-        Dialog.showDialog(Exchange, this.state.selectedItem)
+        Dialog.showDialog(Exchange, this.state.selectedItem).then(() => {
+            this.loadData()
+        })
     }
     deleteItem() {
         AppSync.deleteExchange(this.state.selectedItem);

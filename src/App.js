@@ -56,4 +56,4 @@ function App({signOut, user}) {
   );
 } 
  
-export default withDialog(withAuthenticator(App));
+export default withAuthenticator(withDialog(App));

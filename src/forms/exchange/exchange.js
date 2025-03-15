@@ -41,8 +41,8 @@ class Exchange extends Dialog {
                     super.hide();
                 });
             } else {
-                const res = await AppSync.getExchanges(this.state.id)
-                data = res[0]
+                const res = await AppSync.getExchange(this.state.id)
+                data = res
                 data.Id = this.state.id
                 data.name = this.state.name
                 data.code = this.state.code

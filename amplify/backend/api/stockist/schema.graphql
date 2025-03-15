@@ -27,6 +27,7 @@ type Company @model
   Id: ID! @primaryKey
   name: String!
   industryId: ID!
+  industry: IndustrySector! @hasOne(fields: ["industryId"])
 }
 
 type Stock @model 

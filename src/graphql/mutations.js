@@ -142,6 +142,13 @@ export const createCompany = /* GraphQL */ `
       Id
       name
       industryId
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -157,6 +164,13 @@ export const updateCompany = /* GraphQL */ `
       Id
       name
       industryId
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -172,6 +186,13 @@ export const deleteCompany = /* GraphQL */ `
       Id
       name
       industryId
+      industry {
+        Id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

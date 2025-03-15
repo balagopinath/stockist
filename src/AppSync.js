@@ -109,23 +109,21 @@ class AppSync {
     }
     
     static getExchanges() {
-        if(AppSync.#getExchangesQuery == null) {
-            AppSync.#getExchangesQuery = new Promise((resolve, reject) => {
-                API.graphql(graphqlOperation(queries.listExchanges))
-                .then(data => {
-                    resolve(data.data.listExchanges.items)
-                }).catch(err => {
-                    reject(err)
-                });
-            })
-        }
+        AppSync.#getExchangesQuery = new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.listExchanges))
+            .then(data => {
+                resolve(data.data.listExchanges.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
         return AppSync.#getExchangesQuery;
     }
     static getExchange(Id) {
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.getExchange(Id)))
+            API.graphql(graphqlOperation(queries.getExchange, { Id }))
             .then(data => {
-                resolve(data.data.listExchanges.items)
+                resolve(data.data.getExchange)
             }).catch(err => {
                 reject(err)
             });
@@ -190,9 +188,9 @@ class AppSync {
     }
     static getIndustrySector(Id) {
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.getIndustrySector(Id)))
+            API.graphql(graphqlOperation(queries.getIndustrySector, { Id }))
             .then(data => {
-                resolve(data.data.listIndustrySectors.items)
+                resolve(data.data.getIndustrySector)
             }).catch(err => {
                 reject(err)
             });
@@ -255,9 +253,9 @@ class AppSync {
     }
     static getCompany(Id) {
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.getCompany(Id)))
+            API.graphql(graphqlOperation(queries.getCompany, { Id }))
             .then(data => {
-                resolve(data.data.listCompanies.items)
+                resolve(data.data.getCompany)
             }).catch(err => {
                 reject(err)
             });
@@ -268,7 +266,7 @@ class AppSync {
             const input = {
                 Id: data.Id,
                 name: data.name,
-                industry: data.industry
+                industryId: data.industryId
             };
             API.graphql(graphqlOperation(mutations.createCompany,  { input }))
             .then(data => {
@@ -283,7 +281,7 @@ class AppSync {
             const input = {
                 Id: data.Id,
                 name: data.name,
-                industry: data.industry
+                industryId: data.industryId
             };
             API.graphql(graphqlOperation(mutations.updateCompany,  { input }))
             .then(data => {

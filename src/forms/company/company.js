@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 
 class Company extends Dialog {
     #industries = [];
+
     constructor(props) {
         super();
 
@@ -21,7 +22,7 @@ class Company extends Dialog {
             this.state.mode = "Edit";
             this.state.id =  props.dataContext.Id;
             this.state.name = props.dataContext.name;
-            this.state.industry = props.dataContext.industry;
+            this.state.industry = props.dataContext.industryId;
         }
         else
             this.state.mode = "Add";
@@ -41,7 +42,7 @@ class Company extends Dialog {
         if(actionName === "Save") {
             var data;
             if(this.state.mode === "Add") {
-                data = {Id: uuidv4(), name: this.state.name, industry: this.state.industry}
+                data = {Id: uuidv4(), name: this.state.name, industryId: this.state.industry}
                 AppSync.addCompany(data).then(res => {
                     super.hide();
                 }).catch(err => {
@@ -49,10 +50,10 @@ class Company extends Dialog {
                 });
             } else {
                 const res = await AppSync.getCompany(this.state.id)
-                data = res[0]
+                data = res
                 data.Id = this.state.id
                 data.name = this.state.name
-                data.industry = this.state.industry
+                data.industryId = this.state.industry
 
                 AppSync.editCompany(data, data.Id).then(res => {
                     super.hide();
@@ -73,7 +74,7 @@ class Company extends Dialog {
     }
 
     setIndustry(event) {
-        this.state.industry = this.#industries.find(item => item.name === event.target.value);
+        this.state.industry = event.target.value;
         this.setState(this.state)
     }
 

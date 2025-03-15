@@ -39,7 +39,7 @@ class IndustrySector extends Dialog {
                 });
             } else {
                 const res = await AppSync.getIndustrySector(this.state.id)
-                data = res[0]
+                data = res
                 data.Id = this.state.id
                 data.name = this.state.name
 

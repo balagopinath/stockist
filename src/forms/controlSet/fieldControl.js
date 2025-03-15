@@ -33,74 +33,87 @@ class FieldControl extends ControlBase {
 
         this.renderDialog = this.renderDialog.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
+        this.onOptionsReceived = this.onOptionsReceived.bind(this);
 
-        if(this.#type == "Combo" && this.state.options == null) {
-            props.options.then(res => {
-                this.setState({
-                    fieldValue: this.state.fieldValue,
-                    optionsPromise: this.state.optionsPromise,
-                    options: res.map(item => item.name),
-                });
-                if(res.length > 0) {
-                    if(this.state.fieldValue != undefined) {
-                        this.onValueChange({target: this.state.fieldValue});
-                    } else {
-                        this.onValueChange({target: {value: res[0].name}});
-                    }
-                }
+        this.state.options = [{ Id: props.value, name: '' }]
+    }
+
+    componentDidMount() {
+        if(this.#type == "Combo") {
+            this.props.options.then(res => {
+                this.onOptionsReceived(res);
             }).catch(err => {
                 console.log(err);
             });
-            this.state.options = [props.value]
+
+        }
+    }
+
+    onOptionsReceived(res) {
+        this.setState({
+            optionsPromise: this.state.optionsPromise,
+            options: res.map(item => (
+                { Id: item.Id, name: item.name }
+            )),
+        });
+        if(res.length > 0) {
+            if(this.props.value != undefined) {
+                this.#onChangeHandler({target: {value: this.props.value}});
+            } else {
+                this.#onChangeHandler({target: {value: res[0].Id}});
+            }
         }
     }
 
     onValueChange(event) {
-        this.setState({fieldValue: event.target.value})
+        this.state.fieldValue = event.target.value;
+        this.setState(this.state);
         this.#onChangeHandler(event);
     }
 
     renderDialog(contentElement) {
         return <div className="fieldContainer">
             <table style={{width: "100%"}}>
-                <tr style={{height: "30px"}}>
-                    <td style={this.#lableStyle}>
-                        <span style={this.#lableStyle}>{this.#fieldCaption}</span>
-                    </td>
-                    <td>
-                        <div style={this.#inputStyle}>
-                            {(() => {
-                                switch (this.#type) {
-                                case "Combo":
-                                    return (
-                                        <select
+                <tbody>
+                    <tr style={{height: "30px"}}>
+                        <td style={this.#lableStyle}>
+                            <span style={this.#lableStyle}>{this.#fieldCaption}</span>
+                        </td>
+                        <td>
+                            <div style={this.#inputStyle}>
+                                {(() => {
+                                    switch (this.#type) {
+                                    case "Combo":
+                                        return (
+                                            <select
+                                                style={{ width: "100%" }}
+                                                onChange={this.onValueChange}
+                                                value={this.state.fieldValue}
+                                            >
+                                                {this.state.options.map((item, index) => (
+                                                    <option key={index} value={item.Id}>
+                                                    {item.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            );
+                                        break;
+                                    default:
+                                        return (
+                                        <input
+                                            type="text"
                                             style={{ width: "100%" }}
                                             value={this.state.fieldValue}
                                             onChange={this.onValueChange}
-                                        >
-                                            {this.state.options.map((item, index) => (
-                                                <option key={index} value={item}>
-                                                {item}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        />
                                         );
-                                    break;
-                                default:
-                                    return (
-                                    <input
-                                        type="text"
-                                        style={{ width: "100%" }}
-                                        value={this.state.fieldValue}
-                                        onChange={this.onValueChange}
-                                    />
-                                    );
-                                }
-                            })()}
-                        </div>
-                    </td>
-                </tr>
-                <tr />
+                                    }
+                                })()}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr />
+                </tbody>
             </table>
             
 
