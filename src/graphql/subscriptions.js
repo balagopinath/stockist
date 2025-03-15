@@ -86,6 +86,10 @@ export const onCreateIndustrySector = /* GraphQL */ `
     onCreateIndustrySector(filter: $filter) {
       Id
       name
+      companies {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -99,6 +103,10 @@ export const onUpdateIndustrySector = /* GraphQL */ `
     onUpdateIndustrySector(filter: $filter) {
       Id
       name
+      companies {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -112,6 +120,10 @@ export const onDeleteIndustrySector = /* GraphQL */ `
     onDeleteIndustrySector(filter: $filter) {
       Id
       name
+      companies {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename

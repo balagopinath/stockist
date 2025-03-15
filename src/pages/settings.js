@@ -181,10 +181,15 @@ class IndustrySectorSetting extends Setting {
         return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}]
     }
     addItem() {
-        Dialog.showDialog(IndustrySector)
+        Dialog.showDialog(IndustrySector).then(() => {
+            this.loadData();
+       })
     }
     editItem() {
-        Dialog.showDialog(IndustrySector, this.state.selectedItem)
+        Dialog.showDialog(IndustrySector, this.state.selectedItem).then(() => {
+            this.loadData();
+       })
+        
     }
     deleteItem() {
         AppSync.deleteExchange(this.state.selectedItem);
@@ -196,19 +201,23 @@ class CompanySetting extends Setting {
     
     loadData() {
         AppSync.getCompanies().then(data => {
-            super.setData(data);
+            super.setData(data.map(x => ({...x, industryName: x.industry.name }) ));
         }).catch(err => {
             console.log(err);
         })
     }
     getColumnNames() {
-        return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}]
+        return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}, {name: "industryName", size:"Flex"}]
     }
     addItem() {
-        Dialog.showDialog(Company)
+        Dialog.showDialog(Company).then(() => {
+            this.loadData();
+       })
     }
     editItem() {
-        Dialog.showDialog(Company, this.state.selectedItem)
+        Dialog.showDialog(Company, this.state.selectedItem).then(() => {
+            this.loadData();
+       })
     }
     deleteItem() {
         AppSync.deleteCompany(this.state.selectedItem);

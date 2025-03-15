@@ -20,14 +20,15 @@ type IndustrySector @model
 {
   Id: ID! @primaryKey
   name: String!
+  companies: [Company] @hasMany(indexName: "byIndustrySector", fields: ["Id"])
 }
 
 type Company @model
 {
   Id: ID! @primaryKey
   name: String!
-  industryId: ID!
-  industry: IndustrySector! @hasOne(fields: ["industryId"])
+  industryId: ID! @index(name: "byIndustrySector")
+  industry: IndustrySector! @belongsTo(fields: ["industryId"])
 }
 
 type Stock @model 

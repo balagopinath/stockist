@@ -86,6 +86,10 @@ export const getIndustrySector = /* GraphQL */ `
     getIndustrySector(Id: $Id) {
       Id
       name
+      companies {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -159,6 +163,10 @@ export const listCompanies = /* GraphQL */ `
         industryId
         createdAt
         updatedAt
+        industry {
+          Id
+          name
+        }        
         __typename
       }
       nextToken
@@ -390,6 +398,34 @@ export const userProfilesByUserIdAndId = /* GraphQL */ `
         Id
         userId
         userName
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const companiesByIndustryId = /* GraphQL */ `
+  query CompaniesByIndustryId(
+    $industryId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    companiesByIndustryId(
+      industryId: $industryId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        name
+        industryId
         createdAt
         updatedAt
         __typename
