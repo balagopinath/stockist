@@ -47,6 +47,10 @@ export const getExchange = /* GraphQL */ `
       Id
       name
       code
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -136,6 +140,10 @@ export const getCompany = /* GraphQL */ `
         updatedAt
         __typename
       }
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -161,12 +169,15 @@ export const listCompanies = /* GraphQL */ `
         Id
         name
         industryId
-        createdAt
-        updatedAt
         industry {
           Id
           name
-        }        
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
         __typename
       }
       nextToken
@@ -178,6 +189,7 @@ export const getStock = /* GraphQL */ `
   query GetStock($Id: ID!) {
     getStock(Id: $Id) {
       Id
+      exchangeId
       exchange {
         Id
         name
@@ -186,6 +198,7 @@ export const getStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      companyId
       company {
         Id
         name
@@ -218,6 +231,8 @@ export const listStocks = /* GraphQL */ `
     ) {
       items {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -234,6 +249,8 @@ export const getStockTick = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -281,6 +298,8 @@ export const getStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -426,6 +445,72 @@ export const companiesByIndustryId = /* GraphQL */ `
         Id
         name
         industryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const stocksByExchangeId = /* GraphQL */ `
+  query StocksByExchangeId(
+    $exchangeId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStockFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    stocksByExchangeId(
+      exchangeId: $exchangeId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        exchangeId
+        companyId
+        code
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const stocksByCompanyId = /* GraphQL */ `
+  query StocksByCompanyId(
+    $companyId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStockFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    stocksByCompanyId(
+      companyId: $companyId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        exchangeId
+        exchange {
+          Id
+          name
+          code
+          createdAt
+          updatedAt
+          __typename
+        }
+        companyId
+        code
         createdAt
         updatedAt
         __typename

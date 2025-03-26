@@ -2,6 +2,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
 
+
 const { v4: uuidv4 } = require('uuid');
 
 class AppSync {
@@ -297,6 +298,83 @@ class AppSync {
                 Id: data.Id,
               };
             API.graphql(graphqlOperation(mutations.deleteCompany,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static getStocksByCompany(companyId) {
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.stocksByCompanyId, { companyId }))
+            .then(data => {
+                resolve(data.data.stocksByCompanyId.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+
+    static getStocks() {
+
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.listStocks))
+            .then(data => {
+                resolve(data.data.listStocks.items)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static getStock(Id) {
+        return new Promise((resolve, reject) => {
+            API.graphql(graphqlOperation(queries.getStock, { Id }))
+            .then(data => {
+                resolve(data.data.getStock)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static addStock(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                code: data.code,
+                companyId: data.companyId,
+                exchangeId: data.exchangeId
+            };
+            API.graphql(graphqlOperation(mutations.createStock,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static editStock(data, Id) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+                code: data.code,
+                companyId: data.companyId,
+                exchangeId: data.exchangeId
+            };
+            API.graphql(graphqlOperation(mutations.updateStock,  { input }))
+            .then(data => {
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            });
+        })
+    }
+    static deleteStock(data) {
+        return new Promise((resolve, reject) => {
+            const input = {
+                Id: data.Id,
+              };
+            API.graphql(graphqlOperation(mutations.deleteStock,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {

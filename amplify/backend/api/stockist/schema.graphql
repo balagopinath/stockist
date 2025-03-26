@@ -14,6 +14,7 @@ type Exchange @model
   Id: ID! @primaryKey
   name: String!
   code: String!
+  stocks: [Stock] @hasMany(indexName: "byExchange", fields: ["Id"])
 }
 
 type IndustrySector @model
@@ -29,13 +30,17 @@ type Company @model
   name: String!
   industryId: ID! @index(name: "byIndustrySector")
   industry: IndustrySector! @belongsTo(fields: ["industryId"])
+  stocks: [Stock] @hasMany(indexName: "byCompany", fields: ["Id"])
+
 }
 
 type Stock @model 
 {
   Id: ID! @primaryKey
-  exchange: Exchange!
-  company: Company!
+  exchangeId: ID! @index(name: "byExchange")
+  exchange: Exchange! @belongsTo(fields: ["exchangeId"])
+  companyId: ID!  @index(name: "byCompany")
+  company: Company! @belongsTo(fields: ["companyId"])
   code: String!
 }
 
@@ -63,3 +68,4 @@ type Trade @model
   price: Float!
   tranDate: AWSDateTime!
 }
+

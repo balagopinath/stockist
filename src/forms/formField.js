@@ -3,6 +3,7 @@ class FormField {
     #type = '';
     #width = 50;
     #isMust = false;
+    #gridCols = [];
 
 
     constructor(props) {
@@ -12,6 +13,18 @@ class FormField {
             this.#width = Number(props.inputSize);
         }
         this.#isMust = props.isMust;
+
+        switch(this.type) {
+            case "Grid":
+                if(Array.isArray(props.children)) {
+                    props.children.forEach(item => {
+                        this.#gridCols.push(item);
+                    });
+                } else {
+                    this.#gridCols.push(props.children);
+                }
+                break;
+        }
     }
     getName() {
         return this.#name;
@@ -23,5 +36,10 @@ class FormField {
         return this.#width;
     }
 }
+
+export class GridColumnField {
+
+}
+
 
 export default FormField;

@@ -69,6 +69,17 @@ class FormBase extends React.Component {
     }
 
 
+    shouldComponentUpdate(nextProps, nextState) {
+        this.#fields = [];
+        if(Array.isArray(nextProps.children)) {
+            nextProps.children.forEach(item => {
+                this.#fields.push(item);
+            });
+        } else {
+            this.#fields.push(nextProps.children);
+        }
+        return true;
+    }
 
     render() {
         return (<div className="formContainer" style={this.#formStyle}>
@@ -81,7 +92,8 @@ class FormBase extends React.Component {
                         var retValue = null;
 
                         retValue = (<FieldControl key={index} caption={item.props.name} type={item.props.type} lableSize={this.#lableSize} inputSize={item.props.width} value={item.props.value} onChange={item.props.onChange} 
-                            {...(item.props.type === "Combo" ? { options: item.props.options } : {})} > </FieldControl>)
+                            {...(item.props.type === "Combo" ? { options: item.props.options } : {})}
+                            {...(item.props.type === "Grid" ? { columns: item.props.children, onAddClicked: item.props.onAddClicked, onEditClicked: item.props.onEditClicked, onDeleteClicked: item.props.onDeleteClicked } : {})} > </FieldControl>)
 
 
                         return retValue;

@@ -49,6 +49,10 @@ export const onCreateExchange = /* GraphQL */ `
       Id
       name
       code
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -61,6 +65,10 @@ export const onUpdateExchange = /* GraphQL */ `
       Id
       name
       code
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -73,6 +81,10 @@ export const onDeleteExchange = /* GraphQL */ `
       Id
       name
       code
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -143,6 +155,10 @@ export const onCreateCompany = /* GraphQL */ `
         updatedAt
         __typename
       }
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -160,6 +176,10 @@ export const onUpdateCompany = /* GraphQL */ `
         name
         createdAt
         updatedAt
+        __typename
+      }
+      stocks {
+        nextToken
         __typename
       }
       createdAt
@@ -181,6 +201,10 @@ export const onDeleteCompany = /* GraphQL */ `
         updatedAt
         __typename
       }
+      stocks {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -191,6 +215,7 @@ export const onCreateStock = /* GraphQL */ `
   subscription OnCreateStock($filter: ModelSubscriptionStockFilterInput) {
     onCreateStock(filter: $filter) {
       Id
+      exchangeId
       exchange {
         Id
         name
@@ -199,6 +224,7 @@ export const onCreateStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      companyId
       company {
         Id
         name
@@ -218,6 +244,7 @@ export const onUpdateStock = /* GraphQL */ `
   subscription OnUpdateStock($filter: ModelSubscriptionStockFilterInput) {
     onUpdateStock(filter: $filter) {
       Id
+      exchangeId
       exchange {
         Id
         name
@@ -226,6 +253,7 @@ export const onUpdateStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      companyId
       company {
         Id
         name
@@ -245,6 +273,7 @@ export const onDeleteStock = /* GraphQL */ `
   subscription OnDeleteStock($filter: ModelSubscriptionStockFilterInput) {
     onDeleteStock(filter: $filter) {
       Id
+      exchangeId
       exchange {
         Id
         name
@@ -253,6 +282,7 @@ export const onDeleteStock = /* GraphQL */ `
         updatedAt
         __typename
       }
+      companyId
       company {
         Id
         name
@@ -276,6 +306,8 @@ export const onCreateStockTick = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -297,6 +329,8 @@ export const onUpdateStockTick = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -318,6 +352,8 @@ export const onDeleteStockTick = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -339,6 +375,8 @@ export const onCreateStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -367,6 +405,8 @@ export const onUpdateStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
@@ -395,6 +435,8 @@ export const onDeleteStockUserAssociation = /* GraphQL */ `
       Id
       stock {
         Id
+        exchangeId
+        companyId
         code
         createdAt
         updatedAt
