@@ -25,10 +25,12 @@ export default function StockTickUpdateForm(props) {
   } = props;
   const initialValues = {
     Id: "",
+    stockId: "",
     LTP: "",
     tickTime: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
+  const [stockId, setStockId] = React.useState(initialValues.stockId);
   const [LTP, setLTP] = React.useState(initialValues.LTP);
   const [tickTime, setTickTime] = React.useState(initialValues.tickTime);
   const [errors, setErrors] = React.useState({});
@@ -37,6 +39,7 @@ export default function StockTickUpdateForm(props) {
       ? { ...initialValues, ...stockTickRecord }
       : initialValues;
     setId(cleanValues.Id);
+    setStockId(cleanValues.stockId);
     setLTP(cleanValues.LTP);
     setTickTime(cleanValues.tickTime);
     setErrors({});
@@ -60,6 +63,7 @@ export default function StockTickUpdateForm(props) {
   React.useEffect(resetStateValues, [stockTickRecord]);
   const validations = {
     Id: [{ type: "Required" }],
+    stockId: [{ type: "Required" }],
     LTP: [{ type: "Required" }],
     tickTime: [{ type: "Required" }],
   };
@@ -107,6 +111,7 @@ export default function StockTickUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           Id,
+          stockId,
           LTP,
           tickTime,
         };
@@ -170,6 +175,7 @@ export default function StockTickUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Id: value,
+              stockId,
               LTP,
               tickTime,
             };
@@ -187,6 +193,33 @@ export default function StockTickUpdateForm(props) {
         {...getOverrideProps(overrides, "Id")}
       ></TextField>
       <TextField
+        label="Stock id"
+        isRequired={true}
+        isReadOnly={false}
+        value={stockId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Id,
+              stockId: value,
+              LTP,
+              tickTime,
+            };
+            const result = onChange(modelFields);
+            value = result?.stockId ?? value;
+          }
+          if (errors.stockId?.hasError) {
+            runValidationTasks("stockId", value);
+          }
+          setStockId(value);
+        }}
+        onBlur={() => runValidationTasks("stockId", stockId)}
+        errorMessage={errors.stockId?.errorMessage}
+        hasError={errors.stockId?.hasError}
+        {...getOverrideProps(overrides, "stockId")}
+      ></TextField>
+      <TextField
         label="Ltp"
         isRequired={true}
         isReadOnly={false}
@@ -200,6 +233,7 @@ export default function StockTickUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
+              stockId,
               LTP: value,
               tickTime,
             };
@@ -228,6 +262,7 @@ export default function StockTickUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
+              stockId,
               LTP,
               tickTime: value,
             };

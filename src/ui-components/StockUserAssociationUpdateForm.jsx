@@ -25,9 +25,15 @@ export default function StockUserAssociationUpdateForm(props) {
   } = props;
   const initialValues = {
     Id: "",
+    stockId: "",
+    userProfileId: "",
     openingStocks: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
+  const [stockId, setStockId] = React.useState(initialValues.stockId);
+  const [userProfileId, setUserProfileId] = React.useState(
+    initialValues.userProfileId
+  );
   const [openingStocks, setOpeningStocks] = React.useState(
     initialValues.openingStocks
   );
@@ -37,6 +43,8 @@ export default function StockUserAssociationUpdateForm(props) {
       ? { ...initialValues, ...stockUserAssociationRecord }
       : initialValues;
     setId(cleanValues.Id);
+    setStockId(cleanValues.stockId);
+    setUserProfileId(cleanValues.userProfileId);
     setOpeningStocks(cleanValues.openingStocks);
     setErrors({});
   };
@@ -59,6 +67,8 @@ export default function StockUserAssociationUpdateForm(props) {
   React.useEffect(resetStateValues, [stockUserAssociationRecord]);
   const validations = {
     Id: [{ type: "Required" }],
+    stockId: [{ type: "Required" }],
+    userProfileId: [{ type: "Required" }],
     openingStocks: [{ type: "Required" }],
   };
   const runValidationTasks = async (
@@ -88,6 +98,8 @@ export default function StockUserAssociationUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           Id,
+          stockId,
+          userProfileId,
           openingStocks,
         };
         const validationResponses = await Promise.all(
@@ -150,6 +162,8 @@ export default function StockUserAssociationUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Id: value,
+              stockId,
+              userProfileId,
               openingStocks,
             };
             const result = onChange(modelFields);
@@ -166,6 +180,60 @@ export default function StockUserAssociationUpdateForm(props) {
         {...getOverrideProps(overrides, "Id")}
       ></TextField>
       <TextField
+        label="Stock id"
+        isRequired={true}
+        isReadOnly={false}
+        value={stockId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Id,
+              stockId: value,
+              userProfileId,
+              openingStocks,
+            };
+            const result = onChange(modelFields);
+            value = result?.stockId ?? value;
+          }
+          if (errors.stockId?.hasError) {
+            runValidationTasks("stockId", value);
+          }
+          setStockId(value);
+        }}
+        onBlur={() => runValidationTasks("stockId", stockId)}
+        errorMessage={errors.stockId?.errorMessage}
+        hasError={errors.stockId?.hasError}
+        {...getOverrideProps(overrides, "stockId")}
+      ></TextField>
+      <TextField
+        label="User profile id"
+        isRequired={true}
+        isReadOnly={false}
+        value={userProfileId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Id,
+              stockId,
+              userProfileId: value,
+              openingStocks,
+            };
+            const result = onChange(modelFields);
+            value = result?.userProfileId ?? value;
+          }
+          if (errors.userProfileId?.hasError) {
+            runValidationTasks("userProfileId", value);
+          }
+          setUserProfileId(value);
+        }}
+        onBlur={() => runValidationTasks("userProfileId", userProfileId)}
+        errorMessage={errors.userProfileId?.errorMessage}
+        hasError={errors.userProfileId?.hasError}
+        {...getOverrideProps(overrides, "userProfileId")}
+      ></TextField>
+      <TextField
         label="Opening stocks"
         isRequired={true}
         isReadOnly={false}
@@ -179,6 +247,8 @@ export default function StockUserAssociationUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
+              stockId,
+              userProfileId,
               openingStocks: value,
             };
             const result = onChange(modelFields);

@@ -29,17 +29,22 @@ export default function TradeCreateForm(props) {
   } = props;
   const initialValues = {
     Id: "",
+    stockUserId: "",
     isBuy: false,
     price: "",
     tranDate: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
+  const [stockUserId, setStockUserId] = React.useState(
+    initialValues.stockUserId
+  );
   const [isBuy, setIsBuy] = React.useState(initialValues.isBuy);
   const [price, setPrice] = React.useState(initialValues.price);
   const [tranDate, setTranDate] = React.useState(initialValues.tranDate);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setId(initialValues.Id);
+    setStockUserId(initialValues.stockUserId);
     setIsBuy(initialValues.isBuy);
     setPrice(initialValues.price);
     setTranDate(initialValues.tranDate);
@@ -47,6 +52,7 @@ export default function TradeCreateForm(props) {
   };
   const validations = {
     Id: [{ type: "Required" }],
+    stockUserId: [{ type: "Required" }],
     isBuy: [{ type: "Required" }],
     price: [{ type: "Required" }],
     tranDate: [{ type: "Required" }],
@@ -95,6 +101,7 @@ export default function TradeCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           Id,
+          stockUserId,
           isBuy,
           price,
           tranDate,
@@ -161,6 +168,7 @@ export default function TradeCreateForm(props) {
           if (onChange) {
             const modelFields = {
               Id: value,
+              stockUserId,
               isBuy,
               price,
               tranDate,
@@ -178,6 +186,34 @@ export default function TradeCreateForm(props) {
         hasError={errors.Id?.hasError}
         {...getOverrideProps(overrides, "Id")}
       ></TextField>
+      <TextField
+        label="Stock user id"
+        isRequired={true}
+        isReadOnly={false}
+        value={stockUserId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Id,
+              stockUserId: value,
+              isBuy,
+              price,
+              tranDate,
+            };
+            const result = onChange(modelFields);
+            value = result?.stockUserId ?? value;
+          }
+          if (errors.stockUserId?.hasError) {
+            runValidationTasks("stockUserId", value);
+          }
+          setStockUserId(value);
+        }}
+        onBlur={() => runValidationTasks("stockUserId", stockUserId)}
+        errorMessage={errors.stockUserId?.errorMessage}
+        hasError={errors.stockUserId?.hasError}
+        {...getOverrideProps(overrides, "stockUserId")}
+      ></TextField>
       <SwitchField
         label="Is buy"
         defaultChecked={false}
@@ -188,6 +224,7 @@ export default function TradeCreateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
+              stockUserId,
               isBuy: value,
               price,
               tranDate,
@@ -219,6 +256,7 @@ export default function TradeCreateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
+              stockUserId,
               isBuy,
               price: value,
               tranDate,
@@ -248,6 +286,7 @@ export default function TradeCreateForm(props) {
           if (onChange) {
             const modelFields = {
               Id,
+              stockUserId,
               isBuy,
               price,
               tranDate: value,

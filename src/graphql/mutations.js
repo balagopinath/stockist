@@ -261,6 +261,9 @@ export const createStock = /* GraphQL */ `
         __typename
       }
       code
+      LTP
+      LTV
+      TradedAt
       createdAt
       updatedAt
       __typename
@@ -293,6 +296,9 @@ export const updateStock = /* GraphQL */ `
         __typename
       }
       code
+      LTP
+      LTV
+      TradedAt
       createdAt
       updatedAt
       __typename
@@ -325,6 +331,9 @@ export const deleteStock = /* GraphQL */ `
         __typename
       }
       code
+      LTP
+      LTV
+      TradedAt
       createdAt
       updatedAt
       __typename
@@ -338,15 +347,7 @@ export const createStockTick = /* GraphQL */ `
   ) {
     createStockTick(input: $input, condition: $condition) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
       LTP
       tickTime
       createdAt
@@ -362,15 +363,7 @@ export const updateStockTick = /* GraphQL */ `
   ) {
     updateStockTick(input: $input, condition: $condition) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
       LTP
       tickTime
       createdAt
@@ -386,15 +379,7 @@ export const deleteStockTick = /* GraphQL */ `
   ) {
     deleteStockTick(input: $input, condition: $condition) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
       LTP
       tickTime
       createdAt
@@ -410,23 +395,8 @@ export const createStockUserAssociation = /* GraphQL */ `
   ) {
     createStockUserAssociation(input: $input, condition: $condition) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
-      userProfile {
-        Id
-        userId
-        userName
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
+      userProfileId
       openingStocks
       createdAt
       updatedAt
@@ -441,23 +411,8 @@ export const updateStockUserAssociation = /* GraphQL */ `
   ) {
     updateStockUserAssociation(input: $input, condition: $condition) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
-      userProfile {
-        Id
-        userId
-        userName
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
+      userProfileId
       openingStocks
       createdAt
       updatedAt
@@ -472,23 +427,8 @@ export const deleteStockUserAssociation = /* GraphQL */ `
   ) {
     deleteStockUserAssociation(input: $input, condition: $condition) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
-      userProfile {
-        Id
-        userId
-        userName
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
+      userProfileId
       openingStocks
       createdAt
       updatedAt
@@ -503,13 +443,7 @@ export const createTrade = /* GraphQL */ `
   ) {
     createTrade(input: $input, condition: $condition) {
       Id
-      stockUser {
-        Id
-        openingStocks
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockUserId
       isBuy
       price
       tranDate
@@ -526,13 +460,7 @@ export const updateTrade = /* GraphQL */ `
   ) {
     updateTrade(input: $input, condition: $condition) {
       Id
-      stockUser {
-        Id
-        openingStocks
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockUserId
       isBuy
       price
       tranDate
@@ -549,13 +477,7 @@ export const deleteTrade = /* GraphQL */ `
   ) {
     deleteTrade(input: $input, condition: $condition) {
       Id
-      stockUser {
-        Id
-        openingStocks
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockUserId
       isBuy
       price
       tranDate

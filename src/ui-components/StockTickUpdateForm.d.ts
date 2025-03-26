@@ -23,11 +23,13 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type StockTickUpdateFormInputValues = {
     Id?: string;
+    stockId?: string;
     LTP?: number;
     tickTime?: string;
 };
 export declare type StockTickUpdateFormValidationValues = {
     Id?: ValidationFunction<string>;
+    stockId?: ValidationFunction<string>;
     LTP?: ValidationFunction<number>;
     tickTime?: ValidationFunction<string>;
 };
@@ -35,6 +37,7 @@ export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes
 export declare type StockTickUpdateFormOverridesProps = {
     StockTickUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Id?: PrimitiveOverrideProps<TextFieldProps>;
+    stockId?: PrimitiveOverrideProps<TextFieldProps>;
     LTP?: PrimitiveOverrideProps<TextFieldProps>;
     tickTime?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;

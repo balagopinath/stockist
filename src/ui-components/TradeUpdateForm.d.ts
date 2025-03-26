@@ -23,12 +23,14 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type TradeUpdateFormInputValues = {
     Id?: string;
+    stockUserId?: string;
     isBuy?: boolean;
     price?: number;
     tranDate?: string;
 };
 export declare type TradeUpdateFormValidationValues = {
     Id?: ValidationFunction<string>;
+    stockUserId?: ValidationFunction<string>;
     isBuy?: ValidationFunction<boolean>;
     price?: ValidationFunction<number>;
     tranDate?: ValidationFunction<string>;
@@ -37,6 +39,7 @@ export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes
 export declare type TradeUpdateFormOverridesProps = {
     TradeUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Id?: PrimitiveOverrideProps<TextFieldProps>;
+    stockUserId?: PrimitiveOverrideProps<TextFieldProps>;
     isBuy?: PrimitiveOverrideProps<SwitchFieldProps>;
     price?: PrimitiveOverrideProps<TextFieldProps>;
     tranDate?: PrimitiveOverrideProps<TextFieldProps>;

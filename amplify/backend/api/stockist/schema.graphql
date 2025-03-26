@@ -42,12 +42,15 @@ type Stock @model
   companyId: ID!  @index(name: "byCompany")
   company: Company! @belongsTo(fields: ["companyId"])
   code: String!
+  LTP: Float
+  LTV: Int
+  TradedAt: AWSDateTime
 }
 
 type StockTick @model
 {
   Id: ID! @primaryKey
-  stock: Stock!
+  stockId: ID! @index(name: "byStockPrice")
   LTP: Float!
   tickTime: AWSDateTime!
 }
@@ -55,15 +58,15 @@ type StockTick @model
 type StockUserAssociation @model
 {
   Id: ID! @primaryKey
-  stock: Stock!
-  userProfile: UserProfile!
+  stockId: ID! @index(name: "byStockUser")
+  userProfileId: ID! @index(name: "byUserStock")
   openingStocks: Int!
 }
 
 type Trade @model
 {
   Id: ID! @primaryKey
-  stockUser: StockUserAssociation!
+  stockUserId: ID! @index(name: "byStockTrade")
   isBuy: Boolean!
   price: Float!
   tranDate: AWSDateTime!

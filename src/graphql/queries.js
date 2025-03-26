@@ -175,7 +175,7 @@ export const listCompanies = /* GraphQL */ `
           createdAt
           updatedAt
           __typename
-        }
+        }        
         createdAt
         updatedAt
         __typename
@@ -208,6 +208,9 @@ export const getStock = /* GraphQL */ `
         __typename
       }
       code
+      LTP
+      LTV
+      TradedAt
       createdAt
       updatedAt
       __typename
@@ -232,8 +235,19 @@ export const listStocks = /* GraphQL */ `
       items {
         Id
         exchangeId
+        exchange {
+          Id
+          name
+          code
+          createdAt
+          updatedAt
+          __typename
+        }
         companyId
         code
+        LTP
+        LTV
+        TradedAt
         createdAt
         updatedAt
         __typename
@@ -247,15 +261,7 @@ export const getStockTick = /* GraphQL */ `
   query GetStockTick($Id: ID!) {
     getStockTick(Id: $Id) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
       LTP
       tickTime
       createdAt
@@ -281,6 +287,7 @@ export const listStockTicks = /* GraphQL */ `
     ) {
       items {
         Id
+        stockId
         LTP
         tickTime
         createdAt
@@ -296,23 +303,8 @@ export const getStockUserAssociation = /* GraphQL */ `
   query GetStockUserAssociation($Id: ID!) {
     getStockUserAssociation(Id: $Id) {
       Id
-      stock {
-        Id
-        exchangeId
-        companyId
-        code
-        createdAt
-        updatedAt
-        __typename
-      }
-      userProfile {
-        Id
-        userId
-        userName
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockId
+      userProfileId
       openingStocks
       createdAt
       updatedAt
@@ -337,6 +329,8 @@ export const listStockUserAssociations = /* GraphQL */ `
     ) {
       items {
         Id
+        stockId
+        userProfileId
         openingStocks
         createdAt
         updatedAt
@@ -351,13 +345,7 @@ export const getTrade = /* GraphQL */ `
   query GetTrade($Id: ID!) {
     getTrade(Id: $Id) {
       Id
-      stockUser {
-        Id
-        openingStocks
-        createdAt
-        updatedAt
-        __typename
-      }
+      stockUserId
       isBuy
       price
       tranDate
@@ -384,6 +372,7 @@ export const listTrades = /* GraphQL */ `
     ) {
       items {
         Id
+        stockUserId
         isBuy
         price
         tranDate
@@ -474,6 +463,9 @@ export const stocksByExchangeId = /* GraphQL */ `
         exchangeId
         companyId
         code
+        LTP
+        LTV
+        TradedAt
         createdAt
         updatedAt
         __typename
@@ -511,6 +503,126 @@ export const stocksByCompanyId = /* GraphQL */ `
         }
         companyId
         code
+        LTP
+        LTV
+        TradedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const stockTicksByStockId = /* GraphQL */ `
+  query StockTicksByStockId(
+    $stockId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStockTickFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    stockTicksByStockId(
+      stockId: $stockId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        stockId
+        LTP
+        tickTime
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const stockUserAssociationsByStockId = /* GraphQL */ `
+  query StockUserAssociationsByStockId(
+    $stockId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStockUserAssociationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    stockUserAssociationsByStockId(
+      stockId: $stockId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        stockId
+        userProfileId
+        openingStocks
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const stockUserAssociationsByUserProfileId = /* GraphQL */ `
+  query StockUserAssociationsByUserProfileId(
+    $userProfileId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStockUserAssociationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    stockUserAssociationsByUserProfileId(
+      userProfileId: $userProfileId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        stockId
+        userProfileId
+        openingStocks
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const tradesByStockUserId = /* GraphQL */ `
+  query TradesByStockUserId(
+    $stockUserId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTradeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tradesByStockUserId(
+      stockUserId: $stockUserId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        stockUserId
+        isBuy
+        price
+        tranDate
         createdAt
         updatedAt
         __typename
