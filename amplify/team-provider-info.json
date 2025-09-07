@@ -1,38 +1,73 @@
 {
-  "staging": {
+  "prod": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-amplify31a5ad544fe44-staging-7a2f1-authRole",
-      "UnauthRoleArn": "arn:aws:iam::747387283150:role/amplify-amplify31a5ad544fe44-staging-7a2f1-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::747387283150:role/amplify-amplify31a5ad544fe44-staging-7a2f1-authRole",
+      "AuthRoleName": "amplify-stockist-prod-e5f8f-authRole",
+      "UnauthRoleArn": "arn:aws:iam::747387283150:role/amplify-stockist-prod-e5f8f-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::747387283150:role/amplify-stockist-prod-e5f8f-authRole",
       "Region": "ap-south-1",
-      "DeploymentBucketName": "amplify-amplify31a5ad544fe44-staging-7a2f1-deployment",
-      "UnauthRoleName": "amplify-amplify31a5ad544fe44-staging-7a2f1-unauthRole",
-      "StackName": "amplify-amplify31a5ad544fe44-staging-7a2f1",
-      "StackId": "arn:aws:cloudformation:ap-south-1:747387283150:stack/amplify-amplify31a5ad544fe44-staging-7a2f1/affb0980-f43a-11ef-967e-067fc60f5811",
+      "DeploymentBucketName": "amplify-stockist-prod-e5f8f-deployment",
+      "UnauthRoleName": "amplify-stockist-prod-e5f8f-unauthRole",
+      "StackName": "amplify-stockist-prod-e5f8f",
+      "StackId": "arn:aws:cloudformation:ap-south-1:747387283150:stack/amplify-stockist-prod-e5f8f/aa1ba380-4b6a-11f0-a963-06913b274425",
       "AmplifyAppId": "d29r9senpekqrh"
     },
     "categories": {
-      "api": {
-        "stockist": {}
-      },
       "auth": {
-        "stockist7fc744a0": {},
-        "stockist1b465968": {}
+        "stockist1b465968": {},
+        "stockist7fc744a0": {}
       },
       "function": {
-        "stockist7fc744a0DefineAuthChallenge": {
-          "deploymentBucketName": "amplify-amplify31a5ad544fe44-staging-7a2f1-deployment",
-          "s3Key": "amplify-builds/stockist7fc744a0DefineAuthChallenge-52694658614a4a7a754d-build.zip"
-        },
         "stockist7fc744a0CreateAuthChallenge": {
-          "deploymentBucketName": "amplify-amplify31a5ad544fe44-staging-7a2f1-deployment",
+          "deploymentBucketName": "amplify-stockist-prod-e5f8f-deployment",
           "s3Key": "amplify-builds/stockist7fc744a0CreateAuthChallenge-6e4f6c56796846385450-build.zip"
         },
+        "stockist7fc744a0DefineAuthChallenge": {
+          "deploymentBucketName": "amplify-stockist-prod-e5f8f-deployment",
+          "s3Key": "amplify-builds/stockist7fc744a0DefineAuthChallenge-52694658614a4a7a754d-build.zip"
+        },
         "stockist7fc744a0VerifyAuthChallengeResponse": {
-          "RECAPTCHASECRET": "n",
-          "deploymentBucketName": "amplify-amplify31a5ad544fe44-staging-7a2f1-deployment",
+          "deploymentBucketName": "amplify-stockist-prod-e5f8f-deployment",
           "s3Key": "amplify-builds/stockist7fc744a0VerifyAuthChallengeResponse-6a564445376f76643570-build.zip"
         }
+      },
+      "api": {
+        "stockist": {}
+      }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-stockist-dev-b97eb-authRole",
+      "UnauthRoleArn": "arn:aws:iam::747387283150:role/amplify-stockist-dev-b97eb-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::747387283150:role/amplify-stockist-dev-b97eb-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
+      "UnauthRoleName": "amplify-stockist-dev-b97eb-unauthRole",
+      "StackName": "amplify-stockist-dev-b97eb",
+      "StackId": "arn:aws:cloudformation:ap-south-1:747387283150:stack/amplify-stockist-dev-b97eb/09482f20-5040-11f0-9fa3-06d5f31790a7",
+      "AmplifyAppId": "d29r9senpekqrh"
+    },
+    "categories": {
+      "auth": {
+        "stockist1b465968": {},
+        "stockist7fc744a0": {}
+      },
+      "function": {
+        "stockist7fc744a0CreateAuthChallenge": {
+          "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
+          "s3Key": "amplify-builds/stockist7fc744a0CreateAuthChallenge-6e4f6c56796846385450-build.zip"
+        },
+        "stockist7fc744a0DefineAuthChallenge": {
+          "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
+          "s3Key": "amplify-builds/stockist7fc744a0DefineAuthChallenge-52694658614a4a7a754d-build.zip"
+        },
+        "stockist7fc744a0VerifyAuthChallengeResponse": {
+          "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
+          "s3Key": "amplify-builds/stockist7fc744a0VerifyAuthChallengeResponse-6a564445376f76643570-build.zip"
+        }
+      },
+      "api": {
+        "stockist": {}
       }
     }
   }

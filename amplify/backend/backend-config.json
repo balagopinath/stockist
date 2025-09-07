@@ -95,14 +95,6 @@
         }
       ]
     },
-    "AMPLIFY_function_stockist7fc744a0VerifyAuthChallengeResponse_RECAPTCHASECRET": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "stockist7fc744a0VerifyAuthChallengeResponse"
-        }
-      ]
-    },
     "AMPLIFY_function_stockist7fc744a0VerifyAuthChallengeResponse_deploymentBucketName": {
       "usedBy": [
         {
@@ -119,5 +111,6 @@
         }
       ]
     }
-  }
+  },
+  "storage": {}
 }

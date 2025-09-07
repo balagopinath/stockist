@@ -2,26 +2,26 @@ import AppSync from "../../AppSync";
 import Dialog from "../../dialog";
 import Form from "../form";
 import FormField, { GridColumnField } from "../formField";
-import Stock from "../Stock/stock";
+import Stock from "../Script/script";
 
 const { v4: uuidv4 } = require('uuid');
 
 class Company extends Dialog {
     #industries = [];
-    #stocks = [];
+    #scripts = [];
 
-    #setStocks(stocks) {
-        this.#stocks = stocks;
+    #setScripts(scripts) {
+        this.#scripts = scripts;
     }
 
-    #reloadStocks() {
-        this.setState({stocks: this.#loadStocks()});
+    #reloadScripts() {
+        this.setState({scripts: this.#loadScripts()});
     }
 
-    #loadStocks() {
+    #loadScripts() {
         return new Promise((resolve, reject) => {
-            AppSync.getStocksByCompany(this.state.id).then(res => {
-                this.#setStocks(res);
+            AppSync.getScriptsByCompany(this.state.id).then(res => {
+                this.#setScripts(res);
                 resolve(res.map(x => ({...x, exchangeName: x.exchange.name })));
             })
         });
@@ -36,26 +36,27 @@ class Company extends Dialog {
             name: '',
             industry: undefined,
             industries: undefined,
-            stocks: undefined,
+            scripts: undefined,
         }
         if(props.dataContext !== undefined) {
             this.state.mode = "Edit";
             this.state.id =  props.dataContext.Id;
             this.state.name = props.dataContext.name;
             this.state.industry = props.dataContext.industryId;
-            this.state.stocks = this.#loadStocks();
+            this.state.scripts = this.#loadScripts();
         }
-        else
+        else {
             this.state.mode = "Add";
-
+            this.state.scripts = this.#loadScripts();
+        }
         this.onAction = this.onAction.bind(this);
         this.setName = this.setName.bind(this);
         this.setIndustry = this.setIndustry.bind(this);
-        this.onStockAddClicked = this.onStockAddClicked.bind(this);
-        this.onStockEditClicked = this.onStockEditClicked.bind(this);
-        this.onStockDeleteClicked = this.onStockDeleteClicked.bind(this);
+        this.onScriptAddClicked = this.onScriptAddClicked.bind(this);
+        this.onScriptEditClicked = this.onScriptEditClicked.bind(this);
+        this.onScriptDeleteClicked = this.onScriptDeleteClicked.bind(this);
 
-        this.state.industries = AppSync.getIndustrySectors();
+        this.state.industries = AppSync.getIndustries();
         this.state.industries.then((res) => {
             this.#industries = res;
         });
@@ -102,24 +103,24 @@ class Company extends Dialog {
     }
 
 
-    onStockAddClicked() {
+    onScriptAddClicked() {
         if(this.state.id !== undefined)
             Dialog.showDialog(Stock, {companyId: this.state.id}).then(res => {
-            this.#reloadStocks();
+            this.#reloadScripts();
         })
     }
-    onStockEditClicked(Id) {
-        var stock = this.#stocks.find(item => item.Id === Id);
+    onScriptEditClicked(Id) {
+        var stock = this.#scripts.find(item => item.Id === Id);
         if(stock !== undefined) {
             Dialog.showDialog(Stock, stock).then(res => {
-                this.#reloadStocks();
+                this.#reloadScripts();
             })
         }
 
     }
-    onStockDeleteClicked(Id) {
-        AppSync.deleteStock({Id: Id}).then(res => {
-            this.#reloadStocks();
+    onScriptDeleteClicked(Id) {
+        AppSync.deleteScript({Id: Id}).then(res => {
+            this.#reloadScripts();
         })
     }
 
@@ -128,7 +129,7 @@ class Company extends Dialog {
             <Form name="Company" formActions={["Save", "Cancel"]} onAction={this.onAction} width='400' height='400' lableSize="100">
                 <FormField name="Name" type="Text" value={this.state.name} onChange={this.setName} />
                 <FormField name="Industry" type="Combo" value={this.state.industry} options={this.state.industries} onChange={this.setIndustry} />
-                <FormField name="Indexes" type="Grid" onAddClicked={this.onStockAddClicked} onEditClicked={this.onStockEditClicked} onDeleteClicked={this.onStockDeleteClicked} value={this.state.stocks}>
+                <FormField name="Indexes" type="Grid" onAddClicked={this.onScriptAddClicked} onEditClicked={this.onScriptEditClicked} onDeleteClicked={this.onScriptDeleteClicked} value={this.state.scripts}>
                     <GridColumnField header="Exchange" size="Flex" value="exchangeName" />
                     <GridColumnField header="Script" size="75px" value="code" />
                 </FormField>

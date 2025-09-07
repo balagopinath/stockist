@@ -90,7 +90,20 @@ export const getIndustrySector = /* GraphQL */ `
     getIndustrySector(Id: $Id) {
       Id
       name
-      companies {
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
         nextToken
         __typename
       }
@@ -118,6 +131,74 @@ export const listIndustrySectors = /* GraphQL */ `
       items {
         Id
         name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getIndustry = /* GraphQL */ `
+  query GetIndustry($Id: ID!) {
+    getIndustry(Id: $Id) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listIndustries = /* GraphQL */ `
+  query ListIndustries(
+    $Id: ID
+    $filter: ModelIndustryFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listIndustries(
+      Id: $Id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
@@ -132,15 +213,19 @@ export const getCompany = /* GraphQL */ `
     getCompany(Id: $Id) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -168,14 +253,9 @@ export const listCompanies = /* GraphQL */ `
       items {
         Id
         name
+        ISIN
+        MarketCap
         industryId
-        industry {
-          Id
-          name
-          createdAt
-          updatedAt
-          __typename
-        }        
         createdAt
         updatedAt
         __typename
@@ -185,9 +265,9 @@ export const listCompanies = /* GraphQL */ `
     }
   }
 `;
-export const getStock = /* GraphQL */ `
-  query GetStock($Id: ID!) {
-    getStock(Id: $Id) {
+export const getScript = /* GraphQL */ `
+  query GetScript($Id: ID!) {
+    getScript(Id: $Id) {
       Id
       exchangeId
       exchange {
@@ -202,6 +282,8 @@ export const getStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt
@@ -217,15 +299,15 @@ export const getStock = /* GraphQL */ `
     }
   }
 `;
-export const listStocks = /* GraphQL */ `
-  query ListStocks(
+export const listScripts = /* GraphQL */ `
+  query ListScripts(
     $Id: ID
-    $filter: ModelStockFilterInput
+    $filter: ModelScriptFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listStocks(
+    listScripts(
       Id: $Id
       filter: $filter
       limit: $limit
@@ -235,14 +317,6 @@ export const listStocks = /* GraphQL */ `
       items {
         Id
         exchangeId
-        exchange {
-          Id
-          name
-          code
-          createdAt
-          updatedAt
-          __typename
-        }
         companyId
         code
         LTP
@@ -415,6 +489,92 @@ export const userProfilesByUserIdAndId = /* GraphQL */ `
     }
   }
 `;
+export const industrySectorsByParentISId = /* GraphQL */ `
+  query IndustrySectorsByParentISId(
+    $parentISId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelIndustrySectorFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    industrySectorsByParentISId(
+      parentISId: $parentISId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const industriesByIndustrySectorId = /* GraphQL */ `
+  query IndustriesByIndustrySectorId(
+    $industrySectorId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelIndustryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    industriesByIndustrySectorId(
+      industrySectorId: $industrySectorId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const industriesByParentIndustryId = /* GraphQL */ `
+  query IndustriesByParentIndustryId(
+    $parentIndustryId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelIndustryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    industriesByParentIndustryId(
+      parentIndustryId: $parentIndustryId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const companiesByIndustryId = /* GraphQL */ `
   query CompaniesByIndustryId(
     $industryId: ID!
@@ -433,6 +593,8 @@ export const companiesByIndustryId = /* GraphQL */ `
       items {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt
@@ -443,15 +605,15 @@ export const companiesByIndustryId = /* GraphQL */ `
     }
   }
 `;
-export const stocksByExchangeId = /* GraphQL */ `
-  query StocksByExchangeId(
+export const scriptsByExchangeId = /* GraphQL */ `
+  query ScriptsByExchangeId(
     $exchangeId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelStockFilterInput
+    $filter: ModelScriptFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    stocksByExchangeId(
+    scriptsByExchangeId(
       exchangeId: $exchangeId
       sortDirection: $sortDirection
       filter: $filter
@@ -475,15 +637,15 @@ export const stocksByExchangeId = /* GraphQL */ `
     }
   }
 `;
-export const stocksByCompanyId = /* GraphQL */ `
-  query StocksByCompanyId(
+export const scriptsByCompanyId = /* GraphQL */ `
+  query ScriptsByCompanyId(
     $companyId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelStockFilterInput
+    $filter: ModelScriptFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    stocksByCompanyId(
+    scriptsByCompanyId(
       companyId: $companyId
       sortDirection: $sortDirection
       filter: $filter
@@ -493,14 +655,6 @@ export const stocksByCompanyId = /* GraphQL */ `
       items {
         Id
         exchangeId
-        exchange {
-          Id
-          name
-          code
-          createdAt
-          updatedAt
-          __typename
-        }
         companyId
         code
         LTP

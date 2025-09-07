@@ -21,35 +21,28 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type CompanyUpdateFormInputValues = {
+export declare type IndustryCreateFormInputValues = {
     Id?: string;
     name?: string;
-    ISIN?: string;
-    MarketCap?: number;
 };
-export declare type CompanyUpdateFormValidationValues = {
+export declare type IndustryCreateFormValidationValues = {
     Id?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
-    ISIN?: ValidationFunction<string>;
-    MarketCap?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type CompanyUpdateFormOverridesProps = {
-    CompanyUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type IndustryCreateFormOverridesProps = {
+    IndustryCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Id?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
-    ISIN?: PrimitiveOverrideProps<TextFieldProps>;
-    MarketCap?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type CompanyUpdateFormProps = React.PropsWithChildren<{
-    overrides?: CompanyUpdateFormOverridesProps | undefined | null;
+export declare type IndustryCreateFormProps = React.PropsWithChildren<{
+    overrides?: IndustryCreateFormOverridesProps | undefined | null;
 } & {
-    Id?: string;
-    company?: any;
-    onSubmit?: (fields: CompanyUpdateFormInputValues) => CompanyUpdateFormInputValues;
-    onSuccess?: (fields: CompanyUpdateFormInputValues) => void;
-    onError?: (fields: CompanyUpdateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: CompanyUpdateFormInputValues) => CompanyUpdateFormInputValues;
-    onValidate?: CompanyUpdateFormValidationValues;
+    clearOnSuccess?: boolean;
+    onSubmit?: (fields: IndustryCreateFormInputValues) => IndustryCreateFormInputValues;
+    onSuccess?: (fields: IndustryCreateFormInputValues) => void;
+    onError?: (fields: IndustryCreateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: IndustryCreateFormInputValues) => IndustryCreateFormInputValues;
+    onValidate?: IndustryCreateFormValidationValues;
 } & React.CSSProperties>;
-export default function CompanyUpdateForm(props: CompanyUpdateFormProps): React.ReactElement;
+export default function IndustryCreateForm(props: IndustryCreateFormProps): React.ReactElement;

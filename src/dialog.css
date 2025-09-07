@@ -1,5 +1,6 @@
 .dialogHost {
     height: 100%;
+    z-index: -11;
 }
 
 .dialogContainer {

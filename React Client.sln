@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "amplify", "amplify", "{53486817-8A65-7AAA-B136-823CA3323757}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{A1D4B77E-E835-D066-AC31-385DF0993394}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "function", "function", "{BF4F199A-F7F3-98D5-68D0-15B71958F2DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "importCompanies", "importCompanies", "{706DE881-AF06-8C3F-446B-2B6567F3EB01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "importCompanies", "amplify\backend\function\importCompanies\src\importCompanies.csproj", "{43AB1B81-1338-CE96-7359-2066ABF3B7D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43AB1B81-1338-CE96-7359-2066ABF3B7D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43AB1B81-1338-CE96-7359-2066ABF3B7D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43AB1B81-1338-CE96-7359-2066ABF3B7D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43AB1B81-1338-CE96-7359-2066ABF3B7D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1D4B77E-E835-D066-AC31-385DF0993394} = {53486817-8A65-7AAA-B136-823CA3323757}
+		{BF4F199A-F7F3-98D5-68D0-15B71958F2DB} = {A1D4B77E-E835-D066-AC31-385DF0993394}
+		{706DE881-AF06-8C3F-446B-2B6567F3EB01} = {BF4F199A-F7F3-98D5-68D0-15B71958F2DB}
+		{43AB1B81-1338-CE96-7359-2066ABF3B7D2} = {706DE881-AF06-8C3F-446B-2B6567F3EB01}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D4826EE-772F-4124-AE4B-A393463AA78D}
+	EndGlobalSection
+EndGlobal

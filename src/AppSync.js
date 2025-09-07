@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
-
+import * as customQueries from './graphql/customQueries';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -175,35 +175,35 @@ class AppSync {
         })
     }
 
-
-    static getIndustrySectors() {
+    static getIndustries() {
 
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.listIndustrySectors))
+            API.graphql(graphqlOperation(customQueries.listIndustries))
             .then(data => {
-                resolve(data.data.listIndustrySectors.items)
+                resolve(data.data.listIndustries.items)
             }).catch(err => {
                 reject(err)
             });
         })
     }
-    static getIndustrySector(Id) {
+    static getIndustry(Id) {
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.getIndustrySector, { Id }))
+            API.graphql(graphqlOperation(queries.getIndustry, { Id }))
             .then(data => {
-                resolve(data.data.getIndustrySector)
+                resolve(data.data.getIndustry)
             }).catch(err => {
                 reject(err)
             });
         })
     }
-    static addIndustrySector(data) {
+    static addIndustry(data) {
         return new Promise((resolve, reject) => {
             const input = {
                 Id: data.Id,
-                name: data.name
+                name: data.name,
+                parentIndustryId: data.parentIndustryId
             };
-            API.graphql(graphqlOperation(mutations.createIndustrySector,  { input }))
+            API.graphql(graphqlOperation(mutations.createIndustry,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {
@@ -211,13 +211,14 @@ class AppSync {
             });
         })
     }
-    static editIndustrySector(data, Id) {
+    static editIndustry(data, Id) {
         return new Promise((resolve, reject) => {
             const input = {
                 Id: data.Id,
-                name: data.name
+                name: data.name,
+                parentIndustryId: data.parentIndustryId
             };
-            API.graphql(graphqlOperation(mutations.updateIndustrySector,  { input }))
+            API.graphql(graphqlOperation(mutations.updateIndustry,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {
@@ -225,13 +226,13 @@ class AppSync {
             });
         })
     }
-    static deleteIndustrySector(data) {
+    static deleteIndustry(data) {
         return new Promise((resolve, reject) => {
             const input = {
                 Id: data.Id,
   
             };
-            API.graphql(graphqlOperation(mutations.deleteIndustrySector,  { input }))
+            API.graphql(graphqlOperation(mutations.deleteIndustry,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {
@@ -240,11 +241,10 @@ class AppSync {
         })
     }
 
-
     static getCompanies() {
 
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.listCompanies))
+            API.graphql(graphqlOperation(customQueries.listCompanies))
             .then(data => {
                 resolve(data.data.listCompanies.items)
             }).catch(err => {
@@ -305,31 +305,31 @@ class AppSync {
             });
         })
     }
-    static getStocksByCompany(companyId) {
+
+    static getScriptsByCompany(companyId) {
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.stocksByCompanyId, { companyId }))
+            API.graphql(graphqlOperation(customQueries.scriptsByCompanyId, { companyId }))
             .then(data => {
-                resolve(data.data.stocksByCompanyId.items)
+                resolve(data.data.scriptsByCompanyId.items)
             }).catch(err => {
                 reject(err)
             });
         })
     }
-
-    static getStocks() {
+    static getScripts() {
 
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.listStocks))
+            API.graphql(graphqlOperation(queries.listScripts))
             .then(data => {
-                resolve(data.data.listStocks.items)
+                resolve(data.data.listScripts.items)
             }).catch(err => {
                 reject(err)
             });
         })
     }
-    static getStock(Id) {
+    static getScript(Id) {
         return new Promise((resolve, reject) => {
-            API.graphql(graphqlOperation(queries.getStock, { Id }))
+            API.graphql(graphqlOperation(queries.getScript, { Id }))
             .then(data => {
                 resolve(data.data.getStock)
             }).catch(err => {
@@ -337,7 +337,7 @@ class AppSync {
             });
         })
     }
-    static addStock(data) {
+    static addScript(data) {
         return new Promise((resolve, reject) => {
             const input = {
                 Id: data.Id,
@@ -345,7 +345,7 @@ class AppSync {
                 companyId: data.companyId,
                 exchangeId: data.exchangeId
             };
-            API.graphql(graphqlOperation(mutations.createStock,  { input }))
+            API.graphql(graphqlOperation(mutations.createScript,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {
@@ -353,7 +353,7 @@ class AppSync {
             });
         })
     }
-    static editStock(data, Id) {
+    static editScript(data, Id) {
         return new Promise((resolve, reject) => {
             const input = {
                 Id: data.Id,
@@ -361,7 +361,7 @@ class AppSync {
                 companyId: data.companyId,
                 exchangeId: data.exchangeId
             };
-            API.graphql(graphqlOperation(mutations.updateStock,  { input }))
+            API.graphql(graphqlOperation(mutations.updateScript,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {
@@ -369,12 +369,12 @@ class AppSync {
             });
         })
     }
-    static deleteStock(data) {
+    static deleteScript(data) {
         return new Promise((resolve, reject) => {
             const input = {
                 Id: data.Id,
               };
-            API.graphql(graphqlOperation(mutations.deleteStock,  { input }))
+            API.graphql(graphqlOperation(mutations.deleteScript,  { input }))
             .then(data => {
                 resolve(data)
             }).catch(err => {

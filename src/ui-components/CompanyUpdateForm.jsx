@@ -26,11 +26,13 @@ export default function CompanyUpdateForm(props) {
   const initialValues = {
     Id: "",
     name: "",
-    industryId: "",
+    ISIN: "",
+    MarketCap: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
   const [name, setName] = React.useState(initialValues.name);
-  const [industryId, setIndustryId] = React.useState(initialValues.industryId);
+  const [ISIN, setISIN] = React.useState(initialValues.ISIN);
+  const [MarketCap, setMarketCap] = React.useState(initialValues.MarketCap);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = companyRecord
@@ -38,7 +40,8 @@ export default function CompanyUpdateForm(props) {
       : initialValues;
     setId(cleanValues.Id);
     setName(cleanValues.name);
-    setIndustryId(cleanValues.industryId);
+    setISIN(cleanValues.ISIN);
+    setMarketCap(cleanValues.MarketCap);
     setErrors({});
   };
   const [companyRecord, setCompanyRecord] = React.useState(companyModelProp);
@@ -60,7 +63,8 @@ export default function CompanyUpdateForm(props) {
   const validations = {
     Id: [{ type: "Required" }],
     name: [{ type: "Required" }],
-    industryId: [{ type: "Required" }],
+    ISIN: [{ type: "Required" }],
+    MarketCap: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -90,7 +94,8 @@ export default function CompanyUpdateForm(props) {
         let modelFields = {
           Id,
           name,
-          industryId,
+          ISIN,
+          MarketCap: MarketCap ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -153,7 +158,8 @@ export default function CompanyUpdateForm(props) {
             const modelFields = {
               Id: value,
               name,
-              industryId,
+              ISIN,
+              MarketCap,
             };
             const result = onChange(modelFields);
             value = result?.Id ?? value;
@@ -179,7 +185,8 @@ export default function CompanyUpdateForm(props) {
             const modelFields = {
               Id,
               name: value,
-              industryId,
+              ISIN,
+              MarketCap,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -195,30 +202,62 @@ export default function CompanyUpdateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Industry id"
+        label="Isin"
         isRequired={true}
         isReadOnly={false}
-        value={industryId}
+        value={ISIN}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               Id,
               name,
-              industryId: value,
+              ISIN: value,
+              MarketCap,
             };
             const result = onChange(modelFields);
-            value = result?.industryId ?? value;
+            value = result?.ISIN ?? value;
           }
-          if (errors.industryId?.hasError) {
-            runValidationTasks("industryId", value);
+          if (errors.ISIN?.hasError) {
+            runValidationTasks("ISIN", value);
           }
-          setIndustryId(value);
+          setISIN(value);
         }}
-        onBlur={() => runValidationTasks("industryId", industryId)}
-        errorMessage={errors.industryId?.errorMessage}
-        hasError={errors.industryId?.hasError}
-        {...getOverrideProps(overrides, "industryId")}
+        onBlur={() => runValidationTasks("ISIN", ISIN)}
+        errorMessage={errors.ISIN?.errorMessage}
+        hasError={errors.ISIN?.hasError}
+        {...getOverrideProps(overrides, "ISIN")}
+      ></TextField>
+      <TextField
+        label="Market cap"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={MarketCap}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              Id,
+              name,
+              ISIN,
+              MarketCap: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.MarketCap ?? value;
+          }
+          if (errors.MarketCap?.hasError) {
+            runValidationTasks("MarketCap", value);
+          }
+          setMarketCap(value);
+        }}
+        onBlur={() => runValidationTasks("MarketCap", MarketCap)}
+        errorMessage={errors.MarketCap?.errorMessage}
+        hasError={errors.MarketCap?.hasError}
+        {...getOverrideProps(overrides, "MarketCap")}
       ></TextField>
       <Flex
         justifyContent="space-between"

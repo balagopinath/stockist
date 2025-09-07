@@ -9,10 +9,12 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { createCompany } from "../graphql/mutations";
-export default function CompanyCreateForm(props) {
+import { getIndustry } from "../graphql/queries";
+import { updateIndustry } from "../graphql/mutations";
+export default function IndustryUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    Id: IdProp,
+    industry: industryModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -24,26 +26,37 @@ export default function CompanyCreateForm(props) {
   const initialValues = {
     Id: "",
     name: "",
-    ISIN: "",
-    MarketCap: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
   const [name, setName] = React.useState(initialValues.name);
-  const [ISIN, setISIN] = React.useState(initialValues.ISIN);
-  const [MarketCap, setMarketCap] = React.useState(initialValues.MarketCap);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setId(initialValues.Id);
-    setName(initialValues.name);
-    setISIN(initialValues.ISIN);
-    setMarketCap(initialValues.MarketCap);
+    const cleanValues = industryRecord
+      ? { ...initialValues, ...industryRecord }
+      : initialValues;
+    setId(cleanValues.Id);
+    setName(cleanValues.name);
     setErrors({});
   };
+  const [industryRecord, setIndustryRecord] = React.useState(industryModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = IdProp
+        ? (
+            await API.graphql({
+              query: getIndustry.replaceAll("__typename", ""),
+              variables: { Id: IdProp },
+            })
+          )?.data?.getIndustry
+        : industryModelProp;
+      setIndustryRecord(record);
+    };
+    queryData();
+  }, [IdProp, industryModelProp]);
+  React.useEffect(resetStateValues, [industryRecord]);
   const validations = {
     Id: [{ type: "Required" }],
     name: [{ type: "Required" }],
-    ISIN: [{ type: "Required" }],
-    MarketCap: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -73,8 +86,6 @@ export default function CompanyCreateForm(props) {
         let modelFields = {
           Id,
           name,
-          ISIN,
-          MarketCap,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -105,18 +116,16 @@ export default function CompanyCreateForm(props) {
             }
           });
           await API.graphql({
-            query: createCompany.replaceAll("__typename", ""),
+            query: updateIndustry.replaceAll("__typename", ""),
             variables: {
               input: {
+                Id: industryRecord.Id,
                 ...modelFields,
               },
             },
           });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -125,13 +134,13 @@ export default function CompanyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "CompanyCreateForm")}
+      {...getOverrideProps(overrides, "IndustryUpdateForm")}
       {...rest}
     >
       <TextField
         label="Id"
         isRequired={true}
-        isReadOnly={false}
+        isReadOnly={true}
         value={Id}
         onChange={(e) => {
           let { value } = e.target;
@@ -139,8 +148,6 @@ export default function CompanyCreateForm(props) {
             const modelFields = {
               Id: value,
               name,
-              ISIN,
-              MarketCap,
             };
             const result = onChange(modelFields);
             value = result?.Id ?? value;
@@ -166,8 +173,6 @@ export default function CompanyCreateForm(props) {
             const modelFields = {
               Id,
               name: value,
-              ISIN,
-              MarketCap,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -182,76 +187,19 @@ export default function CompanyCreateForm(props) {
         hasError={errors.name?.hasError}
         {...getOverrideProps(overrides, "name")}
       ></TextField>
-      <TextField
-        label="Isin"
-        isRequired={true}
-        isReadOnly={false}
-        value={ISIN}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              Id,
-              name,
-              ISIN: value,
-              MarketCap,
-            };
-            const result = onChange(modelFields);
-            value = result?.ISIN ?? value;
-          }
-          if (errors.ISIN?.hasError) {
-            runValidationTasks("ISIN", value);
-          }
-          setISIN(value);
-        }}
-        onBlur={() => runValidationTasks("ISIN", ISIN)}
-        errorMessage={errors.ISIN?.errorMessage}
-        hasError={errors.ISIN?.hasError}
-        {...getOverrideProps(overrides, "ISIN")}
-      ></TextField>
-      <TextField
-        label="Market cap"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={MarketCap}
-        onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              Id,
-              name,
-              ISIN,
-              MarketCap: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.MarketCap ?? value;
-          }
-          if (errors.MarketCap?.hasError) {
-            runValidationTasks("MarketCap", value);
-          }
-          setMarketCap(value);
-        }}
-        onBlur={() => runValidationTasks("MarketCap", MarketCap)}
-        errorMessage={errors.MarketCap?.errorMessage}
-        hasError={errors.MarketCap?.hasError}
-        {...getOverrideProps(overrides, "MarketCap")}
-      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(IdProp || industryModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -261,7 +209,10 @@ export default function CompanyCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(IdProp || industryModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

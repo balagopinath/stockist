@@ -14,27 +14,43 @@ type Exchange @model
   Id: ID! @primaryKey
   name: String!
   code: String!
-  stocks: [Stock] @hasMany(indexName: "byExchange", fields: ["Id"])
+  stocks: [Script] @hasMany(indexName: "byExchange", fields: ["Id"])
 }
 
 type IndustrySector @model
 {
   Id: ID! @primaryKey
   name: String!
-  companies: [Company] @hasMany(indexName: "byIndustrySector", fields: ["Id"])
+  industries: [Industry] @hasMany(indexName: "byIndustrySector", fields: ["Id"])
+  parentISId: ID @index(name: "byParentIS")
+  parentIndustrySector: IndustrySector @belongsTo(fields: ["parentISId"])
+  subIndustrySectors: [IndustrySector] @hasMany(indexName: "byParentIS", fields: ["Id"])
+}
+
+type Industry @model
+{
+  Id: ID! @primaryKey
+  name: String!
+  industrySectorId: ID @index(name: "byIndustrySector")
+  industrySector: IndustrySector @belongsTo(fields: ["industrySectorId"])
+  companies: [Company] @hasMany(indexName: "byIndustry", fields: ["Id"])
+  parentIndustryId: ID @index(name: "byParentIndustry")
+  parentIndustry: Industry @belongsTo(fields: ["parentIndustryId"])
+  subIndustries: [Industry] @hasMany(indexName: "byParentIndustry", fields: ["Id"])
 }
 
 type Company @model
 {
   Id: ID! @primaryKey
   name: String!
-  industryId: ID! @index(name: "byIndustrySector")
-  industry: IndustrySector! @belongsTo(fields: ["industryId"])
-  stocks: [Stock] @hasMany(indexName: "byCompany", fields: ["Id"])
-
+  ISIN: String!
+  MarketCap: Float
+  industryId: ID @index(name: "byIndustry")
+  industry: Industry @belongsTo(fields: ["industryId"])
+  scripts: [Script] @hasMany(indexName: "byCompany", fields: ["Id"])
 }
 
-type Stock @model 
+type Script @model 
 {
   Id: ID! @primaryKey
   exchangeId: ID! @index(name: "byExchange")

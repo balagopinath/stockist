@@ -5,7 +5,7 @@ import FormField from "../formField";
 
 const { v4: uuidv4 } = require('uuid');
 
-class Stock extends Dialog {
+class Script extends Dialog {
     #exchanges = [];
     #companyId = undefined;
 
@@ -46,19 +46,19 @@ class Stock extends Dialog {
             var data;
             if(this.state.mode === "Add") {
                 data = {Id: uuidv4(), code: this.state.code, exchangeId: this.state.exchangeId, companyId: this.#companyId}
-                AppSync.addStock(data).then(res => {
+                AppSync.addScript(data).then(res => {
                     super.hide();
                 }).catch(err => {
                     super.hide();
                 });
             } else {
-                const res = await AppSync.getStock(this.state.id)
+                const res = await AppSync.getScript(this.state.id)
                 data = res
                 data.Id = this.state.id
                 data.code = this.state.code
                 data.exchangeId = this.state.exchangeId
 
-                AppSync.editStock(data, data.Id).then(res => {
+                AppSync.editScript(data, data.Id).then(res => {
                     super.hide();
                 }).catch(err => {
                     super.hide();
@@ -90,4 +90,4 @@ class Stock extends Dialog {
     
 }
 
-export default Stock;
+export default Script;

@@ -111,7 +111,20 @@ export const createIndustrySector = /* GraphQL */ `
     createIndustrySector(input: $input, condition: $condition) {
       Id
       name
-      companies {
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
         nextToken
         __typename
       }
@@ -129,7 +142,20 @@ export const updateIndustrySector = /* GraphQL */ `
     updateIndustrySector(input: $input, condition: $condition) {
       Id
       name
-      companies {
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
         nextToken
         __typename
       }
@@ -147,7 +173,143 @@ export const deleteIndustrySector = /* GraphQL */ `
     deleteIndustrySector(input: $input, condition: $condition) {
       Id
       name
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createIndustry = /* GraphQL */ `
+  mutation CreateIndustry(
+    $input: CreateIndustryInput!
+    $condition: ModelIndustryConditionInput
+  ) {
+    createIndustry(input: $input, condition: $condition) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
       companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateIndustry = /* GraphQL */ `
+  mutation UpdateIndustry(
+    $input: UpdateIndustryInput!
+    $condition: ModelIndustryConditionInput
+  ) {
+    updateIndustry(input: $input, condition: $condition) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteIndustry = /* GraphQL */ `
+  mutation DeleteIndustry(
+    $input: DeleteIndustryInput!
+    $condition: ModelIndustryConditionInput
+  ) {
+    deleteIndustry(input: $input, condition: $condition) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
         nextToken
         __typename
       }
@@ -165,15 +327,19 @@ export const createCompany = /* GraphQL */ `
     createCompany(input: $input, condition: $condition) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -191,15 +357,19 @@ export const updateCompany = /* GraphQL */ `
     updateCompany(input: $input, condition: $condition) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -217,15 +387,19 @@ export const deleteCompany = /* GraphQL */ `
     deleteCompany(input: $input, condition: $condition) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -235,12 +409,12 @@ export const deleteCompany = /* GraphQL */ `
     }
   }
 `;
-export const createStock = /* GraphQL */ `
-  mutation CreateStock(
-    $input: CreateStockInput!
-    $condition: ModelStockConditionInput
+export const createScript = /* GraphQL */ `
+  mutation CreateScript(
+    $input: CreateScriptInput!
+    $condition: ModelScriptConditionInput
   ) {
-    createStock(input: $input, condition: $condition) {
+    createScript(input: $input, condition: $condition) {
       Id
       exchangeId
       exchange {
@@ -255,6 +429,8 @@ export const createStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt
@@ -270,12 +446,12 @@ export const createStock = /* GraphQL */ `
     }
   }
 `;
-export const updateStock = /* GraphQL */ `
-  mutation UpdateStock(
-    $input: UpdateStockInput!
-    $condition: ModelStockConditionInput
+export const updateScript = /* GraphQL */ `
+  mutation UpdateScript(
+    $input: UpdateScriptInput!
+    $condition: ModelScriptConditionInput
   ) {
-    updateStock(input: $input, condition: $condition) {
+    updateScript(input: $input, condition: $condition) {
       Id
       exchangeId
       exchange {
@@ -290,6 +466,8 @@ export const updateStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt
@@ -305,12 +483,12 @@ export const updateStock = /* GraphQL */ `
     }
   }
 `;
-export const deleteStock = /* GraphQL */ `
-  mutation DeleteStock(
-    $input: DeleteStockInput!
-    $condition: ModelStockConditionInput
+export const deleteScript = /* GraphQL */ `
+  mutation DeleteScript(
+    $input: DeleteScriptInput!
+    $condition: ModelScriptConditionInput
   ) {
-    deleteStock(input: $input, condition: $condition) {
+    deleteScript(input: $input, condition: $condition) {
       Id
       exchangeId
       exchange {
@@ -325,6 +503,8 @@ export const deleteStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt

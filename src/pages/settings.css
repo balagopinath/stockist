@@ -38,15 +38,23 @@
 
   .settingGridContainer {
     width: 100%;
-    height: calc(100% -50px);
-    padding: 10px;
+    display: block;
+    height: calc(100% - 70px);
+    padding: 0px 10px 10px 10px;
     overflow-y: auto;
+    border-width: 0px;
   }
 
   .settingGrid {
     width: 100%;
   }
-
+.settingGrid thead th {
+  position: sticky;
+  top: 0;
+  margin: 0px;
+  padding: 0px;
+  z-index: 2;
+}
   .gridColumnSizeAuto {
     width: auto;
   }

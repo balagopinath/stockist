@@ -98,7 +98,20 @@ export const onCreateIndustrySector = /* GraphQL */ `
     onCreateIndustrySector(filter: $filter) {
       Id
       name
-      companies {
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
         nextToken
         __typename
       }
@@ -115,7 +128,20 @@ export const onUpdateIndustrySector = /* GraphQL */ `
     onUpdateIndustrySector(filter: $filter) {
       Id
       name
-      companies {
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
         nextToken
         __typename
       }
@@ -132,7 +158,134 @@ export const onDeleteIndustrySector = /* GraphQL */ `
     onDeleteIndustrySector(filter: $filter) {
       Id
       name
+      industries {
+        nextToken
+        __typename
+      }
+      parentISId
+      parentIndustrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustrySectors {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateIndustry = /* GraphQL */ `
+  subscription OnCreateIndustry($filter: ModelSubscriptionIndustryFilterInput) {
+    onCreateIndustry(filter: $filter) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
       companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateIndustry = /* GraphQL */ `
+  subscription OnUpdateIndustry($filter: ModelSubscriptionIndustryFilterInput) {
+    onUpdateIndustry(filter: $filter) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteIndustry = /* GraphQL */ `
+  subscription OnDeleteIndustry($filter: ModelSubscriptionIndustryFilterInput) {
+    onDeleteIndustry(filter: $filter) {
+      Id
+      name
+      industrySectorId
+      industrySector {
+        Id
+        name
+        parentISId
+        createdAt
+        updatedAt
+        __typename
+      }
+      companies {
+        nextToken
+        __typename
+      }
+      parentIndustryId
+      parentIndustry {
+        Id
+        name
+        industrySectorId
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      subIndustries {
         nextToken
         __typename
       }
@@ -147,15 +300,19 @@ export const onCreateCompany = /* GraphQL */ `
     onCreateCompany(filter: $filter) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -170,15 +327,19 @@ export const onUpdateCompany = /* GraphQL */ `
     onUpdateCompany(filter: $filter) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -193,15 +354,19 @@ export const onDeleteCompany = /* GraphQL */ `
     onDeleteCompany(filter: $filter) {
       Id
       name
+      ISIN
+      MarketCap
       industryId
       industry {
         Id
         name
+        industrySectorId
+        parentIndustryId
         createdAt
         updatedAt
         __typename
       }
-      stocks {
+      scripts {
         nextToken
         __typename
       }
@@ -211,9 +376,9 @@ export const onDeleteCompany = /* GraphQL */ `
     }
   }
 `;
-export const onCreateStock = /* GraphQL */ `
-  subscription OnCreateStock($filter: ModelSubscriptionStockFilterInput) {
-    onCreateStock(filter: $filter) {
+export const onCreateScript = /* GraphQL */ `
+  subscription OnCreateScript($filter: ModelSubscriptionScriptFilterInput) {
+    onCreateScript(filter: $filter) {
       Id
       exchangeId
       exchange {
@@ -228,6 +393,8 @@ export const onCreateStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt
@@ -243,9 +410,9 @@ export const onCreateStock = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateStock = /* GraphQL */ `
-  subscription OnUpdateStock($filter: ModelSubscriptionStockFilterInput) {
-    onUpdateStock(filter: $filter) {
+export const onUpdateScript = /* GraphQL */ `
+  subscription OnUpdateScript($filter: ModelSubscriptionScriptFilterInput) {
+    onUpdateScript(filter: $filter) {
       Id
       exchangeId
       exchange {
@@ -260,6 +427,8 @@ export const onUpdateStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt
@@ -275,9 +444,9 @@ export const onUpdateStock = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteStock = /* GraphQL */ `
-  subscription OnDeleteStock($filter: ModelSubscriptionStockFilterInput) {
-    onDeleteStock(filter: $filter) {
+export const onDeleteScript = /* GraphQL */ `
+  subscription OnDeleteScript($filter: ModelSubscriptionScriptFilterInput) {
+    onDeleteScript(filter: $filter) {
       Id
       exchangeId
       exchange {
@@ -292,6 +461,8 @@ export const onDeleteStock = /* GraphQL */ `
       company {
         Id
         name
+        ISIN
+        MarketCap
         industryId
         createdAt
         updatedAt

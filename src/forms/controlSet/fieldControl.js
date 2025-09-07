@@ -21,7 +21,7 @@ class FieldControl extends ControlBase {
     constructor(props) {
         super();
         this.state = {
-            fieldValue: props.value,
+            fieldValue: "",
             optionsPromise: props.options,
             options: null,
         }
@@ -55,6 +55,7 @@ class FieldControl extends ControlBase {
         if(this.#type === "Grid") {
             this.#columns = props.columns;
             this.state.dataRows = [];
+            this.state.fieldValue = props.value;
             this.state.fieldValue.then(res => {
                 this.state.dataRows = res;
                 if(this.#isCompMounted)
@@ -106,11 +107,7 @@ class FieldControl extends ControlBase {
             )),
         });
         if(res.length > 0) {
-            if(this.props.value !== undefined) {
-                this.#onChangeHandler({target: {value: this.props.value}});
-            } else {
-                this.#onChangeHandler({target: {value: res[0].Id}});
-            }
+            this.setState({ fieldValue: "" });
         }
     }
 

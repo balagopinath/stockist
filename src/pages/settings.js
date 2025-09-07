@@ -4,8 +4,8 @@ import './settings.css'
 import AppSync from "../AppSync";
 import Dialog from "../dialog";
 import Exchange from "../forms/exchange/exchange";
-import IndustrySector from "../forms/industrySector/industrySector";
 import Company from "../forms/company/company";
+import Industry from "../forms/industry/industry";
 
 class Setting extends React.Component {
     #height = "300px";
@@ -168,31 +168,31 @@ class ExchangeSetting extends Setting {
 
 }
 
-class IndustrySectorSetting extends Setting {
+class IndustrySetting extends Setting {
     
     loadData() {
-        AppSync.getIndustrySectors().then(data => {
-            super.setData(data);
+        AppSync.getIndustries().then(data => {
+            super.setData(data.map(x => ({...x, parentIndustryName: (x.parentIndustry !== null ? x.parentIndustry.name : "") }) ));
         }).catch(err => {
             console.log(err);
         })
     }
     getColumnNames() {
-        return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}]
+        return [{name: "Id", size: "350px"}, {name: "name", size:"Flex"}, {name: "parentIndustryName", size:"Flex"}]
     }
     addItem() {
-        Dialog.showDialog(IndustrySector).then(() => {
+        Dialog.showDialog(Industry).then(() => {
             this.loadData();
        })
     }
     editItem() {
-        Dialog.showDialog(IndustrySector, this.state.selectedItem).then(() => {
+        Dialog.showDialog(Industry, this.state.selectedItem).then(() => {
             this.loadData();
        })
         
     }
     deleteItem() {
-        AppSync.deleteExchange(this.state.selectedItem);
+        AppSync.deleteIndustry(this.state.selectedItem);
     }
 
 }
@@ -201,7 +201,7 @@ class CompanySetting extends Setting {
     
     loadData() {
         AppSync.getCompanies().then(data => {
-            super.setData(data.map(x => ({...x, industryName: x.industry.name }) ));
+            super.setData(data.map(x => ({...x, industryName: (x.industry !== undefined ? x.industry.name : "") }) ));
         }).catch(err => {
             console.log(err);
         })
@@ -233,7 +233,7 @@ export default class Settings extends Page {
     renderPage(contentElem) {
         return super.renderPage(
             <div className="spContainer">
-                <IndustrySectorSetting Name="Industry Sectors" IsAdd={true} height="300px" />
+                <IndustrySetting Name="Industry Sectors" IsAdd={true} height="300px" />
                 <ExchangeSetting Name="Exchanges" IsAdd={true} height="300px" />
                 <CompanySetting Name="Companies" IsAdd={true} height="300px" />
             </div>
