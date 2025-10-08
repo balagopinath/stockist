@@ -25,13 +25,13 @@ export declare type CompanyUpdateFormInputValues = {
     Id?: string;
     name?: string;
     ISIN?: string;
-    MarketCap?: number;
+    marketCap?: number;
 };
 export declare type CompanyUpdateFormValidationValues = {
     Id?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     ISIN?: ValidationFunction<string>;
-    MarketCap?: ValidationFunction<number>;
+    marketCap?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CompanyUpdateFormOverridesProps = {
@@ -39,7 +39,7 @@ export declare type CompanyUpdateFormOverridesProps = {
     Id?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     ISIN?: PrimitiveOverrideProps<TextFieldProps>;
-    MarketCap?: PrimitiveOverrideProps<TextFieldProps>;
+    marketCap?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CompanyUpdateFormProps = React.PropsWithChildren<{
     overrides?: CompanyUpdateFormOverridesProps | undefined | null;

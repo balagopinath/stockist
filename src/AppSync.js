@@ -267,7 +267,9 @@ class AppSync {
             const input = {
                 Id: data.Id,
                 name: data.name,
-                industryId: data.industryId
+                industryId: data.industryId,
+                ISIN: data.ISIN,
+                marketCap: data.marketCap
             };
             API.graphql(graphqlOperation(mutations.createCompany,  { input }))
             .then(data => {
@@ -282,7 +284,9 @@ class AppSync {
             const input = {
                 Id: data.Id,
                 name: data.name,
-                industryId: data.industryId
+                industryId: data.industryId,
+                ISIN: data.ISIN,
+                marketCap: data.marketCap                
             };
             API.graphql(graphqlOperation(mutations.updateCompany,  { input }))
             .then(data => {

@@ -21,7 +21,7 @@ class FieldControl extends ControlBase {
     constructor(props) {
         super();
         this.state = {
-            fieldValue: "",
+            fieldValue: props.value,
             optionsPromise: props.options,
             options: null,
         }
@@ -106,9 +106,7 @@ class FieldControl extends ControlBase {
                 { Id: item.Id, name: item.name }
             )),
         });
-        if(res.length > 0) {
-            this.setState({ fieldValue: "" });
-        }
+
     }
 
     onAdd() {
@@ -127,6 +125,10 @@ class FieldControl extends ControlBase {
         this.state.fieldValue = event.target.value;
         this.setState(this.state);
         this.#onChangeHandler(event);
+    }
+
+    onCurrencyInput(event) {
+
     }
 
     renderDialog(contentElement) {
@@ -218,14 +220,27 @@ class FieldControl extends ControlBase {
                                                                 style={{ width: "100%" }}
                                                                 onChange={this.onValueChange}
                                                                 value={this.state.fieldValue}
-                                                            >
+                                                            >   
+                                                                <option key="0" value="">
+                                                                    Select a value
+                                                                </option>
                                                                 {this.state.options.map((item, index) => (
-                                                                    <option key={index} value={item.Id}>
+                                                                    <option key={index+1} value={item.Id}>
                                                                     {item.name}
                                                                     </option>
                                                                 ))}
                                                             </select>
                                                             );
+                                                    case "Currency":
+                                                        return (
+                                                        <input
+                                                            type="text"
+                                                            style={{ width: "100%", textAlign: 'right' }}
+                                                            value={this.state.fieldValue}
+                                                            onInput={this.onCurrencyInput}
+                                                            onChange={this.onValueChange}
+                                                        />
+                                                        );                                                    
                                                     default:
                                                         return (
                                                         <input

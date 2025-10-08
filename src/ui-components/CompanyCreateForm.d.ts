@@ -25,13 +25,13 @@ export declare type CompanyCreateFormInputValues = {
     Id?: string;
     name?: string;
     ISIN?: string;
-    MarketCap?: number;
+    marketCap?: number;
 };
 export declare type CompanyCreateFormValidationValues = {
     Id?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     ISIN?: ValidationFunction<string>;
-    MarketCap?: ValidationFunction<number>;
+    marketCap?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CompanyCreateFormOverridesProps = {
@@ -39,7 +39,7 @@ export declare type CompanyCreateFormOverridesProps = {
     Id?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     ISIN?: PrimitiveOverrideProps<TextFieldProps>;
-    MarketCap?: PrimitiveOverrideProps<TextFieldProps>;
+    marketCap?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CompanyCreateFormProps = React.PropsWithChildren<{
     overrides?: CompanyCreateFormOverridesProps | undefined | null;

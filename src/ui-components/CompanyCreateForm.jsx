@@ -25,25 +25,25 @@ export default function CompanyCreateForm(props) {
     Id: "",
     name: "",
     ISIN: "",
-    MarketCap: "",
+    marketCap: "",
   };
   const [Id, setId] = React.useState(initialValues.Id);
   const [name, setName] = React.useState(initialValues.name);
   const [ISIN, setISIN] = React.useState(initialValues.ISIN);
-  const [MarketCap, setMarketCap] = React.useState(initialValues.MarketCap);
+  const [marketCap, setMarketCap] = React.useState(initialValues.marketCap);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setId(initialValues.Id);
     setName(initialValues.name);
     setISIN(initialValues.ISIN);
-    setMarketCap(initialValues.MarketCap);
+    setMarketCap(initialValues.marketCap);
     setErrors({});
   };
   const validations = {
     Id: [{ type: "Required" }],
     name: [{ type: "Required" }],
-    ISIN: [{ type: "Required" }],
-    MarketCap: [],
+    ISIN: [],
+    marketCap: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -74,7 +74,7 @@ export default function CompanyCreateForm(props) {
           Id,
           name,
           ISIN,
-          MarketCap,
+          marketCap,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -140,7 +140,7 @@ export default function CompanyCreateForm(props) {
               Id: value,
               name,
               ISIN,
-              MarketCap,
+              marketCap,
             };
             const result = onChange(modelFields);
             value = result?.Id ?? value;
@@ -167,7 +167,7 @@ export default function CompanyCreateForm(props) {
               Id,
               name: value,
               ISIN,
-              MarketCap,
+              marketCap,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -184,7 +184,7 @@ export default function CompanyCreateForm(props) {
       ></TextField>
       <TextField
         label="Isin"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={ISIN}
         onChange={(e) => {
@@ -194,7 +194,7 @@ export default function CompanyCreateForm(props) {
               Id,
               name,
               ISIN: value,
-              MarketCap,
+              marketCap,
             };
             const result = onChange(modelFields);
             value = result?.ISIN ?? value;
@@ -215,7 +215,7 @@ export default function CompanyCreateForm(props) {
         isReadOnly={false}
         type="number"
         step="any"
-        value={MarketCap}
+        value={marketCap}
         onChange={(e) => {
           let value = isNaN(parseFloat(e.target.value))
             ? e.target.value
@@ -225,20 +225,20 @@ export default function CompanyCreateForm(props) {
               Id,
               name,
               ISIN,
-              MarketCap: value,
+              marketCap: value,
             };
             const result = onChange(modelFields);
-            value = result?.MarketCap ?? value;
+            value = result?.marketCap ?? value;
           }
-          if (errors.MarketCap?.hasError) {
-            runValidationTasks("MarketCap", value);
+          if (errors.marketCap?.hasError) {
+            runValidationTasks("marketCap", value);
           }
           setMarketCap(value);
         }}
-        onBlur={() => runValidationTasks("MarketCap", MarketCap)}
-        errorMessage={errors.MarketCap?.errorMessage}
-        hasError={errors.MarketCap?.hasError}
-        {...getOverrideProps(overrides, "MarketCap")}
+        onBlur={() => runValidationTasks("marketCap", marketCap)}
+        errorMessage={errors.marketCap?.errorMessage}
+        hasError={errors.marketCap?.hasError}
+        {...getOverrideProps(overrides, "marketCap")}
       ></TextField>
       <Flex
         justifyContent="space-between"

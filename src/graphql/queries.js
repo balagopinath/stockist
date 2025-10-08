@@ -214,7 +214,7 @@ export const getCompany = /* GraphQL */ `
       Id
       name
       ISIN
-      MarketCap
+      marketCap
       industryId
       industry {
         Id
@@ -254,7 +254,7 @@ export const listCompanies = /* GraphQL */ `
         Id
         name
         ISIN
-        MarketCap
+        marketCap
         industryId
         createdAt
         updatedAt
@@ -283,7 +283,7 @@ export const getScript = /* GraphQL */ `
         Id
         name
         ISIN
-        MarketCap
+        marketCap
         industryId
         createdAt
         updatedAt
@@ -594,7 +594,7 @@ export const companiesByIndustryId = /* GraphQL */ `
         Id
         name
         ISIN
-        MarketCap
+        marketCap
         industryId
         createdAt
         updatedAt

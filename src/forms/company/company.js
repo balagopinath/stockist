@@ -34,6 +34,8 @@ class Company extends Dialog {
             id: '',
             mode: '',
             name: '',
+            ISIN: '',
+            marketCap: 0.00,
             industry: undefined,
             industries: undefined,
             scripts: undefined,
@@ -42,6 +44,8 @@ class Company extends Dialog {
             this.state.mode = "Edit";
             this.state.id =  props.dataContext.Id;
             this.state.name = props.dataContext.name;
+            this.state.ISIN = props.dataContext.ISIN;
+            this.state.marketCap = props.dataContext.marketCap;
             this.state.industry = props.dataContext.industryId;
             this.state.scripts = this.#loadScripts();
         }
@@ -52,6 +56,8 @@ class Company extends Dialog {
         this.onAction = this.onAction.bind(this);
         this.setName = this.setName.bind(this);
         this.setIndustry = this.setIndustry.bind(this);
+        this.setISIN = this.setISIN.bind(this);
+        this.setMarketCap = this.setMarketCap.bind(this);
         this.onScriptAddClicked = this.onScriptAddClicked.bind(this);
         this.onScriptEditClicked = this.onScriptEditClicked.bind(this);
         this.onScriptDeleteClicked = this.onScriptDeleteClicked.bind(this);
@@ -66,7 +72,7 @@ class Company extends Dialog {
         if(actionName === "Save") {
             var data;
             if(this.state.mode === "Add") {
-                data = {Id: uuidv4(), name: this.state.name, industryId: this.state.industry}
+                data = {Id: uuidv4(), name: this.state.name, industryId: this.state.industry, ISIN: this.state.ISIN, marketCap: this.state.marketCap}
                 AppSync.addCompany(data).then(res => {
                     super.hide();
                 }).catch(err => {
@@ -78,7 +84,8 @@ class Company extends Dialog {
                 data.Id = this.state.id
                 data.name = this.state.name
                 data.industryId = this.state.industry
-
+                data.ISIN = this.state.ISIN
+                data.marketCap = this.state.marketCap
                 AppSync.editCompany(data, data.Id).then(res => {
                     super.hide();
                 }).catch(err => {
@@ -96,6 +103,14 @@ class Company extends Dialog {
         this.state.name = event.target.value;
         this.setState(this.state)
     }
+    setISIN(event) {
+        this.state.ISIN = event.target.value;
+        this.setState(this.state)
+    }
+    setMarketCap(event) {
+        this.state.marketCap = event.target.value;
+        this.setState(this.state)
+    }   
 
     setIndustry(event) {
         this.state.industry = event.target.value;
@@ -128,6 +143,8 @@ class Company extends Dialog {
         return super.renderDialog(
             <Form name="Company" formActions={["Save", "Cancel"]} onAction={this.onAction} width='400' height='400' lableSize="100">
                 <FormField name="Name" type="Text" value={this.state.name} onChange={this.setName} />
+                <FormField name="ISIN" type="Text" value={this.state.ISIN} onChange={this.setISIN} />
+                <FormField name="Market Cap" type="Currency" value={this.state.marketCap} onChange={this.setMarketCap} />
                 <FormField name="Industry" type="Combo" value={this.state.industry} options={this.state.industries} onChange={this.setIndustry} />
                 <FormField name="Indexes" type="Grid" onAddClicked={this.onScriptAddClicked} onEditClicked={this.onScriptEditClicked} onDeleteClicked={this.onScriptDeleteClicked} value={this.state.scripts}>
                     <GridColumnField header="Exchange" size="Flex" value="exchangeName" />

@@ -43,8 +43,8 @@ type Company @model
 {
   Id: ID! @primaryKey
   name: String!
-  ISIN: String!
-  MarketCap: Float
+  ISIN: String
+  marketCap: Float
   industryId: ID @index(name: "byIndustry")
   industry: Industry @belongsTo(fields: ["industryId"])
   scripts: [Script] @hasMany(indexName: "byCompany", fields: ["Id"])

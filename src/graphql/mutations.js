@@ -328,7 +328,7 @@ export const createCompany = /* GraphQL */ `
       Id
       name
       ISIN
-      MarketCap
+      marketCap
       industryId
       industry {
         Id
@@ -358,7 +358,7 @@ export const updateCompany = /* GraphQL */ `
       Id
       name
       ISIN
-      MarketCap
+      marketCap
       industryId
       industry {
         Id
@@ -388,7 +388,7 @@ export const deleteCompany = /* GraphQL */ `
       Id
       name
       ISIN
-      MarketCap
+      marketCap
       industryId
       industry {
         Id
@@ -430,7 +430,7 @@ export const createScript = /* GraphQL */ `
         Id
         name
         ISIN
-        MarketCap
+        marketCap
         industryId
         createdAt
         updatedAt
@@ -467,7 +467,7 @@ export const updateScript = /* GraphQL */ `
         Id
         name
         ISIN
-        MarketCap
+        marketCap
         industryId
         createdAt
         updatedAt
@@ -504,7 +504,7 @@ export const deleteScript = /* GraphQL */ `
         Id
         name
         ISIN
-        MarketCap
+        marketCap
         industryId
         createdAt
         updatedAt

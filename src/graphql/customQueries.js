@@ -20,7 +20,9 @@ export const listCompanies = /* GraphQL */ `
         industry {
           Id
           name
-        }        
+        }
+        ISIN
+        marketCap
         createdAt
         updatedAt
         __typename
