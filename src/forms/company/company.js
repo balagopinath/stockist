@@ -141,7 +141,7 @@ class Company extends Dialog {
 
     renderDialog(contentElem) {
         return super.renderDialog(
-            <Form name="Company" formActions={["Save", "Cancel"]} onAction={this.onAction} width='400' height='400' lableSize="100">
+            <Form name="Company" formActions={["Save", "Cancel"]} onAction={this.onAction} width='450' height='500' lableSize="100">
                 <FormField name="Name" type="Text" value={this.state.name} onChange={this.setName} />
                 <FormField name="ISIN" type="Text" value={this.state.ISIN} onChange={this.setISIN} />
                 <FormField name="Market Cap" type="Currency" value={this.state.marketCap} onChange={this.setMarketCap} />
