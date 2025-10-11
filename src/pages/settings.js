@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { createRef }  from "react";
 import Page from "./page";
 import './settings.css'
 import AppSync from "../AppSync";
@@ -6,6 +6,9 @@ import Dialog from "../dialog";
 import Exchange from "../forms/exchange/exchange";
 import Company from "../forms/company/company";
 import Industry from "../forms/industry/industry";
+import CSVParser from "../utilities/CSVParser";
+import FileStorage from "../utilities/fileStorage";
+
 
 class Setting extends React.Component {
     #height = "300px";
@@ -25,8 +28,11 @@ class Setting extends React.Component {
         this.addItem = this.addItem.bind(this);
         this.editItem = this.editItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+        this.importItems = this.importItems.bind(this);
+        this.onCSVFileSelected = this.onCSVFileSelected.bind(this);
 
         this.#height = props.height;
+        this.csvFileInput = createRef();
     }
 
     componentDidMount() {
@@ -59,6 +65,19 @@ class Setting extends React.Component {
     deleteItem() {
 
     }
+    importItems() {
+        this.csvFileInput.current.click();
+    }
+    onCSVFileSelected(event) {
+        const file = event.target.files[0];
+        event.target.value = null;
+        CSVParser.parseCSV(file).then(async res =>  {
+            await FileStorage.push(file);
+        }).catch(err => {
+
+        });
+    }
+
     setSelected(selectedItem) {
         selectedItem.isSelected = true;
         this.setState({data: this.state.data, selectedItem: selectedItem})
@@ -67,8 +86,10 @@ class Setting extends React.Component {
         const colNames = this.getColumnNames()
         return (
             <div style={{height: this.#height}} className="settingContainer" >
+                <input type="file" ref={this.csvFileInput} style={{ display: "none" }} onChange={this.onCSVFileSelected} accept=".csv,text/csv" />
                 <div className="settingHeader">
                     <h4>{this.props.Name}</h4>
+                    {this.props.canImport && <button onClick={this.importItems}>Import</button>}
                     {this.state.selectedItem && <button onClick={this.deleteItem}>-</button>}
                     {this.state.selectedItem != null && <button onClick={this.editItem}>Edit</button>}
                     {this.props.IsAdd && <button onClick={this.addItem}>+</button>}
@@ -235,7 +256,7 @@ export default class Settings extends Page {
             <div className="spContainer">
                 <IndustrySetting Name="Industry Sectors" IsAdd={true} height="300px" />
                 <ExchangeSetting Name="Exchanges" IsAdd={true} height="300px" />
-                <CompanySetting Name="Companies" IsAdd={true} height="300px" />
+                <CompanySetting Name="Companies" canImport={true} IsAdd={true} height="300px" />
             </div>
         )
     }

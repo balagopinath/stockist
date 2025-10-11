@@ -1,0 +1,14 @@
+{
+  "resourceName": "stockist",
+  "policyUUID": "ec8efed7",
+  "bucketName": "masters",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

@@ -112,5 +112,11 @@
       ]
     }
   },
-  "storage": {}
+  "storage": {
+    "stockist": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
 }
