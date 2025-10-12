@@ -73,7 +73,7 @@ class Setting extends React.Component {
         const file = event.target.files[0];
         event.target.value = null;
         CSVParser.parseCSV(file).then(async res =>  {
-            await FileStorage.push(file);
+            await FileStorage.push(file, this.props.data);
         }).catch(err => {
             Debug.Write(err);
         });
@@ -257,7 +257,7 @@ export default class Settings extends Page {
             <div className="spContainer">
                 <IndustrySetting Name="Industry Sectors" IsAdd={true} height="300px" />
                 <ExchangeSetting Name="Exchanges" IsAdd={true} height="300px" />
-                <CompanySetting Name="Companies" canImport={true} IsAdd={true} height="300px" />
+                <CompanySetting Name="Companies" canImport={true} data="Companies" IsAdd={true} height="300px" />
             </div>
         )
     }
