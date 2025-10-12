@@ -1,5 +1,5 @@
 import AppSync from "./AppSync";
-import Log from "./Log"
+import { Log } from "./Log"
 
 class Environment {
     static #authUser = null;

@@ -8,6 +8,7 @@ import Company from "../forms/company/company";
 import Industry from "../forms/industry/industry";
 import CSVParser from "../utilities/CSVParser";
 import FileStorage from "../utilities/fileStorage";
+import { Debug } from "../Log";
 
 
 class Setting extends React.Component {
@@ -74,7 +75,7 @@ class Setting extends React.Component {
         CSVParser.parseCSV(file).then(async res =>  {
             await FileStorage.push(file);
         }).catch(err => {
-
+            Debug.Write(err);
         });
     }
 
