@@ -46,6 +46,22 @@
     }
   },
   "function": {
+    "S3Triggerf6149a57": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "stockist"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "stockist7fc744a0CreateAuthChallenge": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -63,6 +79,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_S3Triggerf6149a57_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Triggerf6149a57"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Triggerf6149a57_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Triggerf6149a57"
+        }
+      ]
+    },
     "AMPLIFY_function_stockist7fc744a0CreateAuthChallenge_deploymentBucketName": {
       "usedBy": [
         {
@@ -114,7 +146,17 @@
   },
   "storage": {
     "stockist": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ],
+          "category": "function",
+          "resourceName": "S3Triggerf6149a57"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

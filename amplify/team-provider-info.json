@@ -28,6 +28,10 @@
         "stockist7fc744a0VerifyAuthChallengeResponse": {
           "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
           "s3Key": "amplify-builds/stockist7fc744a0VerifyAuthChallengeResponse-6a564445376f76643570-build.zip"
+        },
+        "S3Triggerf6149a57": {
+          "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
+          "s3Key": "amplify-builds/S3Triggerf6149a57-373678664a2b714b6745-build.zip"
         }
       },
       "api": {

@@ -91,110 +91,11 @@ export const onDeleteExchange = /* GraphQL */ `
     }
   }
 `;
-export const onCreateIndustrySector = /* GraphQL */ `
-  subscription OnCreateIndustrySector(
-    $filter: ModelSubscriptionIndustrySectorFilterInput
-  ) {
-    onCreateIndustrySector(filter: $filter) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateIndustrySector = /* GraphQL */ `
-  subscription OnUpdateIndustrySector(
-    $filter: ModelSubscriptionIndustrySectorFilterInput
-  ) {
-    onUpdateIndustrySector(filter: $filter) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteIndustrySector = /* GraphQL */ `
-  subscription OnDeleteIndustrySector(
-    $filter: ModelSubscriptionIndustrySectorFilterInput
-  ) {
-    onDeleteIndustrySector(filter: $filter) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const onCreateIndustry = /* GraphQL */ `
   subscription OnCreateIndustry($filter: ModelSubscriptionIndustryFilterInput) {
     onCreateIndustry(filter: $filter) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -203,7 +104,6 @@ export const onCreateIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -224,15 +124,6 @@ export const onUpdateIndustry = /* GraphQL */ `
     onUpdateIndustry(filter: $filter) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -241,7 +132,6 @@ export const onUpdateIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -262,15 +152,6 @@ export const onDeleteIndustry = /* GraphQL */ `
     onDeleteIndustry(filter: $filter) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -279,7 +160,6 @@ export const onDeleteIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -306,7 +186,6 @@ export const onCreateCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -333,7 +212,6 @@ export const onUpdateCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -360,7 +238,6 @@ export const onDeleteCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt

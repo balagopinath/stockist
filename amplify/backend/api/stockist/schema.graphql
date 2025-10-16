@@ -17,22 +17,10 @@ type Exchange @model
   stocks: [Script] @hasMany(indexName: "byExchange", fields: ["Id"])
 }
 
-type IndustrySector @model
-{
-  Id: ID! @primaryKey
-  name: String!
-  industries: [Industry] @hasMany(indexName: "byIndustrySector", fields: ["Id"])
-  parentISId: ID @index(name: "byParentIS")
-  parentIndustrySector: IndustrySector @belongsTo(fields: ["parentISId"])
-  subIndustrySectors: [IndustrySector] @hasMany(indexName: "byParentIS", fields: ["Id"])
-}
-
 type Industry @model
 {
   Id: ID! @primaryKey
   name: String!
-  industrySectorId: ID @index(name: "byIndustrySector")
-  industrySector: IndustrySector @belongsTo(fields: ["industrySectorId"])
   companies: [Company] @hasMany(indexName: "byIndustry", fields: ["Id"])
   parentIndustryId: ID @index(name: "byParentIndustry")
   parentIndustry: Industry @belongsTo(fields: ["parentIndustryId"])

@@ -85,76 +85,11 @@ export const listExchanges = /* GraphQL */ `
     }
   }
 `;
-export const getIndustrySector = /* GraphQL */ `
-  query GetIndustrySector($Id: ID!) {
-    getIndustrySector(Id: $Id) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listIndustrySectors = /* GraphQL */ `
-  query ListIndustrySectors(
-    $Id: ID
-    $filter: ModelIndustrySectorFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listIndustrySectors(
-      Id: $Id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getIndustry = /* GraphQL */ `
   query GetIndustry($Id: ID!) {
     getIndustry(Id: $Id) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -163,7 +98,6 @@ export const getIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -197,7 +131,6 @@ export const listIndustries = /* GraphQL */ `
       items {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -219,7 +152,6 @@ export const getCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -489,63 +421,6 @@ export const userProfilesByUserIdAndId = /* GraphQL */ `
     }
   }
 `;
-export const industrySectorsByParentISId = /* GraphQL */ `
-  query IndustrySectorsByParentISId(
-    $parentISId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelIndustrySectorFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    industrySectorsByParentISId(
-      parentISId: $parentISId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const industriesByIndustrySectorId = /* GraphQL */ `
-  query IndustriesByIndustrySectorId(
-    $industrySectorId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelIndustryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    industriesByIndustrySectorId(
-      industrySectorId: $industrySectorId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        Id
-        name
-        industrySectorId
-        parentIndustryId
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const industriesByParentIndustryId = /* GraphQL */ `
   query IndustriesByParentIndustryId(
     $parentIndustryId: ID!
@@ -564,7 +439,6 @@ export const industriesByParentIndustryId = /* GraphQL */ `
       items {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt

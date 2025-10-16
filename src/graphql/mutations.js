@@ -103,99 +103,6 @@ export const deleteExchange = /* GraphQL */ `
     }
   }
 `;
-export const createIndustrySector = /* GraphQL */ `
-  mutation CreateIndustrySector(
-    $input: CreateIndustrySectorInput!
-    $condition: ModelIndustrySectorConditionInput
-  ) {
-    createIndustrySector(input: $input, condition: $condition) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateIndustrySector = /* GraphQL */ `
-  mutation UpdateIndustrySector(
-    $input: UpdateIndustrySectorInput!
-    $condition: ModelIndustrySectorConditionInput
-  ) {
-    updateIndustrySector(input: $input, condition: $condition) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteIndustrySector = /* GraphQL */ `
-  mutation DeleteIndustrySector(
-    $input: DeleteIndustrySectorInput!
-    $condition: ModelIndustrySectorConditionInput
-  ) {
-    deleteIndustrySector(input: $input, condition: $condition) {
-      Id
-      name
-      industries {
-        nextToken
-        __typename
-      }
-      parentISId
-      parentIndustrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
-      subIndustrySectors {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const createIndustry = /* GraphQL */ `
   mutation CreateIndustry(
     $input: CreateIndustryInput!
@@ -204,15 +111,6 @@ export const createIndustry = /* GraphQL */ `
     createIndustry(input: $input, condition: $condition) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -221,7 +119,6 @@ export const createIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -245,15 +142,6 @@ export const updateIndustry = /* GraphQL */ `
     updateIndustry(input: $input, condition: $condition) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -262,7 +150,6 @@ export const updateIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -286,15 +173,6 @@ export const deleteIndustry = /* GraphQL */ `
     deleteIndustry(input: $input, condition: $condition) {
       Id
       name
-      industrySectorId
-      industrySector {
-        Id
-        name
-        parentISId
-        createdAt
-        updatedAt
-        __typename
-      }
       companies {
         nextToken
         __typename
@@ -303,7 +181,6 @@ export const deleteIndustry = /* GraphQL */ `
       parentIndustry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -333,7 +210,6 @@ export const createCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -363,7 +239,6 @@ export const updateCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
@@ -393,7 +268,6 @@ export const deleteCompany = /* GraphQL */ `
       industry {
         Id
         name
-        industrySectorId
         parentIndustryId
         createdAt
         updatedAt
