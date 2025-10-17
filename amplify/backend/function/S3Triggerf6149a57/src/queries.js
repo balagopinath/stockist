@@ -1,4 +1,4 @@
-  const getCompany = `
+  export const getCompany = `
     query GetCompany($Id: ID!) {
       getCompany(Id: $Id) {
         Id
@@ -24,5 +24,3 @@
         __typename
       }
     }`;
-
-module.exports = { getCompany };

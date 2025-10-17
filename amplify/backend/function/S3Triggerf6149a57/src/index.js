@@ -1,6 +1,6 @@
-const { isCSVFile } = require("./utilities.js");
-const { getCompany } = require("./queries.js");
-const { faultyFile } = require("./S3Ops.js")
+import { isCSVFile, getItemInfo } from './utilities.js';
+import { getCompany } from './queries.js';
+import { faultyItem } from './S3Ops.js';
 
 /* Amplify Params - DO NOT EDIT
 	API_STOCKIST_GRAPHQLAPIENDPOINTOUTPUT
@@ -10,24 +10,25 @@ const { faultyFile } = require("./S3Ops.js")
 	REGION
 Amplify Params - DO NOT EDIT */
 
-exports.handler = async function (event) {
+export const handler = async (event) => {
+  const bucket = event.Records[0].s3.bucket.name;
+  const key = event.Records[0].s3.object.key;
 
   console.log(process.env);
   console.log('Received S3 event:', JSON.stringify(event, null, 2));
 
-  executeProcess(event.Records[0].s3.object.key)
+  await executeProcess(bucket, key)
+
+ 
 
 
-
-  const bucket = event.Records[0].s3.bucket.name;
-  const key = event.Records[0].s3.object.key;
   console.log(`Bucket: ${bucket}`, `Key: ${key}`);
 };
 
-async function executeProcess(csvFileKey) {
-  let itemInfo = getItemInfo(itemKey);
-  console.log("itemInfo : " + itemInfo);
+async function executeProcess(bucket, itemKey) {
+  const itemInfo = getItemInfo(itemKey);
+  console.log("itemInfo : " + JSON.stringify(itemInfo));
   if(!isCSVFile(itemInfo)) {
-    await faultyFile(itemInfo)
+    await faultyItem(bucket, itemInfo)
   }
 } 

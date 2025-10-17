@@ -1,4 +1,4 @@
-function isCSVFile(itemInfo) {
+export function isCSVFile(itemInfo) {
     if(itemInfo.isFile) {
         return itemInfo.ext.toLowerCase().endsWith('.csv')
     }
@@ -7,7 +7,7 @@ function isCSVFile(itemInfo) {
     }
 }
 
-function getItemInfo(itemKey) {
+export function getItemInfo(itemKey) {
     if (typeof itemKey !== "string" || itemKey.trim() === "") {
         throw new Error("Invalid S3 key");
     }
@@ -38,5 +38,3 @@ function getItemInfo(itemKey) {
         key,
     };
 }
-
-module.exports = { isCSVFile }

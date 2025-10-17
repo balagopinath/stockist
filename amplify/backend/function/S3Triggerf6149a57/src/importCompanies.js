@@ -1,4 +1,4 @@
-function importCompanies(csvFileKey) {
+export function importCompanies(csvFileKey) {
 
       console.log("Impart function called with csvFileKey : " + csvFileKey);
 

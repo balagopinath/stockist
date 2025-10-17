@@ -1,20 +1,23 @@
-const { getItemInfo } = require("./utilities");
+import { getItemInfo } from './utilities.js';
+
 import {
   S3Client,
   CopyObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 
-async function faultyItem(bucket, itemInfo) {
+const s3 = new S3Client({ region: "ap-south-1" });
 
-    const targetKey = itemInfo.path + "/error/" + itemInfo.name;
+export async function faultyItem(bucket, itemInfo) {
+
+    const targetKey = itemInfo.path + "error/" + itemInfo.name;
 
     // Copy to error/ folder
     await s3.send(
       new CopyObjectCommand({
         Bucket: bucket,
-        CopySource: `${bucket}/${targetKey}`,
-        Key: destinationKey,
+        CopySource: `${bucket}/${itemInfo.key}`,
+        Key: targetKey,
       })
     );
 
@@ -22,11 +25,8 @@ async function faultyItem(bucket, itemInfo) {
     await s3.send(
       new DeleteObjectCommand({
         Bucket: bucket,
-        Key: itemInfo.Key,
+        Key: itemInfo.key,
       })
     );
 
-
 }
-
-module.exports = { faultyFile }
