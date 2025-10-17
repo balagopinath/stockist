@@ -12,6 +12,7 @@ export async function faultyItem(bucket, itemInfo) {
 
     const targetKey = itemInfo.path + "error/" + itemInfo.name;
 
+    console.log("Copying the file to error");
     // Copy to error/ folder
     await s3.send(
       new CopyObjectCommand({
@@ -20,7 +21,9 @@ export async function faultyItem(bucket, itemInfo) {
         Key: targetKey,
       })
     );
+    console.log("Copying the file to error - DONE");
 
+    console.log("Deleting the original file");
     // Delete original
     await s3.send(
       new DeleteObjectCommand({
@@ -28,5 +31,6 @@ export async function faultyItem(bucket, itemInfo) {
         Key: itemInfo.key,
       })
     );
+    console.log("Deleting the original file - DONE");    
 
 }

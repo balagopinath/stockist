@@ -31,7 +31,7 @@
         },
         "S3Triggerf6149a57": {
           "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
-          "s3Key": "amplify-builds/S3Triggerf6149a57-4f73637a784255433978-build.zip"
+          "s3Key": "amplify-builds/S3Triggerf6149a57-647a694e574f527a2b4a-build.zip"
         }
       },
       "api": {

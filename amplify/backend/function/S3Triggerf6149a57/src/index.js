@@ -26,9 +26,15 @@ export const handler = async (event) => {
 };
 
 async function executeProcess(bucket, itemKey) {
-  const itemInfo = getItemInfo(itemKey);
-  console.log("itemInfo : " + JSON.stringify(itemInfo));
-  if(!isCSVFile(itemInfo)) {
-    await faultyItem(bucket, itemInfo)
-  }
+    const itemInfo = getItemInfo(itemKey);
+    console.log("itemInfo : " + JSON.stringify(itemInfo));
+
+    switch(itemInfo.path) {
+      case "public/Companies/": 
+        console.log("Companies file");
+        if(!isCSVFile(itemInfo)) {
+          await faultyItem(bucket, itemInfo)
+        }
+        break;
+    }
 } 
