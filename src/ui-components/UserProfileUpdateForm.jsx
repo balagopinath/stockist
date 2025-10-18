@@ -7,14 +7,14 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { API } from "aws-amplify";
-import { getUserProfile } from "../graphql/queries";
-import { updateUserProfile } from "../graphql/mutations";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { UserProfile } from "../models";
+import { fetchByPath, validateField } from "./utils";
+import { DataStore } from "aws-amplify";
 export default function UserProfileUpdateForm(props) {
   const {
     Id: IdProp,
-    userProfile: userProfileModelProp,
+    userProfile,
     onSuccess,
     onError,
     onSubmit,
@@ -41,22 +41,16 @@ export default function UserProfileUpdateForm(props) {
     setUserName(cleanValues.userName);
     setErrors({});
   };
-  const [userProfileRecord, setUserProfileRecord] =
-    React.useState(userProfileModelProp);
+  const [userProfileRecord, setUserProfileRecord] = React.useState(userProfile);
   React.useEffect(() => {
     const queryData = async () => {
       const record = IdProp
-        ? (
-            await API.graphql({
-              query: getUserProfile.replaceAll("__typename", ""),
-              variables: { Id: IdProp },
-            })
-          )?.data?.getUserProfile
-        : userProfileModelProp;
+        ? await DataStore.query(UserProfile, IdProp)
+        : userProfile;
       setUserProfileRecord(record);
     };
     queryData();
-  }, [IdProp, userProfileModelProp]);
+  }, [IdProp, userProfile]);
   React.useEffect(resetStateValues, [userProfileRecord]);
   const validations = {
     Id: [{ type: "Required" }],
@@ -68,10 +62,9 @@ export default function UserProfileUpdateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value =
-      currentValue && getDisplayValue
-        ? getDisplayValue(currentValue)
-        : currentValue;
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -117,26 +110,21 @@ export default function UserProfileUpdateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value === "") {
-              modelFields[key] = null;
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
             }
           });
-          await API.graphql({
-            query: updateUserProfile.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                Id: userProfileRecord.Id,
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(
+            UserProfile.copyOf(userProfileRecord, (updated) => {
+              Object.assign(updated, modelFields);
+            })
+          );
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}
@@ -232,7 +220,7 @@ export default function UserProfileUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(IdProp || userProfileModelProp)}
+          isDisabled={!(IdProp || userProfile)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -244,7 +232,7 @@ export default function UserProfileUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(IdProp || userProfileModelProp) ||
+              !(IdProp || userProfile) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

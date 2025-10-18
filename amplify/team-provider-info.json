@@ -13,10 +13,16 @@
     },
     "categories": {
       "auth": {
-        "stockist7fc744a0": {},
         "stockist064fbe47": {}
       },
+      "storage": {
+        "stockist": {}
+      },
       "function": {
+        "S3Triggerf6149a57": {
+          "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
+          "s3Key": "amplify-builds/S3Triggerf6149a57-65316879314842596234-build.zip"
+        },
         "stockist7fc744a0CreateAuthChallenge": {
           "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
           "s3Key": "amplify-builds/stockist7fc744a0CreateAuthChallenge-6e4f6c56796846385450-build.zip"
@@ -28,16 +34,9 @@
         "stockist7fc744a0VerifyAuthChallengeResponse": {
           "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
           "s3Key": "amplify-builds/stockist7fc744a0VerifyAuthChallengeResponse-6a564445376f76643570-build.zip"
-        },
-        "S3Triggerf6149a57": {
-          "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
-          "s3Key": "amplify-builds/S3Triggerf6149a57-647a694e574f527a2b4a-build.zip"
         }
       },
       "api": {
-        "stockist": {}
-      },
-      "storage": {
         "stockist": {}
       }
     }

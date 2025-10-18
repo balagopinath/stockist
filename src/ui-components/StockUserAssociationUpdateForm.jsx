@@ -7,14 +7,14 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { API } from "aws-amplify";
-import { getStockUserAssociation } from "../graphql/queries";
-import { updateStockUserAssociation } from "../graphql/mutations";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { StockUserAssociation } from "../models";
+import { fetchByPath, validateField } from "./utils";
+import { DataStore } from "aws-amplify";
 export default function StockUserAssociationUpdateForm(props) {
   const {
     Id: IdProp,
-    stockUserAssociation: stockUserAssociationModelProp,
+    stockUserAssociation,
     onSuccess,
     onError,
     onSubmit,
@@ -49,21 +49,16 @@ export default function StockUserAssociationUpdateForm(props) {
     setErrors({});
   };
   const [stockUserAssociationRecord, setStockUserAssociationRecord] =
-    React.useState(stockUserAssociationModelProp);
+    React.useState(stockUserAssociation);
   React.useEffect(() => {
     const queryData = async () => {
       const record = IdProp
-        ? (
-            await API.graphql({
-              query: getStockUserAssociation.replaceAll("__typename", ""),
-              variables: { Id: IdProp },
-            })
-          )?.data?.getStockUserAssociation
-        : stockUserAssociationModelProp;
+        ? await DataStore.query(StockUserAssociation, IdProp)
+        : stockUserAssociation;
       setStockUserAssociationRecord(record);
     };
     queryData();
-  }, [IdProp, stockUserAssociationModelProp]);
+  }, [IdProp, stockUserAssociation]);
   React.useEffect(resetStateValues, [stockUserAssociationRecord]);
   const validations = {
     Id: [{ type: "Required" }],
@@ -76,10 +71,9 @@ export default function StockUserAssociationUpdateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value =
-      currentValue && getDisplayValue
-        ? getDisplayValue(currentValue)
-        : currentValue;
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -126,26 +120,24 @@ export default function StockUserAssociationUpdateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value === "") {
-              modelFields[key] = null;
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
             }
           });
-          await API.graphql({
-            query: updateStockUserAssociation.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                Id: stockUserAssociationRecord.Id,
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(
+            StockUserAssociation.copyOf(
+              stockUserAssociationRecord,
+              (updated) => {
+                Object.assign(updated, modelFields);
+              }
+            )
+          );
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}
@@ -275,7 +267,7 @@ export default function StockUserAssociationUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(IdProp || stockUserAssociationModelProp)}
+          isDisabled={!(IdProp || stockUserAssociation)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -287,7 +279,7 @@ export default function StockUserAssociationUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(IdProp || stockUserAssociationModelProp) ||
+              !(IdProp || stockUserAssociation) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

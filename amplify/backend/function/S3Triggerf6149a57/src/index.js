@@ -17,11 +17,12 @@ export const handler = async (event) => {
   console.log(process.env);
   console.log('Received S3 event:', JSON.stringify(event, null, 2));
 
-  await executeProcess(bucket, key)
-
- 
-
-
+  switch(event.Records[0].eventName) {
+      case "ObjectCreated:Put":
+      case "ObjectCreated:Copy":
+        await executeProcess(bucket, key)
+        break;
+  }
   console.log(`Bucket: ${bucket}`, `Key: ${key}`);
 };
 

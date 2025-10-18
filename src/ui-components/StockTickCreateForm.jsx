@@ -7,9 +7,10 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { API } from "aws-amplify";
-import { createStockTick } from "../graphql/mutations";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { StockTick } from "../models";
+import { fetchByPath, validateField } from "./utils";
+import { DataStore } from "aws-amplify";
 export default function StockTickCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -50,10 +51,9 @@ export default function StockTickCreateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value =
-      currentValue && getDisplayValue
-        ? getDisplayValue(currentValue)
-        : currentValue;
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -71,7 +71,7 @@ export default function StockTickCreateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hourCycle: "h23",
+      hour12: false,
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -117,18 +117,11 @@ export default function StockTickCreateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value === "") {
-              modelFields[key] = null;
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
             }
           });
-          await API.graphql({
-            query: createStockTick.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(new StockTick(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -137,8 +130,7 @@ export default function StockTickCreateForm(props) {
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}
