@@ -1,6 +1,7 @@
 import { isCSVFile, getItemInfo } from './utilities.js';
-import { getCompany } from './queries.js';
-import { faultyItem } from './S3Ops.js';
+import { faultyItem, getItem } from './S3Ops.js';
+import { importCompanies } from './importCompanies.js';
+
 
 /* Amplify Params - DO NOT EDIT
 	API_STOCKIST_GRAPHQLAPIENDPOINTOUTPUT
@@ -14,7 +15,6 @@ export const handler = async (event) => {
   const bucket = event.Records[0].s3.bucket.name;
   const key = event.Records[0].s3.object.key;
 
-  console.log(process.env);
   console.log('Received S3 event:', JSON.stringify(event, null, 2));
 
   switch(event.Records[0].eventName) {
@@ -32,9 +32,14 @@ async function executeProcess(bucket, itemKey) {
 
     switch(itemInfo.path) {
       case "public/Companies/": 
-        console.log("Companies file");
         if(!isCSVFile(itemInfo)) {
           await faultyItem(bucket, itemInfo)
+        }
+        try {
+          const res = await getItem(bucket, itemInfo);
+          await importCompanies(res);
+        } catch(ex) {
+          console.log(ex);
         }
         break;
     }

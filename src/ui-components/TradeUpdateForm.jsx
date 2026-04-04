@@ -13,14 +13,14 @@ import {
   SwitchField,
   TextField,
 } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Trade } from "../models";
-import { fetchByPath, validateField } from "./utils";
-import { DataStore } from "aws-amplify";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
+import { API } from "aws-amplify";
+import { getTrade } from "../graphql/queries";
+import { updateTrade } from "../graphql/mutations";
 export default function TradeUpdateForm(props) {
   const {
     Id: IdProp,
-    trade,
+    trade: tradeModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -55,14 +55,21 @@ export default function TradeUpdateForm(props) {
     setTranDate(cleanValues.tranDate);
     setErrors({});
   };
-  const [tradeRecord, setTradeRecord] = React.useState(trade);
+  const [tradeRecord, setTradeRecord] = React.useState(tradeModelProp);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = IdProp ? await DataStore.query(Trade, IdProp) : trade;
+      const record = IdProp
+        ? (
+            await API.graphql({
+              query: getTrade.replaceAll("__typename", ""),
+              variables: { Id: IdProp },
+            })
+          )?.data?.getTrade
+        : tradeModelProp;
       setTradeRecord(record);
     };
     queryData();
-  }, [IdProp, trade]);
+  }, [IdProp, tradeModelProp]);
   React.useEffect(resetStateValues, [tradeRecord]);
   const validations = {
     Id: [{ type: "Required" }],
@@ -76,9 +83,10 @@ export default function TradeUpdateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value = getDisplayValue
-      ? getDisplayValue(currentValue)
-      : currentValue;
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -96,7 +104,7 @@ export default function TradeUpdateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hour12: false,
+      hourCycle: "h23",
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -143,21 +151,26 @@ export default function TradeUpdateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value.trim() === "") {
-              modelFields[key] = undefined;
+            if (typeof value === "string" && value === "") {
+              modelFields[key] = null;
             }
           });
-          await DataStore.save(
-            Trade.copyOf(tradeRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await API.graphql({
+            query: updateTrade.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                Id: tradeRecord.Id,
+                ...modelFields,
+              },
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            onError(modelFields, err.message);
+            const messages = err.errors.map((e) => e.message).join("\n");
+            onError(modelFields, messages);
           }
         }
       }}
@@ -321,7 +334,7 @@ export default function TradeUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(IdProp || trade)}
+          isDisabled={!(IdProp || tradeModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -333,7 +346,7 @@ export default function TradeUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(IdProp || trade) ||
+              !(IdProp || tradeModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

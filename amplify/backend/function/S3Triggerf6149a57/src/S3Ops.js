@@ -4,6 +4,7 @@ import {
   S3Client,
   CopyObjectCommand,
   DeleteObjectCommand,
+  GetObjectCommand
 } from "@aws-sdk/client-s3";
 
 const s3 = new S3Client({ region: "ap-south-1" });
@@ -12,7 +13,6 @@ export async function faultyItem(bucket, itemInfo) {
 
     const targetKey = itemInfo.path + "error/" + itemInfo.name;
 
-    console.log("Copying the file to error");
     // Copy to error/ folder
     await s3.send(
       new CopyObjectCommand({
@@ -21,9 +21,6 @@ export async function faultyItem(bucket, itemInfo) {
         Key: targetKey,
       })
     );
-    console.log("Copying the file to error - DONE");
-
-    console.log("Deleting the original file");
     // Delete original
     await s3.send(
       new DeleteObjectCommand({
@@ -31,6 +28,14 @@ export async function faultyItem(bucket, itemInfo) {
         Key: itemInfo.key,
       })
     );
-    console.log("Deleting the original file - DONE");    
+}
 
+export async function getItem(bucket, itemInfo) {
+      const res  = await s3.send(
+        new GetObjectCommand({
+          Bucket: bucket,
+          Key: itemInfo.key,
+        })
+      ); 
+      return res; 
 }

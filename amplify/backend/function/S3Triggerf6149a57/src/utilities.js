@@ -1,6 +1,8 @@
+import csv from "csv-parser";
+
 export function isCSVFile(itemInfo) {
     if(itemInfo.isFile) {
-        return itemInfo.ext.toLowerCase().endsWith('.csv')
+        return itemInfo.ext.toLowerCase().endsWith('csv')
     }
     else {
         return false;
@@ -37,4 +39,19 @@ export function getItemInfo(itemKey) {
         path,
         key,
     };
+}
+
+export async function getObjectsFromStream(stream) {
+    return parseStream(stream);
+}
+
+async function parseStream(stream) {
+    return new Promise((resolve, reject) => {
+    const results = [];
+    stream
+      .pipe(csv()) // auto-detects headers from first line
+      .on("data", (data) => results.push(data))
+      .on("end", () => resolve(results))
+      .on("error", reject);
+  });
 }

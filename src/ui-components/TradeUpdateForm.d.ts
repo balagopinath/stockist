@@ -6,8 +6,16 @@
 
 import * as React from "react";
 import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Trade } from "../models";
+export declare type EscapeHatchProps = {
+    [elementHierarchy: string]: Record<string, unknown>;
+} | null;
+export declare type VariantValues = {
+    [key: string]: string;
+};
+export declare type Variant = {
+    variantValues: VariantValues;
+    overrides: EscapeHatchProps;
+};
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -40,7 +48,7 @@ export declare type TradeUpdateFormProps = React.PropsWithChildren<{
     overrides?: TradeUpdateFormOverridesProps | undefined | null;
 } & {
     Id?: string;
-    trade?: Trade;
+    trade?: any;
     onSubmit?: (fields: TradeUpdateFormInputValues) => TradeUpdateFormInputValues;
     onSuccess?: (fields: TradeUpdateFormInputValues) => void;
     onError?: (fields: TradeUpdateFormInputValues, errorMessage: string) => void;

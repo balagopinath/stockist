@@ -7,14 +7,14 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { StockTick } from "../models";
-import { fetchByPath, validateField } from "./utils";
-import { DataStore } from "aws-amplify";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
+import { API } from "aws-amplify";
+import { getStockTick } from "../graphql/queries";
+import { updateStockTick } from "../graphql/mutations";
 export default function StockTickUpdateForm(props) {
   const {
     Id: IdProp,
-    stockTick,
+    stockTick: stockTickModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -44,16 +44,22 @@ export default function StockTickUpdateForm(props) {
     setTickTime(cleanValues.tickTime);
     setErrors({});
   };
-  const [stockTickRecord, setStockTickRecord] = React.useState(stockTick);
+  const [stockTickRecord, setStockTickRecord] =
+    React.useState(stockTickModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = IdProp
-        ? await DataStore.query(StockTick, IdProp)
-        : stockTick;
+        ? (
+            await API.graphql({
+              query: getStockTick.replaceAll("__typename", ""),
+              variables: { Id: IdProp },
+            })
+          )?.data?.getStockTick
+        : stockTickModelProp;
       setStockTickRecord(record);
     };
     queryData();
-  }, [IdProp, stockTick]);
+  }, [IdProp, stockTickModelProp]);
   React.useEffect(resetStateValues, [stockTickRecord]);
   const validations = {
     Id: [{ type: "Required" }],
@@ -66,9 +72,10 @@ export default function StockTickUpdateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value = getDisplayValue
-      ? getDisplayValue(currentValue)
-      : currentValue;
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -86,7 +93,7 @@ export default function StockTickUpdateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hour12: false,
+      hourCycle: "h23",
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -132,21 +139,26 @@ export default function StockTickUpdateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value.trim() === "") {
-              modelFields[key] = undefined;
+            if (typeof value === "string" && value === "") {
+              modelFields[key] = null;
             }
           });
-          await DataStore.save(
-            StockTick.copyOf(stockTickRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await API.graphql({
+            query: updateStockTick.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                Id: stockTickRecord.Id,
+                ...modelFields,
+              },
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            onError(modelFields, err.message);
+            const messages = err.errors.map((e) => e.message).join("\n");
+            onError(modelFields, messages);
           }
         }
       }}
@@ -278,7 +290,7 @@ export default function StockTickUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(IdProp || stockTick)}
+          isDisabled={!(IdProp || stockTickModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -290,7 +302,7 @@ export default function StockTickUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(IdProp || stockTick) ||
+              !(IdProp || stockTickModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

@@ -7,14 +7,14 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Exchange } from "../models";
-import { fetchByPath, validateField } from "./utils";
-import { DataStore } from "aws-amplify";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
+import { API } from "aws-amplify";
+import { getExchange } from "../graphql/queries";
+import { updateExchange } from "../graphql/mutations";
 export default function ExchangeUpdateForm(props) {
   const {
     Id: IdProp,
-    exchange,
+    exchange: exchangeModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -41,16 +41,21 @@ export default function ExchangeUpdateForm(props) {
     setCode(cleanValues.code);
     setErrors({});
   };
-  const [exchangeRecord, setExchangeRecord] = React.useState(exchange);
+  const [exchangeRecord, setExchangeRecord] = React.useState(exchangeModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = IdProp
-        ? await DataStore.query(Exchange, IdProp)
-        : exchange;
+        ? (
+            await API.graphql({
+              query: getExchange.replaceAll("__typename", ""),
+              variables: { Id: IdProp },
+            })
+          )?.data?.getExchange
+        : exchangeModelProp;
       setExchangeRecord(record);
     };
     queryData();
-  }, [IdProp, exchange]);
+  }, [IdProp, exchangeModelProp]);
   React.useEffect(resetStateValues, [exchangeRecord]);
   const validations = {
     Id: [{ type: "Required" }],
@@ -62,9 +67,10 @@ export default function ExchangeUpdateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value = getDisplayValue
-      ? getDisplayValue(currentValue)
-      : currentValue;
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -110,21 +116,26 @@ export default function ExchangeUpdateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value.trim() === "") {
-              modelFields[key] = undefined;
+            if (typeof value === "string" && value === "") {
+              modelFields[key] = null;
             }
           });
-          await DataStore.save(
-            Exchange.copyOf(exchangeRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await API.graphql({
+            query: updateExchange.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                Id: exchangeRecord.Id,
+                ...modelFields,
+              },
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            onError(modelFields, err.message);
+            const messages = err.errors.map((e) => e.message).join("\n");
+            onError(modelFields, messages);
           }
         }
       }}
@@ -220,7 +231,7 @@ export default function ExchangeUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(IdProp || exchange)}
+          isDisabled={!(IdProp || exchangeModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -232,7 +243,7 @@ export default function ExchangeUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(IdProp || exchange) ||
+              !(IdProp || exchangeModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}
