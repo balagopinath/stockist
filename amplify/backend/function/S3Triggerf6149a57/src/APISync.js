@@ -1,5 +1,5 @@
-import { getCompaniesByISIN, getExchangesByCode, getExchanges, getIndustries } from './queries.js';
-import { createIndustry, createExchange } from './mutations.js'
+import { getCompaniesByISIN, getIndustriesByName, getExchangesByCode, getExchanges, getIndustries } from './queries.js';
+import { createIndustry, createExchange, createCompany } from './mutations.js'
 import { v4 as uuidv4 } from 'uuid';
 
 const endpoint = process.env.API_STOCKIST_GRAPHQLAPIENDPOINTOUTPUT;
@@ -38,6 +38,17 @@ export async function getCompanyByISIN(ISIN) {
     });
 }
 
+export async function  addCompany(company) {
+    return new Promise((response, reject) => {
+        company.Id = uuidv4();
+        get(createCompany, {input: company}).then(data => {
+            response(data);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
 export async function getIndustryByName(name) {
 
     return new Promise((response, reject) => {
@@ -63,7 +74,7 @@ export async function getIndustriesWithNames(names) {
     });
 }
 
-export async function addIndustry(industry) {
+export async function  addIndustry(industry) {
     return new Promise((response, reject) => {
         industry.Id = uuidv4();
         get(createIndustry, {input: industry}).then(data => {

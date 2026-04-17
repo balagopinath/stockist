@@ -49,3 +49,32 @@ export const createExchange = /* GraphQL */ `
     }
   }
 `;
+export const createCompany = /* GraphQL */ `
+  mutation CreateCompany(
+    $input: CreateCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    createCompany(input: $input, condition: $condition) {
+      Id
+      name
+      ISIN
+      marketCap
+      industryId
+      industry {
+        Id
+        name
+        parentIndustryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      scripts {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

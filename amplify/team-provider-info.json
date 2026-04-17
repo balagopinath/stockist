@@ -21,7 +21,7 @@
       "function": {
         "S3Triggerf6149a57": {
           "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",
-          "s3Key": "amplify-builds/S3Triggerf6149a57-2b796143593762334f33-build.zip"
+          "s3Key": "amplify-builds/S3Triggerf6149a57-303730483845544f3537-build.zip"
         },
         "stockist7fc744a0CreateAuthChallenge": {
           "deploymentBucketName": "amplify-stockist-dev-b97eb-deployment",

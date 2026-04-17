@@ -1,5 +1,5 @@
 import { getObjectsFromStream } from './utilities.js'
-import { addIndustry, addExchange, getIndustriesWithNames, getExchangesWithCodes }  from './APISync.js';
+import { addIndustry, addExchange, getIndustriesWithNames, getExchangesWithCodes, getIndustryByName, getExchangeByCode, getCompanyByISIN }  from './APISync.js';
 
 
 function getMissingItems(allItems, items) {
@@ -26,24 +26,23 @@ export async function importCompanies(s3Response) {
                   industries.push(await addIndustry({name: element}));
             }            
             console.log("Missing industries in db : " + missingItems);
-
-            // await data.forEach(async element =>  {
-            //       var industry = await getIndustryByName(element.Industry)
-            //       if(!industry) {
-            //             industry = addIndustry({name: element.Industry })
-            //       } 
-            //       var exchange = getExchangeByCode(element.Exchange)
-            //       if(!exchange) {
-            //             exchange = addExchange({name: '', code: element.exchange})
-            //       }
-
-
-            //       const dbRow = await getCompanyByISIN(element.ISIN);
-            //       if(!dbRow) {
-
-            //       }
-            // });
-      } 
+            console.log("Temp")
+            await data.forEach(async element =>  {
+                  var industry = await getIndustryByName(element.Industry)
+                  if(!industry) {
+                        industry = addIndustry({name: element.Industry })
+                  } 
+                  var exchange = getExchangeByCode(element.Exchange)
+                  if(!exchange) {
+                        exchange = addExchange({name: '', code: element.exchange})
+                  }
+                  const dbRow = await getCompanyByISIN(element.ISIN);
+                  if(!dbRow) {
+                        console.log("Company '"  + element.Name + "' not found");
+                        
+                  }
+            });
+            } 
       catch (exp) {
             console.log(exp);
       }
