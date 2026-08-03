@@ -126,9 +126,22 @@ export default function ReconcileHoldings() {
           }))
           .filter((r) => r.symbol);
 
+        // Zerodha appends the NSE series to some symbols (e.g. STLTECH-BE,
+        // X-BZ, Y-IL). Match the exact symbol first; if that misses, fall back
+        // to the base symbol before the "-", but only if it maps to a script.
+        const lookup = (sym) => {
+          const up = (sym || '').toUpperCase();
+          if (symbolToCompany[up]) return symbolToCompany[up];
+          if (up.includes('-')) {
+            const base = up.split('-')[0];
+            if (symbolToCompany[base]) return symbolToCompany[base];
+          }
+          return undefined;
+        };
+
         const seen = new Set();
         const out = zRows.map((z) => {
-          const cid = symbolToCompany[z.symbol.toUpperCase()];
+          const cid = lookup(z.symbol);
           if (cid) seen.add(cid);
           const app = cid ? appByCompany[cid] : null;
           const appQty = app?.qty ?? 0;

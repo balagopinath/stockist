@@ -23,6 +23,8 @@ import {
 } from 'antd';
 import HoldingsByDate from './HoldingsByDate';
 import ReconcileHoldings from './ReconcileHoldings';
+import LotRecovery from './LotRecovery';
+import StockHistory from './StockHistory';
 
 const client = generateClient();
 
@@ -78,11 +80,14 @@ function aggregate(lots) {
   const m = {};
   lots.forEach((l) => {
     const bal = l.balanceQty ?? l.quantity;
-    if (bal <= 0) return;
+    // keep sold-down lots that are "recovering" so they stay in the dialog
+    if (bal <= 0 && !l.recovering) return;
     const g = (m[l.companyId] = m[l.companyId] || { lots: [], qty: 0, cost: 0 });
     g.lots.push(l);
-    g.qty += bal;
-    g.cost += bal * l.avgPrice;
+    if (bal > 0) {
+      g.qty += bal;
+      g.cost += bal * l.avgPrice;
+    }
   });
   return m;
 }
@@ -93,6 +98,7 @@ export default function Portfolio() {
   const [specLots, setSpecLots] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [quotes, setQuotes] = useState([]);
+  const [swings, setSwings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
@@ -111,6 +117,9 @@ export default function Portfolio() {
   // read-only lot view (click an average)
   const [lotView, setLotView] = useState(null);
   const [byDateOpen, setByDateOpen] = useState(false);
+  const [historyRow, setHistoryRow] = useState(null); // stock history dialog
+  const [recoveryCompany, setRecoveryCompany] = useState(null); // recovery details dialog
+  const [search, setSearch] = useState('');
   const [reconcileOpen, setReconcileOpen] = useState(false);
   const [pnlBasis, setPnlBasis] = useState('SPECIFIC'); // default specific-lot
   const [benchRow, setBenchRow] = useState(null); // row whose benchmark is being set
@@ -126,18 +135,20 @@ export default function Portfolio() {
         return;
       }
       const active = { soldOut: { ne: true } };
-      const [pf, f, s, co, q] = await Promise.all([
+      const [pf, f, s, co, q, sw] = await Promise.all([
         listAll(client.models.PortfolioItem),
         listAll(client.models.HoldingFIFO, active),
         listAll(client.models.HoldingSpecificLot, active),
         listAll(client.models.Company),
         client.models.CurrentQuote ? listAll(client.models.CurrentQuote) : [],
+        client.models.RecoverySwing ? listAll(client.models.RecoverySwing) : [],
       ]);
       setPortfolio(pf);
       setFifoLots(f);
       setSpecLots(s);
       setCompanies(co);
       setQuotes(q);
+      setSwings(sw);
     } catch (e) {
       message.error(`Failed to load: ${e.message}`);
     } finally {
@@ -185,6 +196,7 @@ export default function Portfolio() {
           companyId: cid,
           companyName: companyById[cid]?.name ?? '—',
           qty: ff.qty,
+          specQty: ss.qty,
           benchmarkQty,
           buyBack: benchmarkQty != null ? Math.max(0, benchmarkQty - ff.qty) : null,
           fifoAvg: ff.qty > 0 ? ff.cost / ff.qty : 0,
@@ -202,6 +214,82 @@ export default function Portfolio() {
   }, [fifoLots, specLots, portfolio, companyById, priceByCompany, portfolioByCompany]);
 
   const inPortfolio = useMemo(() => new Set(rows.map((r) => r.companyId)), [rows]);
+
+  // grid filter by company name or ISIN
+  const filteredRows = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter(
+      (r) =>
+        (r.companyName || '').toLowerCase().includes(q) ||
+        (companyById[r.companyId]?.ISIN || '').toLowerCase().includes(q)
+    );
+  }, [rows, search, companyById]);
+
+  // watcher: companies where FIFO holding qty ≠ sum of specific-lot quantities
+  const mismatches = useMemo(
+    () =>
+      rows
+        .map((r) => ({ ...r, diff: (r.qty || 0) - (r.specQty || 0) }))
+        .filter((r) => Math.abs(r.diff) > 1e-6)
+        .sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff)),
+    [rows]
+  );
+
+  const swingsByLot = useMemo(() => {
+    const m = {};
+    swings.forEach((s) => (m[s.specificLotId] = m[s.specificLotId] || []).push(s));
+    return m;
+  }, [swings]);
+
+  // companies that have any recovering lot, with recovered/pending totals.
+  // A lot counts as recovering if its flag is set OR it has an OPEN swing
+  // (guards against data where the flag wasn't set but a swing exists).
+  const recoveringByCompany = useMemo(() => {
+    const openSwingLotIds = new Set(
+      swings.filter((s) => s.status === 'OPEN').map((s) => s.specificLotId)
+    );
+    const m = {};
+    specLots.forEach((l) => {
+      if (!l.recovering && !openSwingLotIds.has(l.id)) return;
+      const g = (m[l.companyId] = m[l.companyId] || {
+        companyId: l.companyId,
+        companyName: companyById[l.companyId]?.name ?? '—',
+        lots: [],
+      });
+      g.lots.push(l);
+    });
+    return Object.values(m)
+      .map((g) => {
+        const cs = swings.filter((s) => s.companyId === g.companyId);
+        const recovered = cs
+          .filter((s) => s.status === 'CLOSED' && s.closeType === 'BUYBACK')
+          .reduce((a, s) => a + (s.profit || 0), 0);
+        const open = cs.filter((s) => s.status === 'OPEN');
+        const pending = open.reduce((a, s) => a + (s.qty || 0), 0);
+        // weighted avg sell price of the pending (open) swings — the level to
+        // buy back below
+        const avgSell =
+          pending > 0
+            ? open.reduce((a, s) => a + (s.sellPrice || 0) * (s.qty || 0), 0) / pending
+            : null;
+        const ltp = priceByCompany[g.companyId] ?? null;
+        return { ...g, recovered, pending, avgSell, ltp };
+      })
+      // still recovering = has shares sold but not yet bought back; drop the
+      // fully-bought-back ones (the recovering flag lingers after buy-back)
+      .filter((g) => g.pending > 0)
+      .sort((a, b) => a.companyName.localeCompare(b.companyName));
+  }, [specLots, swings, companyById, priceByCompany]);
+
+  // live lots for the open dialog (re-derived from rows so it refreshes)
+  const lotViewRow = lotView ? rows.find((r) => r.companyId === lotView.companyId) : null;
+  const lotViewLots = lotViewRow
+    ? lotView.method === 'FIFO'
+      ? lotViewRow.fifoLots
+      : lotViewRow.specLots
+    : [];
+  const lotViewLtp = lotViewRow?.ltp ?? null;
 
   // Add: only companies NOT already in the portfolio
   const addCompanyOptions = useMemo(
@@ -427,11 +515,9 @@ export default function Portfolio() {
   // ---- misc ----------------------------------------------------------------
 
   function showLots(row, method) {
-    setLotView({
-      companyName: row.companyName,
-      method,
-      lots: method === 'FIFO' ? row.fifoLots : row.specLots,
-    });
+    // store the key + method, not a snapshot, so the dialog stays live after
+    // recovery actions (buy-back / close) refresh the underlying lots.
+    setLotView({ companyId: row.companyId, companyName: row.companyName, method });
   }
 
   async function removeCompany(cid) {
@@ -462,12 +548,30 @@ export default function Portfolio() {
       dataIndex: 'companyName',
       sorter: (a, b) => a.companyName.localeCompare(b.companyName),
       defaultSortOrder: 'ascend',
+      render: (v, r) => (
+        <Button
+          type="link"
+          style={{ padding: 0, height: 'auto', textAlign: 'left', whiteSpace: 'normal' }}
+          onClick={() => setHistoryRow(r)}
+        >
+          {v}
+        </Button>
+      ),
     },
     {
-      title: 'Total qty',
+      title: 'Qty',
       dataIndex: 'qty',
       align: 'right',
-      render: (v) => v?.toLocaleString('en-IN'),
+      sorter: (a, b) => (a.qty || 0) - (b.qty || 0),
+      render: (v, r) => {
+        // FIFO & specific totals should always match; flag if they don't
+        const mismatch = Math.abs((r.qty || 0) - (r.specQty || 0)) > 1e-6;
+        return (
+          <span style={mismatch ? { color: '#cf1322', fontWeight: 600 } : undefined}>
+            {v?.toLocaleString('en-IN')}
+          </span>
+        );
+      },
     },
     {
       title: 'Benchmark',
@@ -541,9 +645,12 @@ export default function Portfolio() {
     {
       title: '',
       key: 'actions',
-      width: 150,
+      width: 210,
       render: (_, r) => (
         <Space size="small">
+          <Button size="small" type="link" onClick={() => setHistoryRow(r)}>
+            History
+          </Button>
           <Button size="small" type="link" onClick={() => openEdit(r)}>
             Edit
           </Button>
@@ -697,35 +804,190 @@ export default function Portfolio() {
         </Space>
       </Card>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, flexWrap: 'wrap' }}>
-        <Popconfirm
-          title="Set every company's benchmark to its current holding quantity?"
-          description="This overwrites any existing benchmarks."
-          onConfirm={setAllBenchmarks}
-          okText="Set all"
-        >
-          <Button loading={benchBulkSaving}>Benchmarks = holdings</Button>
-        </Popconfirm>
-        <Button onClick={() => setReconcileOpen(true)}>Reconcile with broker</Button>
-        <Button onClick={() => setByDateOpen(true)}>Holdings by date</Button>
-        <Button type="primary" onClick={openAdd}>
-          Add Portfolio
-        </Button>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: 8,
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}
+      >
+        <Input
+          allowClear
+          placeholder="Search company or ISIN"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 260 }}
+        />
+        <Space wrap>
+          <Popconfirm
+            title="Set every company's benchmark to its current holding quantity?"
+            description="This overwrites any existing benchmarks."
+            onConfirm={setAllBenchmarks}
+            okText="Set all"
+          >
+            <Button loading={benchBulkSaving}>Benchmarks = holdings</Button>
+          </Popconfirm>
+          <Button onClick={() => setReconcileOpen(true)}>Reconcile with broker</Button>
+          <Button onClick={() => setByDateOpen(true)}>Holdings by date</Button>
+          <Button type="primary" onClick={openAdd}>
+            Add Portfolio
+          </Button>
+        </Space>
       </div>
 
-      <Table
-        rowKey="key"
-        loading={loading}
-        columns={columns}
-        dataSource={rows}
-        pagination={{
-          pageSize: 25,
-          hideOnSinglePage: true,
-          position: ['bottomCenter'],
-        }}
-        scroll={{ x: 'max-content' }}
-        locale={{ emptyText: 'No holdings yet — click Add Portfolio.' }}
-      />
+      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', flex: 1, minHeight: 0 }}>
+        {/* holdings grid — scrolls internally to fit the window height */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <Table
+            rowKey="key"
+            loading={loading}
+            columns={columns}
+            dataSource={filteredRows}
+            pagination={{ pageSize: 100, hideOnSinglePage: true, position: ['bottomCenter'] }}
+            scroll={{ x: 'max-content', y: 'calc(100vh - 320px)' }}
+            locale={{
+              emptyText: search
+                ? 'No matching companies.'
+                : 'No holdings yet — click Add Portfolio.',
+            }}
+          />
+        </div>
+
+        {/* fixed right panel */}
+        <div
+          style={{
+            width: 360,
+            flexShrink: 0,
+            position: 'sticky',
+            top: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
+          }}
+        >
+        <Card
+          size="small"
+          title="Watchers"
+          styles={{ body: { padding: 0, maxHeight: 'calc(50vh - 160px)', overflow: 'auto' } }}
+        >
+          <div style={{ padding: '8px 12px', borderBottom: '1px solid #f0f0f0' }}>
+            <Typography.Text strong>Holding qty mismatch</Typography.Text>
+            <div style={{ fontSize: 12, color: '#888' }}>
+              FIFO qty ≠ sum of specific lots
+            </div>
+          </div>
+          {mismatches.length === 0 ? (
+            <div style={{ padding: 16, textAlign: 'center', color: '#3f8600' }}>
+              ✓ All holdings match
+            </div>
+          ) : (
+            <Table
+              rowKey="companyId"
+              size="small"
+              showHeader
+              pagination={false}
+              dataSource={mismatches}
+              columns={[
+                {
+                  title: 'Company',
+                  dataIndex: 'companyName',
+                  ellipsis: true,
+                  render: (v, r) => (
+                    <Button
+                      type="link"
+                      size="small"
+                      style={{ padding: 0, height: 'auto' }}
+                      onClick={() => setHistoryRow(r)}
+                    >
+                      {v}
+                    </Button>
+                  ),
+                },
+                { title: 'FIFO', dataIndex: 'qty', align: 'right', width: 56 },
+                { title: 'Lots', dataIndex: 'specQty', align: 'right', width: 56 },
+                {
+                  title: 'Δ',
+                  dataIndex: 'diff',
+                  align: 'right',
+                  width: 52,
+                  render: (v) => (
+                    <span style={{ color: '#cf1322' }}>
+                      {v > 0 ? '+' : ''}
+                      {v.toLocaleString('en-IN')}
+                    </span>
+                  ),
+                },
+              ]}
+            />
+          )}
+        </Card>
+
+        <Card
+          size="small"
+          title="Recovering lots"
+          styles={{ body: { padding: 0, maxHeight: 'calc(50vh - 120px)', overflow: 'auto' } }}
+        >
+          {recoveringByCompany.length === 0 ? (
+            <div style={{ padding: 16, textAlign: 'center', color: '#888' }}>
+              No recovering lots.
+            </div>
+          ) : (
+            <Table
+              rowKey="companyId"
+              size="small"
+              pagination={false}
+              dataSource={recoveringByCompany}
+              columns={[
+                {
+                  title: 'Company',
+                  dataIndex: 'companyName',
+                  ellipsis: true,
+                  render: (v, r) => (
+                    <Button
+                      type="link"
+                      size="small"
+                      style={{ padding: 0, height: 'auto' }}
+                      onClick={() => setRecoveryCompany(r)}
+                    >
+                      {v}
+                    </Button>
+                  ),
+                },
+                {
+                  title: 'LTP',
+                  dataIndex: 'ltp',
+                  align: 'right',
+                  width: 78,
+                  render: (v, r) =>
+                    v == null ? (
+                      '—'
+                    ) : (
+                      // green when below the avg sell → good level to buy back
+                      <span
+                        style={{
+                          color: r.avgSell != null && v < r.avgSell ? '#3f8600' : '#cf1322',
+                        }}
+                      >
+                        {money(v)}
+                      </span>
+                    ),
+                },
+                {
+                  title: 'Avg sell',
+                  dataIndex: 'avgSell',
+                  align: 'right',
+                  width: 84,
+                  render: (v) => (v == null ? '—' : money(v)),
+                },
+                { title: 'Pending', dataIndex: 'pending', align: 'right', width: 62 },
+              ]}
+            />
+          )}
+        </Card>
+        </div>
+      </div>
 
       {/* read-only lot view */}
       <Modal
@@ -739,12 +1001,35 @@ export default function Portfolio() {
         footer={null}
         width={640}
       >
+        {lotView?.method === 'SPECIFIC' && (
+          <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+            Expand a lot to short-trade it for loss recovery (sell now, buy back
+            cheaper) and see its recovery scorecard.
+          </Typography.Text>
+        )}
         <Table
           rowKey="id"
           size="small"
           columns={lotColumns}
-          dataSource={lotView?.lots ?? []}
+          dataSource={lotViewLots}
           pagination={{ pageSize: 10, hideOnSinglePage: true }}
+          expandable={
+            lotView?.method === 'SPECIFIC'
+              ? {
+                  // only recovering lots (or ones with swing history) expand
+                  rowExpandable: (lot) =>
+                    !!lot.recovering || (swingsByLot[lot.id] || []).length > 0,
+                  expandedRowRender: (lot) => (
+                    <LotRecovery
+                      lot={lot}
+                      ltp={lotViewLtp}
+                      swings={swingsByLot[lot.id] || []}
+                      onChange={load}
+                    />
+                  ),
+                }
+              : undefined
+          }
         />
       </Modal>
 
@@ -758,6 +1043,61 @@ export default function Portfolio() {
         destroyOnClose
       >
         <HoldingsByDate />
+      </Modal>
+
+      {/* Per-stock holding history */}
+      <Modal
+        title={historyRow ? `Company — ${historyRow.companyName}` : ''}
+        open={!!historyRow}
+        onCancel={() => setHistoryRow(null)}
+        footer={null}
+        width="92vw"
+        style={{ top: 24, maxWidth: 1400 }}
+        styles={{ body: { maxHeight: 'calc(100vh - 140px)', overflow: 'auto' } }}
+        destroyOnClose
+      >
+        {historyRow && <StockHistory companyId={historyRow.companyId} onChange={load} />}
+      </Modal>
+
+      {/* Recovery details for a company */}
+      <Modal
+        title={recoveryCompany ? `Recovery — ${recoveryCompany.companyName}` : ''}
+        open={!!recoveryCompany}
+        onCancel={() => setRecoveryCompany(null)}
+        footer={null}
+        width={820}
+        destroyOnClose
+      >
+        {recoveryCompany && (
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <Space size="large" wrap>
+              <Statistic
+                title="Recovered"
+                value={money(recoveryCompany.recovered)}
+                valueStyle={{ color: recoveryCompany.recovered >= 0 ? '#3f8600' : '#cf1322' }}
+              />
+              <Statistic title="Pending (sold, not bought back)" value={recoveryCompany.pending} />
+              <Statistic title="Recovering lots" value={recoveryCompany.lots.length} />
+            </Space>
+            {recoveryCompany.lots
+              .slice()
+              .sort((a, b) => String(a.buyDate).localeCompare(String(b.buyDate)))
+              .map((lot) => (
+                <Card
+                  key={lot.id}
+                  size="small"
+                  title={`Lot ${dayjs(lot.buyDate).format('DD MMM YYYY')} @ ${money(lot.avgPrice)}`}
+                >
+                  <LotRecovery
+                    lot={lot}
+                    ltp={priceByCompany[lot.companyId] ?? null}
+                    swings={swingsByLot[lot.id] || []}
+                    onChange={load}
+                  />
+                </Card>
+              ))}
+          </Space>
+        )}
       </Modal>
 
       {/* Set benchmark quantity */}

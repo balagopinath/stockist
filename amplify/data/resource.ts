@@ -140,6 +140,8 @@ const schema = a.schema({
     .authorization((allow) => [allow.owner()]),
 
   // Current open lots under specific-lot method — same shape.
+  //   recovering = true keeps a losing lot "sticky": it stays in holdings even
+  //   when short-traded down to zero balance, so it can be recovered via swings.
   HoldingSpecificLot: a
     .model({
       companyId: a.id().required(),
@@ -148,6 +150,32 @@ const schema = a.schema({
       balanceQty: a.float().required(),
       avgPrice: a.float().required(),
       soldOut: a.boolean().default(false),
+      recovering: a.boolean().default(false),
+    })
+    .authorization((allow) => [allow.owner()]),
+
+  // A short-trade "swing" against a specific (loss) lot to recover its loss:
+  // sell now, buy back cheaper later. While OPEN the shares are out and cash is
+  // realized; buying back CLOSES it with profit = (sell − buyback) × qty and
+  // returns the shares to the lot at its ORIGINAL price. The user may instead
+  // CLOSE it manually (give up on the buy-back) — shares stay gone.
+  RecoverySwing: a
+    .model({
+      companyId: a.id().required(),
+      specificLotId: a.id().required(),
+      qty: a.float().required(),
+      sellPrice: a.float().required(),
+      sellDate: a.date(),
+      status: a.enum(['OPEN', 'CLOSED']),
+      closeType: a.enum(['BUYBACK', 'MANUAL']),
+      buyBackPrice: a.float(),
+      buyBackDate: a.date(),
+      profit: a.float(),
+      note: a.string(),
+      // the TradeDetail rows that opened (sell) / closed (buy-back) this swing,
+      // so the trade history can tag them.
+      openTradeDetailId: a.id(),
+      closeTradeDetailId: a.id(),
     })
     .authorization((allow) => [allow.owner()]),
 
@@ -253,6 +281,22 @@ const schema = a.schema({
       amount: a.float().required(),
       incurredOn: a.date(),
       note: a.string(),
+    })
+    .authorization((allow) => [allow.owner()]),
+
+  // A resumable tradebook-import job. Saved when the user hits Proceed so the
+  // save can be watched company-by-company and resumed after a failure — even
+  // across a page reload — without re-uploading or re-choosing lots.
+  //   plan     = { tradeDate, brokerId, charges, totalPnl, fundNet, companies:[...] }
+  //   progress = { setup:{status,bookId}, companies:{ [companyId]:{status,error,created} },
+  //                finalize:{status} }
+  ImportRun: a
+    .model({
+      tradeDate: a.date().required(),
+      status: a.enum(['RUNNING', 'DONE', 'ERROR']),
+      plan: a.json(),
+      progress: a.json(),
+      brokerId: a.id(),
     })
     .authorization((allow) => [allow.owner()]),
 

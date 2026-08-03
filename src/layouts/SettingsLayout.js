@@ -45,6 +45,7 @@ export default function SettingsLayout() {
         { key: 'exchanges', label: 'Exchanges' },
         { key: 'brokers', label: 'Brokers' },
         { key: 'daily-prices', label: 'Daily Prices' },
+        { key: 'data-browser', label: 'Data Browser' },
       ],
     });
   }
@@ -94,7 +95,7 @@ export default function SettingsLayout() {
         </Sider>
 
         <Content style={{ padding: 24, minWidth: 0, overflow: 'auto' }}>
-          <div style={{ maxWidth: 1280 }}>
+          <div style={{ maxWidth: 1600, width: '100%' }}>
             <Outlet />
           </div>
         </Content>

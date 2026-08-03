@@ -18,6 +18,7 @@ import Exchanges from './settings/Exchanges';
 import Scripts from './settings/Scripts';
 import Brokers from './settings/Brokers';
 import DailyPrices from './settings/DailyPrices';
+import DataBrowser from './settings/DataBrowser';
 
 function App() {
   return (
@@ -86,6 +87,14 @@ function App() {
                   element={
                     <RequireAdmin>
                       <DailyPrices />
+                    </RequireAdmin>
+                  }
+                />
+                <Route
+                  path="data-browser"
+                  element={
+                    <RequireAdmin>
+                      <DataBrowser />
                     </RequireAdmin>
                   }
                 />

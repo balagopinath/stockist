@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import GridLayout, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import StockHistory from '../settings/StockHistory';
 import {
   Button,
   Card,
@@ -478,7 +479,7 @@ const WIDGETS = {
   buyback: {
     title: 'Buy-back opportunities (below benchmark)',
     size: { w: 8, h: 5 },
-    render: (d) => (
+    render: (d, ctx) => (
       <Table
         rowKey="companyId"
         size="small"
@@ -486,7 +487,20 @@ const WIDGETS = {
         pagination={{ pageSize: 6, hideOnSinglePage: true }}
         locale={{ emptyText: 'Nothing below benchmark.' }}
         columns={[
-          { title: 'Company', dataIndex: 'companyName' },
+          {
+            title: 'Company',
+            dataIndex: 'companyName',
+            render: (v, r) => (
+              <Button
+                type="link"
+                size="small"
+                style={{ padding: 0, height: 'auto', textAlign: 'left', whiteSpace: 'normal' }}
+                onClick={() => ctx?.openCompany?.(r.companyId, r.companyName)}
+              >
+                {v}
+              </Button>
+            ),
+          },
           { title: 'Have', dataIndex: 'currentQty', align: 'right' },
           { title: 'Target', dataIndex: 'benchmark', align: 'right' },
           {
@@ -496,20 +510,37 @@ const WIDGETS = {
             render: (v) => <span style={{ color: '#cf1322' }}>{v?.toLocaleString('en-IN')}</span>,
           },
           {
+            title: 'Avg sold',
+            dataIndex: 'avgSold',
+            align: 'right',
+            render: (v, r) =>
+              v == null ? (
+                '—'
+              ) : (
+                // green when current price is below the avg sold → buy back cheaper
+                <span
+                  style={{ color: r.price != null && r.price < v ? '#3f8600' : '#cf1322' }}
+                >
+                  {money(v)}
+                </span>
+              ),
+          },
+          {
             title: 'Price',
             dataIndex: 'price',
             align: 'right',
             render: (v) => (v == null ? '—' : money(v)),
           },
           {
-            title: 'Day chg',
-            dataIndex: 'dayChgPct',
+            title: 'P/L %',
+            dataIndex: 'plPct',
             align: 'right',
             render: (v) =>
               v == null ? (
                 '—'
               ) : (
                 <span style={{ color: v >= 0 ? '#3f8600' : '#cf1322' }}>
+                  {v >= 0 ? '+' : ''}
                   {v.toFixed(2)}%
                 </span>
               ),
@@ -633,6 +664,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [addOpen, setAddOpen] = useState(false);
   const [newName, setNewName] = useState('');
+  const [companyDialog, setCompanyDialog] = useState(null); // { companyId, companyName }
   const [data, setData] = useState({
     companies: 0,
     totalFifo: 0,
@@ -680,7 +712,7 @@ export default function Dashboard() {
 
       // portfolio data for the widgets
       const active = { soldOut: { ne: true } };
-      const [fifo, spec, companies, quotes, allPortfolio, exchanges, brokerList, uploads, industries, scripts] =
+      const [fifo, spec, companies, quotes, allPortfolio, exchanges, brokerList, uploads, industries, scripts, recSwings] =
         await Promise.all([
           listAll(client.models.HoldingFIFO, active),
           listAll(client.models.HoldingSpecificLot, active),
@@ -692,7 +724,23 @@ export default function Dashboard() {
           client.models.PriceUpload ? listAll(client.models.PriceUpload) : [],
           client.models.Industry ? listAll(client.models.Industry) : [],
           client.models.Script ? listAll(client.models.Script) : [],
+          client.models.RecoverySwing
+            ? listAll(client.models.RecoverySwing, { status: { eq: 'OPEN' } })
+            : [],
         ]);
+      // weighted avg sell price of OPEN recovery swings, per company
+      const avgSoldByCompany = {};
+      const soldQtyByCompany = {};
+      recSwings.forEach((s) => {
+        avgSoldByCompany[s.companyId] =
+          (avgSoldByCompany[s.companyId] || 0) + (s.sellPrice || 0) * (s.qty || 0);
+        soldQtyByCompany[s.companyId] = (soldQtyByCompany[s.companyId] || 0) + (s.qty || 0);
+      });
+      Object.keys(avgSoldByCompany).forEach((cid) => {
+        avgSoldByCompany[cid] = soldQtyByCompany[cid]
+          ? avgSoldByCompany[cid] / soldQtyByCompany[cid]
+          : null;
+      });
       // my own portfolio items (for the personal widgets)
       const isMine = (p) =>
         !mySub || !p.owner || p.owner.startsWith(mySub) || (myUsername && p.owner.includes(myUsername));
@@ -789,6 +837,13 @@ export default function Dashboard() {
         const price = priceByCompany[p.companyId];
         const prev = prevCloseByCompany[p.companyId];
         const dayChgPct = price != null && prev ? ((price - prev) / prev) * 100 : null;
+        const avgSold = avgSoldByCompany[p.companyId] ?? null;
+        // buy-back P/L %: what you'd gain buying back now vs your avg sold price
+        // ((sold − now) / sold). Positive = profitable (buying below your sell).
+        const plPct =
+          avgSold != null && avgSold > 0 && price != null
+            ? ((avgSold - price) / avgSold) * 100
+            : null;
         buyBackOps.push({
           companyId: p.companyId,
           companyName: companyById[p.companyId]?.name ?? '—',
@@ -797,11 +852,18 @@ export default function Dashboard() {
           shortfall,
           price,
           dayChgPct,
+          avgSold,
+          plPct,
           cost: price != null ? shortfall * price : null,
         });
       });
-      // most "down" first (cheapest to rebuild)
-      buyBackOps.sort((a, b) => (a.dayChgPct ?? 0) - (b.dayChgPct ?? 0));
+      // most profitable buy-back first; rows without a sold price go last
+      buyBackOps.sort((a, b) => {
+        if (a.plPct == null && b.plPct == null) return 0;
+        if (a.plPct == null) return 1;
+        if (b.plPct == null) return -1;
+        return b.plPct - a.plPct;
+      });
 
       const lastUpload = uploads
         .map((u) => u.date)
@@ -1140,7 +1202,13 @@ export default function Dashboard() {
                     ) : null
                   }
                 >
-                  {def ? def.render(data, { reload: load }) : 'Unknown widget'}
+                  {def
+                    ? def.render(data, {
+                        reload: load,
+                        openCompany: (companyId, companyName) =>
+                          setCompanyDialog({ companyId, companyName }),
+                      })
+                    : 'Unknown widget'}
                 </Card>
               </div>
             );
@@ -1150,6 +1218,22 @@ export default function Dashboard() {
       {loading && (
         <Typography.Text type="secondary">Loading…</Typography.Text>
       )}
+
+      {/* company detail dialog (shared with Portfolio) */}
+      <Modal
+        title={companyDialog ? `Company — ${companyDialog.companyName}` : ''}
+        open={!!companyDialog}
+        onCancel={() => setCompanyDialog(null)}
+        footer={null}
+        width="92vw"
+        style={{ top: 24, maxWidth: 1400 }}
+        styles={{ body: { maxHeight: 'calc(100vh - 140px)', overflow: 'auto' } }}
+        destroyOnClose
+      >
+        {companyDialog && (
+          <StockHistory companyId={companyDialog.companyId} onChange={load} />
+        )}
+      </Modal>
     </div>
   );
 }
