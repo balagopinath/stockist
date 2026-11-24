@@ -1,7 +1,7 @@
 import { referenceAuth } from '@aws-amplify/backend';
 
 /**
- * Stockiest uses the shared auth owned by gopsweb (Amplify app d2tt60fanegk1u).
+ * Stockist uses the shared auth owned by gopsweb (Amplify app d2tt60fanegk1u).
  * Do not define auth here; manage users and groups in gopsweb's user pool.
  */
 export const auth = referenceAuth({

@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
-// Stockiest is served under www.gopsweb.com/stockiest. The path comes from
+// Stockist is served under www.gopsweb.com/stockist. The path comes from
 // "homepage" in package.json (CRA exposes it as PUBLIC_URL), so asset URLs
 // and routes always agree.
 const root = ReactDOM.createRoot(document.getElementById('root'));
