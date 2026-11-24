@@ -259,6 +259,19 @@ export default function Portfolio() {
       });
       g.lots.push(l);
     });
+    // naked shorts have no underlying lot — seed their company so the widget
+    // still shows the open short position.
+    swings
+      .filter((s) => s.status === 'OPEN')
+      .forEach((s) => {
+        if (!m[s.companyId]) {
+          m[s.companyId] = {
+            companyId: s.companyId,
+            companyName: companyById[s.companyId]?.name ?? '—',
+            lots: [],
+          };
+        }
+      });
     return Object.values(m)
       .map((g) => {
         const cs = swings.filter((s) => s.companyId === g.companyId);

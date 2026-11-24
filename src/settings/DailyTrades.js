@@ -501,10 +501,15 @@ export default function DailyTrades() {
         setIntra(ri.filter((m) => m.companyId));
         setUnmatched([...new Set(un)]);
 
-        // default: a buy of a scrip with open recovery swings is a buy-back
+        // default: a buy of a scrip with open recovery swings is a buy-back —
+        // but only when it's actually buying back CHEAPER than the loss-sell
+        // price (buy price < swing sell price), so the recovery books a profit.
+        // If the buy is at/above every open swing's sell price, don't auto-mark
+        // it (the user can still tick it manually).
         const flags = {};
         okBuys.forEach((b, i) => {
-          if ((openSwingsByCompany[b.companyId] || []).length > 0) flags[i] = true;
+          const swings = openSwingsByCompany[b.companyId] || [];
+          if (swings.some((sw) => b.price < sw.sellPrice)) flags[i] = true;
         });
         setBuyBackFlags(flags);
 
@@ -587,9 +592,24 @@ export default function DailyTrades() {
     intra.reduce((s, m) => s + m.pnl, 0) +
     sells.reduce((s, _m, i) => s + sellPnl(i), 0);
 
-  const allSellsAllocated = sells.every(
-    (s, i) => Math.abs(allocTotal(i) - s.qty) < 1e-6
-  );
+  // shares you actually hold for this sell (sum of available specific lots)
+  const sellHeldQty = (i) =>
+    (specByCompany[sells[i].companyId] || []).reduce(
+      (s, l) => s + (l.balanceQty ?? l.quantity),
+      0
+    );
+  // a SHORT is only the part you can't cover from holdings (sold qty − held).
+  // A sell you simply haven't allotted yet is NOT a short if you hold the shares.
+  const sellShortQty = (i) => Math.max(0, sells[i].qty - sellHeldQty(i));
+
+  // you must still allot the part you hold; only the excess over holdings is a
+  // short. Proceed once every sell has its held portion allotted and none is
+  // over-sold.
+  const allSellsAllocated = sells.every((s, i) => {
+    const need = Math.min(s.qty, sellHeldQty(i)); // coverable portion
+    const t = allocTotal(i);
+    return t >= need - 1e-6 && t <= s.qty + 1e-6;
+  });
 
   const hasFile = buys.length + sells.length + intra.length > 0;
 
@@ -668,7 +688,7 @@ export default function DailyTrades() {
 
   function startSave() {
     if (!allSellsAllocated) {
-      return message.error('Allocate every delivery sell to lots first.');
+      return message.error('A sell is allocated more than its sold quantity — remove the extra lots.');
     }
     setSaverPlan(buildImportPlan());
     setSaverRun(null);
@@ -700,7 +720,7 @@ export default function DailyTrades() {
 
   async function process() {
     if (!allSellsAllocated) {
-      return message.error('Allocate every delivery sell to lots first (must equal the sold qty).');
+      return message.error('A sell is allocated more than its sold quantity — remove the extra lots.');
     }
     setProcessing(true);
     setProgress(0);
@@ -1067,7 +1087,11 @@ export default function DailyTrades() {
 
       // build the reversal plan
       const lotDeltas = {}; // lotId -> net qty to add back
-      const addDelta = (id, q) => (lotDeltas[id] = (lotDeltas[id] || 0) + q);
+      // naked-short swings have no lot (null id) — nothing to restore, so skip
+      const addDelta = (id, q) => {
+        if (!id) return;
+        lotDeltas[id] = (lotDeltas[id] || 0) + q;
+      };
       const lotsToDelete = [];
       const allocsToDelete = allocs.map((a) => a.id);
       allocs.forEach((a) => {
@@ -1376,6 +1400,8 @@ export default function DailyTrades() {
         allocTotal={allocTotal}
         sellPnl={sellPnl}
         sellRecoveryQty={sellRecoveryQty}
+        sellShortQty={sellShortQty}
+        sellHeldQty={sellHeldQty}
         chooseLot={chooseLot}
         unchooseLot={unchooseLot}
         autoFill={autoFill}

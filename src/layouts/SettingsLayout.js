@@ -28,6 +28,7 @@ export default function SettingsLayout() {
         { key: 'portfolio', label: 'Portfolio' },
         { key: 'daily-trades', label: 'Daily Trades' },
         { key: 'funds', label: 'Funds' },
+        { key: 'capital', label: 'Capital Tracker' },
         { key: 'recovery', label: 'Loss Recovery' },
         { key: 'account', label: 'Account' },
       ],

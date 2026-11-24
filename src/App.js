@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Portfolio from './settings/Portfolio';
 import DailyTrades from './settings/DailyTrades';
 import Funds from './settings/Funds';
+import CapitalTracker from './settings/CapitalTracker';
 import Recovery from './settings/Recovery';
 import Account from './settings/Account';
 import Companies from './settings/Companies';
@@ -39,6 +40,7 @@ function App() {
                 <Route path="portfolio" element={<Portfolio />} />
                 <Route path="daily-trades" element={<DailyTrades />} />
                 <Route path="funds" element={<Funds />} />
+                <Route path="capital" element={<CapitalTracker />} />
                 <Route path="recovery" element={<Recovery />} />
                 <Route path="account" element={<Account />} />
                 {/* Master data — admins only */}

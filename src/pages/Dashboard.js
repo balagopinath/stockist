@@ -479,11 +479,26 @@ const WIDGETS = {
   buyback: {
     title: 'Buy-back opportunities (below benchmark)',
     size: { w: 8, h: 5 },
-    render: (d, ctx) => (
-      <Table
+    render: (d, ctx) => {
+      const ops = d.buyBackOps || [];
+      const totalCost = ops.reduce((s, r) => s + (r.cost || 0), 0);
+      const missing = ops.filter((r) => r.cost == null).length;
+      return (
+        <div>
+          <div style={{ marginBottom: 8, fontSize: 13 }}>
+            <span style={{ color: '#888' }}>Capital to buy back all {ops.length}: </span>
+            <strong style={{ color: '#1677ff' }}>{money(totalCost)}</strong>
+            {missing > 0 && (
+              <span style={{ color: '#888' }}>
+                {' '}
+                ({missing} without a live price — not included)
+              </span>
+            )}
+          </div>
+          <Table
         rowKey="companyId"
         size="small"
-        dataSource={d.buyBackOps}
+        dataSource={ops}
         pagination={{ pageSize: 6, hideOnSinglePage: true }}
         locale={{ emptyText: 'Nothing below benchmark.' }}
         columns={[
@@ -552,8 +567,10 @@ const WIDGETS = {
             render: (v) => (v == null ? '—' : money(v)),
           },
         ]}
-      />
-    ),
+          />
+        </div>
+      );
+    },
   },
   // admin-only widget: portfolio companies missing an industry, attach inline.
   unindustried: {

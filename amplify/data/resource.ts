@@ -159,10 +159,14 @@ const schema = a.schema({
   // realized; buying back CLOSES it with profit = (sell − buyback) × qty and
   // returns the shares to the lot at its ORIGINAL price. The user may instead
   // CLOSE it manually (give up on the buy-back) — shares stay gone.
+  // Also used for NAKED SHORTS: a short sell (sell with no holding) opens a
+  // swing with specificLotId = null. Buying it back closes it the same way as a
+  // recovery buy-back (profit = sell − buyback), just with no lot to restore
+  // shares to.
   RecoverySwing: a
     .model({
       companyId: a.id().required(),
-      specificLotId: a.id().required(),
+      specificLotId: a.id(), // null = naked short (no underlying lot)
       qty: a.float().required(),
       sellPrice: a.float().required(),
       sellDate: a.date(),
@@ -321,6 +325,35 @@ const schema = a.schema({
       brokerInvested: a.float(),
       investedDiff: a.float(),
       status: a.string(),
+    })
+    .authorization((allow) => [allow.owner()]),
+
+  // --- Capital tracker (owner-private) ------------------------------------
+  // Models the invested capital as a balance that "earns" a fixed monthly rate
+  // (like a loan at monthlyRatePct/month). Each month:
+  //   closing = opening × (1 + rate) − withdrawal
+  // So withdrawing exactly the interest keeps capital flat; withdrawing more
+  // shrinks it; withdrawing less (or nothing) grows it. The month's trading
+  // P&L is pulled from the tradebooks for reference and to default the
+  // withdrawal, but the recurrence itself uses the fixed rate.
+  //   One config row per user (first one wins).
+  CapitalConfig: a
+    .model({
+      initialCapital: a.float().required(),
+      monthlyRatePct: a.float().required(), // e.g. 2 = 2% / month
+      startMonth: a.string().required(), // 'YYYY-MM'
+    })
+    .authorization((allow) => [allow.owner()]),
+
+  // One row per tracked month (only created when the user records something).
+  //   withdrawal     = cash taken out that month
+  //   profitOverride = if set, used instead of the auto tradebook P&L (display)
+  CapitalMonth: a
+    .model({
+      month: a.string().required(), // 'YYYY-MM'
+      withdrawal: a.float(),
+      profitOverride: a.float(),
+      note: a.string(),
     })
     .authorization((allow) => [allow.owner()]),
 

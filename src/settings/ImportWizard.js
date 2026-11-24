@@ -49,6 +49,8 @@ export default function ImportWizard(props) {
     allocTotal,
     sellPnl,
     sellRecoveryQty,
+    sellShortQty,
+    sellHeldQty,
     chooseLot,
     unchooseLot,
     autoFill,
@@ -149,14 +151,24 @@ export default function ImportWizard(props) {
 
   const sellsBody = (
     <>
-      {!allSellsAllocated && (
+      {!allSellsAllocated ? (
         <Alert
           type="warning"
           showIcon
           style={{ marginBottom: 12 }}
-          message="Allot every sell fully before you can proceed"
-          description="Open “Choose lots” on each sell and allocate the whole sold quantity."
+          message="Allot the shares you hold for each sell"
+          description="Open “Choose lots” and allocate the lots you hold. Anything beyond your holdings is booked automatically as a short sell — you don't need to allot that part."
         />
+      ) : (
+        sells.some((_s, i) => sellShortQty && sellShortQty(i) > 0) && (
+          <Alert
+            type="info"
+            showIcon
+            style={{ marginBottom: 12 }}
+            message="Some sells include a short position"
+            description="The quantity beyond your holdings is booked as a short sell — buy it back later to close it (profit = sell − buy-back)."
+          />
+        )
       )}
       <Table
         rowKey={(_, i) => i}
@@ -172,7 +184,8 @@ export default function ImportWizard(props) {
             align: 'right',
             render: (_, r) => {
               const t = allocTotal(r._i);
-              const ok = Math.abs(t - r.qty) < 1e-6;
+              const need = sellHeldQty ? Math.min(r.qty, sellHeldQty(r._i)) : r.qty;
+              const ok = t >= need - 1e-6 && t <= r.qty + 1e-6;
               return (
                 <span style={{ color: ok ? green : red }}>
                   {t} / {r.qty}
@@ -196,11 +209,23 @@ export default function ImportWizard(props) {
               ),
           },
           {
+            title: 'Short',
+            align: 'right',
+            render: (_, r) =>
+              sellShortQty && sellShortQty(r._i) > 0 ? (
+                <Tag color="volcano">{sellShortQty(r._i)} short</Tag>
+              ) : (
+                '—'
+              ),
+          },
+          {
             title: '',
             align: 'right',
             width: 120,
             render: (_, r) => {
-              const ok = Math.abs(allocTotal(r._i) - r.qty) < 1e-6;
+              const t = allocTotal(r._i);
+              const need = sellHeldQty ? Math.min(r.qty, sellHeldQty(r._i)) : r.qty;
+              const ok = t >= need - 1e-6 && t <= r.qty + 1e-6;
               return (
                 <Button size="small" type={ok ? 'default' : 'primary'} onClick={() => setPickerSell(r._i)}>
                   {ok ? 'Edit lots' : 'Choose lots'}
@@ -371,7 +396,11 @@ export default function ImportWizard(props) {
               </Button>
             </Space>
             {pickerHeld < sell.qty && (
-              <Alert type="error" showIcon message={`You only hold ${pickerHeld} — can't fully allot ${sell.qty}.`} />
+              <Alert
+                type="warning"
+                showIcon
+                message={`You hold ${pickerHeld} of ${sell.qty}. The uncovered ${sell.qty - pickerHeld} will be booked as a short sell (buy back later to close).`}
+              />
             )}
             <Table
               rowKey="id"

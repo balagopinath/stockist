@@ -101,7 +101,12 @@ function TradeAllocations({ detailId, lotById, swings = [] }) {
         {
           title: 'Kind',
           dataIndex: 'kind',
-          render: (v) => (v === 'RECOVERY' ? <Tag color="orange">RECOVERY</Tag> : <Tag>{v}</Tag>),
+          render: (v, a) =>
+            v === 'RECOVERY' ? (
+              <Tag color={a.lotId ? 'orange' : 'volcano'}>{a.lotId ? 'RECOVERY' : 'SHORT'}</Tag>
+            ) : (
+              <Tag>{v}</Tag>
+            ),
         },
         { title: 'Lot buy date', render: (_, a) => lotById[a.lotId]?.buyDate ?? '—' },
         {
@@ -597,6 +602,17 @@ export default function StockHistory({ companyId, onChange }) {
                   dataSource={swings}
                   pagination={{ pageSize: 8, hideOnSinglePage: true }}
                   columns={[
+                    {
+                      title: 'Type',
+                      key: 'ty',
+                      width: 100,
+                      render: (_, s) =>
+                        s.specificLotId ? (
+                          <Tag color="orange">Recovery</Tag>
+                        ) : (
+                          <Tag color="volcano">Short</Tag>
+                        ),
+                    },
                     { title: 'Sold on', dataIndex: 'sellDate', width: 120, render: (v) => v || '—' },
                     { title: 'Qty', dataIndex: 'qty', align: 'right' },
                     { title: 'Sell ₹', dataIndex: 'sellPrice', align: 'right', render: money },

@@ -381,6 +381,26 @@ export default function ImportSaver({ open, onClose, onDone, plan, resumeRun }) 
           if (al) created.allocations.push(al.id);
         }
       }
+
+      // any sold quantity not covered by lots is a naked SHORT — open a swing
+      // with no underlying lot; a later buy-back closes it (profit = sell − buyback).
+      const allocSum = Object.values(s.alloc || {}).reduce((a, q) => a + (Number(q) || 0), 0);
+      const shortQty = s.qty - allocSum;
+      if (shortQty > 1e-9 && RECOVERY_ENABLED && client.models.RecoverySwing) {
+        const nc = (
+          await client.models.RecoverySwing.create({
+            companyId: cid,
+            specificLotId: null,
+            qty: shortQty,
+            sellPrice: s.price,
+            sellDate: planObj.tradeDate,
+            status: 'OPEN',
+            openTradeDetailId: det?.id,
+            note: 'Short sell',
+          })
+        ).data;
+        if (nc) created.swingsCreated.push(nc.id);
+      }
     }
 
     // INTRADAY
