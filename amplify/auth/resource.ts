@@ -1,26 +1,19 @@
-import { defineAuth } from '@aws-amplify/backend';
+import { referenceAuth } from '@aws-amplify/backend';
 
 /**
- * Cognito auth, mirroring the previous Gen 1 setup:
- * - Email is the sign-in alias and is auto-verified
- * - MFA off
- * - Min password length 8
- *
- * Groups:
- * - "admin" — members get full access to admin-only models (e.g. Company).
- *   Add users to this group from the Cognito console (User pool → Groups)
- *   or via the CLI; there is no self-service path into it.
- * @see https://docs.amplify.aws/react/build-a-backend/auth/
+ * Stockiest uses the shared auth owned by gopsweb (Amplify app d2tt60fanegk1u).
+ * Do not define auth here; manage users and groups in gopsweb's user pool.
  */
-export const auth = defineAuth({
-  loginWith: {
-    email: true,
-  },
-  groups: ['admin'],
-  userAttributes: {
-    email: {
-      required: true,
-      mutable: true,
-    },
+export const auth = referenceAuth({
+  userPoolId: 'ap-south-1_LaiamNdqk',
+  identityPoolId: 'ap-south-1:7a8c14e2-4719-4c48-bd75-0a3fbd97e5a9',
+  userPoolClientId: '2olkptiikpqfuvb8i6dkci7od8',
+  authRoleArn:
+    'arn:aws:iam::747387283150:role/amplify-d2tt60fanegk1u-ma-amplifyAuthauthenticatedU-hUTMywbTvyYg',
+  unauthRoleArn:
+    'arn:aws:iam::747387283150:role/amplify-d2tt60fanegk1u-ma-amplifyAuthunauthenticate-HXLoEoTsrit3',
+  groups: {
+    admin:
+      'arn:aws:iam::747387283150:role/amplify-d2tt60fanegk1u-ma-amplifyAuthadminGroupRole-FXOBWnqX3AUL',
   },
 });
