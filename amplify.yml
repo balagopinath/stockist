@@ -11,9 +11,11 @@ frontend:
   phases:
     build:
       commands:
-        - CI=false npm run build
+        # Build into out/stockiest so the app is served at /stockiest/ on this
+        # app's own domain too; www.gopsweb.com/stockiest proxies to it unchanged.
+        - CI=false BUILD_PATH=out/stockiest npm run build
   artifacts:
-    baseDirectory: build
+    baseDirectory: out
     files:
       - '**/*'
   cache:
